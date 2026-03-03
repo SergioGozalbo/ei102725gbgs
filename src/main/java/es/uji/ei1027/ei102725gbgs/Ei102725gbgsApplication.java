@@ -9,5 +9,4 @@ public class Ei102725gbgsApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(Ei102725gbgsApplication.class, args);
 	}
-
 }
