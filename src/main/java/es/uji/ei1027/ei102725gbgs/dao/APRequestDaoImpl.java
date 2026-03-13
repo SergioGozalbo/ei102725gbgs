@@ -1,16 +1,17 @@
 package es.uji.ei1027.ei102725gbgs.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import es.uji.ei1027.ei102725gbgs.model.APRequest;
-import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
 
 /**
  * Data Access Object implementation for {@link APRequest} entities.
@@ -20,7 +21,7 @@ import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
  * </p>
  */
 @Repository
-public class APRequestDaoImpl implements Dao<APRequest, Integer> {
+public class APRequestDaoImpl {
 
     /** JDBC template used to execute SQL statements against the data source. */
     private JdbcTemplate jdbcTemplate;
@@ -35,74 +36,56 @@ public class APRequestDaoImpl implements Dao<APRequest, Integer> {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the request identifier to look up
-     * @return the matching {@link APRequest}, or {@code null} if not found
-     */
-    @Override
-    public APRequest getByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getByID'");
+    // Añadir APRequest usando VALUES(?)
+    public void addAPRequest(APRequest apRequest) {
+        jdbcTemplate.update("INSERT INTO APRequest VALUES(?, ?, ?, ?, ?, ?)",
+                apRequest.getIdSolicitud(),
+                apRequest.getIdUsuarioOvi(),
+                apRequest.getEstado(),
+                apRequest.getTipoAsistencia(),
+                apRequest.getPreferencias(),
+                apRequest.getProximidad()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return a list of all {@link APRequest} records
-     */
-    @Override
-    public List<APRequest> getAll() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    // Borrar por ID (Integer)
+    public void deleteAPRequestPorId(int idSolicitud) {
+        jdbcTemplate.update("DELETE FROM APRequest WHERE id_solicitud = ?", idSolicitud);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link APRequest} to persist
-     */
-    @Override
-    public void save(APRequest entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    // Borrar por Estado (String)
+    public void deleteAPRequestPorEstado(String estado) {
+        jdbcTemplate.update("DELETE FROM APRequest WHERE estado = ?", estado);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link APRequest} containing updated values
-     */
-    @Override
-    public void update(APRequest entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    // Actualizar APRequest
+    public void updateAPRequest(APRequest apRequest) {
+        jdbcTemplate.update("UPDATE APRequest SET id_usuario_ovi = ?, estado = ?, tipo_asistencia = ?, preferencias = ?, proximidad = ? WHERE id_solicitud = ?",
+                apRequest.getIdUsuarioOvi(),
+                apRequest.getEstado(),
+                apRequest.getTipoAsistencia(),
+                apRequest.getPreferencias(),
+                apRequest.getProximidad(),
+                apRequest.getIdSolicitud()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the request to update
-     */
-    @Override
-    public void updateByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateByID'");
+    // Obtener una sola solicitud
+    public APRequest getAPRequest(int idSolicitud) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM APRequest WHERE id_solicitud = ?",
+                    new APRequestRowMapper(), idSolicitud);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link APRequest} to remove
-     */
-    @Override
-    public void delete(APRequest entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the request to remove
-     */
-    @Override
-    public void deleteByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteByID'");
+    // Listar todas las solicitudes
+    public List<APRequest> getAPRequests() {
+        try {
+            return jdbcTemplate.query("SELECT * FROM APRequest", new APRequestRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<APRequest>();
+        }
     }
 }

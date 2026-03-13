@@ -1,16 +1,17 @@
 package es.uji.ei1027.ei102725gbgs.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import es.uji.ei1027.ei102725gbgs.model.AssistentPersonal;
-import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
 
 /**
  * Data Access Object implementation for {@link AssistentPersonal} entities.
@@ -20,7 +21,7 @@ import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
  * </p>
  */
 @Repository
-public class AssistentPersonalDaoImpl implements Dao<AssistentPersonal, String> {
+public class AssistentPersonalDaoImpl {
 
     /** JDBC template used to execute SQL statements against the data source. */
     private JdbcTemplate jdbcTemplate;
@@ -35,74 +36,62 @@ public class AssistentPersonalDaoImpl implements Dao<AssistentPersonal, String> 
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the assistant identifier to look up
-     * @return the matching {@link AssistentPersonal}, or {@code null} if not found
-     */
-    @Override
-    public AssistentPersonal getByID(String id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getByID'");
+    // Añadir AssistentPersonal usando VALUES(?)
+    public void addAssistentPersonal(AssistentPersonal asistente) {
+        jdbcTemplate.update("INSERT INTO ASSISTENTE_PERSONAL VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                asistente.getIdAsistente(),
+                asistente.getNombre(),
+                asistente.getApellidos(),
+                asistente.getEmail(),
+                asistente.getPassword(),
+                asistente.getTelefono(),
+                asistente.getFormacionAcademica(),
+                asistente.getExperiencia(),
+                asistente.getEstadoAceptado()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return a list of all {@link AssistentPersonal} records
-     */
-    @Override
-    public List<AssistentPersonal> getAll() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    // Borrar por ID (String)
+    public void deleteAssistentPersonalPorId(String idAsistente) {
+        jdbcTemplate.update("DELETE FROM ASSISTENTE_PERSONAL WHERE id_asisntente = ?", idAsistente);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link AssistentPersonal} to persist
-     */
-    @Override
-    public void save(AssistentPersonal entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    // Borrar por Email (String)
+    public void deleteAssistentPersonalPorEmail(String email) {
+        jdbcTemplate.update("DELETE FROM ASSISTENTE_PERSONAL WHERE email = ?", email);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link AssistentPersonal} containing updated values
-     */
-    @Override
-    public void update(AssistentPersonal entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    // Actualizar AssistentPersonal
+    public void updateAssistentPersonal(AssistentPersonal asistente) {
+        jdbcTemplate.update("UPDATE ASSISTENTE_PERSONAL SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, formacion_academica = ?, experiencia = ?, estado_aceptado = ? WHERE id_asistente = ?",
+                asistente.getNombre(),
+                asistente.getApellidos(),
+                asistente.getEmail(),
+                asistente.getPassword(),
+                asistente.getTelefono(),
+                asistente.getFormacionAcademica(),
+                asistente.getExperiencia(),
+                asistente.getEstadoAceptado(),
+                asistente.getIdAsistente()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the assistant to update
-     */
-    @Override
-    public void updateByID(String id) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateByID'");
+    // Obtener un asistente por su ID
+    public AssistentPersonal getAssistentPersonal(String idAsistente) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM ASSISTENTE_PERSONAL WHERE id_asistente = ?",
+                    new AssistentPersonalRowMapper(), idAsistente);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link AssistentPersonal} to remove
-     */
-    @Override
-    public void delete(AssistentPersonal entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the assistant to remove
-     */
-    @Override
-    public void deleteByID(String id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteByID'");
+    // Listar todos los asistentes
+    public List<AssistentPersonal> getAssistentsPersonals() {
+        try {
+            return jdbcTemplate.query("SELECT * FROM ASSISTENTE_PERSONAL", new AssistentPersonalRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<AssistentPersonal>();
+        }
     }
 }

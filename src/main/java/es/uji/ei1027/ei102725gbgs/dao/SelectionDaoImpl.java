@@ -1,16 +1,17 @@
 package es.uji.ei1027.ei102725gbgs.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import es.uji.ei1027.ei102725gbgs.model.Selection;
-import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
 
 /**
  * Data Access Object implementation for {@link Selection} entities.
@@ -20,7 +21,7 @@ import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
  * </p>
  */
 @Repository
-public class SelectionDaoImpl implements Dao<Selection, Integer> {
+public class SelectionDaoImpl {
 
     /** JDBC template used to execute SQL statements against the data source. */
     private JdbcTemplate jdbcTemplate;
@@ -35,74 +36,50 @@ public class SelectionDaoImpl implements Dao<Selection, Integer> {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the selection identifier to look up
-     * @return the matching {@link Selection}, or {@code null} if not found
-     */
-    @Override
-    public Selection getByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getByID'");
+    // Añadir Selection usando VALUES(?)
+    public void addSelection(Selection selection) {
+        jdbcTemplate.update("INSERT INTO SELECCION VALUES(?, ?, ?)",
+                selection.getIdSeleccion(),
+                selection.getIdSolicitud(),
+                selection.getIdAsistente()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return a list of all {@link Selection} records
-     */
-    @Override
-    public List<Selection> getAll() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    // Borrar por ID de Selección (Integer)
+    public void deleteSelectionPorId(int idSeleccion) {
+        jdbcTemplate.update("DELETE FROM SELECCION WHERE id_seleccion = ?", idSeleccion);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link Selection} to persist
-     */
-    @Override
-    public void save(Selection entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    // Borrar por ID de Asistente (String)
+    public void deleteSelectionPorAsistente(String idAsistente) {
+        jdbcTemplate.update("DELETE FROM SELECCION WHERE id_asistente = ?", idAsistente);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link Selection} containing updated values
-     */
-    @Override
-    public void update(Selection entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    // Actualizar Selection
+    public void updateSelection(Selection selection) {
+        jdbcTemplate.update("UPDATE SELECCION SET id_solicitud = ?, id_asistente = ? WHERE id_seleccion = ?",
+                selection.getIdSolicitud(),
+                selection.getIdAsistente(),
+                selection.getIdSeleccion()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the selection to update
-     */
-    @Override
-    public void updateByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateByID'");
+    // Obtener una selección específica
+    public Selection getSelection(int idSeleccion) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM SELECCION WHERE id_seleccion = ?",
+                    new SelectionRowMapper(), idSeleccion);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link Selection} to remove
-     */
-    @Override
-    public void delete(Selection entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the selection to remove
-     */
-    @Override
-    public void deleteByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteByID'");
+    // Listar todas las selecciones
+    public List<Selection> getSelections() {
+        try {
+            return jdbcTemplate.query("SELECT * FROM SELECCION", new SelectionRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<Selection>();
+        }
     }
 }

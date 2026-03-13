@@ -1,16 +1,17 @@
 package es.uji.ei1027.ei102725gbgs.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import es.uji.ei1027.ei102725gbgs.model.RegistreContracte;
-import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
 
 /**
  * Data Access Object implementation for {@link RegistreContracte} entities.
@@ -20,7 +21,7 @@ import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
  * </p>
  */
 @Repository
-public class RegistreContracteDaoImpl implements Dao<RegistreContracte, Integer> {
+public class RegistreContracteDaoImpl {
 
     /** JDBC template used to execute SQL statements against the data source. */
     private JdbcTemplate jdbcTemplate;
@@ -35,74 +36,54 @@ public class RegistreContracteDaoImpl implements Dao<RegistreContracte, Integer>
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the contract identifier to look up
-     * @return the matching {@link RegistreContracte}, or {@code null} if not found
-     */
-    @Override
-    public RegistreContracte getByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getByID'");
+    // Añadir RegistreContracte usando VALUES(?)
+    public void addRegistreContracte(RegistreContracte contracte) {
+        jdbcTemplate.update("INSERT INTO REGISTRE_CONTRACTE VALUES(?, ?, ?, ?, ?)",
+                contracte.getIdContrato(),
+                contracte.getIdSeleccion(),
+                contracte.getFechaInicio(),
+                contracte.getFechaFin(),
+                contracte.getUrlPdf()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return a list of all {@link RegistreContracte} records
-     */
-    @Override
-    public List<RegistreContracte> getAll() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    // Borrar por ID de Contrato (Integer)
+    public void deleteRegistreContractePorId(int idContrato) {
+        jdbcTemplate.update("DELETE FROM REGISTRE_CONTRACTE WHERE id_contrato = ?", idContrato);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link RegistreContracte} to persist
-     */
-    @Override
-    public void save(RegistreContracte entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    // Borrar por URL del PDF (String)
+    public void deleteRegistreContractePorUrl(String urlPdf) {
+        jdbcTemplate.update("DELETE FROM REGISTRE_CONTRACTE WHERE url_pdf = ?", urlPdf);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link RegistreContracte} containing updated values
-     */
-    @Override
-    public void update(RegistreContracte entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    // Actualizar RegistreContracte
+    public void updateRegistreContracte(RegistreContracte contracte) {
+        jdbcTemplate.update("UPDATE REGISTRE_CONTRACTE SET id_seleccion = ?, fecha_inicio = ?, fecha_fin = ?, url_pdf = ? WHERE id_contrato = ?",
+                contracte.getIdSeleccion(),
+                contracte.getFechaInicio(),
+                contracte.getFechaFin(),
+                contracte.getUrlPdf(),
+                contracte.getIdContrato()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the contract to update
-     */
-    @Override
-    public void updateByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateByID'");
+    // Obtener un contrato específico
+    public RegistreContracte getRegistreContracte(int idContrato) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM REGISTRE_CONTRACTE WHERE id_contrato = ?",
+                    new RegistreContracteRowMapper(), idContrato);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link RegistreContracte} to remove
-     */
-    @Override
-    public void delete(RegistreContracte entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the contract to remove
-     */
-    @Override
-    public void deleteByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteByID'");
+    // Listar todos los contratos
+    public List<RegistreContracte> getRegistresContractes() {
+        try {
+            return jdbcTemplate.query("SELECT * FROM REGISTRE_CONTRACTE", new RegistreContracteRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<RegistreContracte>();
+        }
     }
 }

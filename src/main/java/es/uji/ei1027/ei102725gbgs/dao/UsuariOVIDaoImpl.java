@@ -1,16 +1,17 @@
 package es.uji.ei1027.ei102725gbgs.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
-import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
 
 /**
  * Data Access Object implementation for {@link UsuariOVI} entities.
@@ -20,7 +21,7 @@ import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
  * </p>
  */
 @Repository
-public class UsuariOVIDaoImpl implements Dao<UsuariOVI, String> {
+public class UsuariOVIDaoImpl {
 
     /** JDBC template used to execute SQL statements against the data source. */
     private JdbcTemplate jdbcTemplate;
@@ -35,74 +36,60 @@ public class UsuariOVIDaoImpl implements Dao<UsuariOVI, String> {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the user identifier to look up
-     * @return the matching {@link UsuariOVI}, or {@code null} if not found
-     */
-    @Override
-    public UsuariOVI getByID(String id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getByID'");
+    // Añadir UsuariOVI usando VALUES(?)
+    public void addUsuariOVI(UsuariOVI usuario) {
+        jdbcTemplate.update("INSERT INTO USUARIO_OVI VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+                usuario.getIdUsuario(),
+                usuario.getNombre(),
+                usuario.getApellidos(),
+                usuario.getEmail(),
+                usuario.getPassword(),
+                usuario.getTelefono(),
+                usuario.isConsentimientoRgpd(),
+                usuario.getEstadoAprobacion()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return a list of all {@link UsuariOVI} records
-     */
-    @Override
-    public List<UsuariOVI> getAll() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    // Borrar por ID (String)
+    public void deleteUsuariOVIPorId(String idUsuario) {
+        jdbcTemplate.update("DELETE FROM USUARIO_OVI WHERE id_usuario = ?", idUsuario);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link UsuariOVI} to persist
-     */
-    @Override
-    public void save(UsuariOVI entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    // Borrar por Email (String)
+    public void deleteUsuariOVIPorEmail(String email) {
+        jdbcTemplate.update("DELETE FROM USUARIO_OVI WHERE email = ?", email);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link UsuariOVI} containing updated values
-     */
-    @Override
-    public void update(UsuariOVI entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    // Actualizar UsuariOVI
+    public void updateUsuariOVI(UsuariOVI usuario) {
+        jdbcTemplate.update("UPDATE USUARIO_OVI SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, consentimiento_rgpd = ?, estado_aprobacion = ? WHERE id_usuario = ?",
+                usuario.getNombre(),
+                usuario.getApellidos(),
+                usuario.getEmail(),
+                usuario.getPassword(),
+                usuario.getTelefono(),
+                usuario.isConsentimientoRgpd(),
+                usuario.getEstadoAprobacion(),
+                usuario.getIdUsuario()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the user to update
-     */
-    @Override
-    public void updateByID(String id) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateByID'");
+    // Obtener un usuario por su ID
+    public UsuariOVI getUsuariOVI(String idUsuario) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM USUARIO_OVI WHERE id_usuario = ?",
+                    new UsuariOVIRowMapper(), idUsuario);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link UsuariOVI} to remove
-     */
-    @Override
-    public void delete(UsuariOVI entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the user to remove
-     */
-    @Override
-    public void deleteByID(String id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteByID'");
+    // Listar todos los usuarios OVI
+    public List<UsuariOVI> getUsuariosOVI() {
+        try {
+            return jdbcTemplate.query("SELECT * FROM USUARIO_OVI", new UsuariOVIRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<UsuariOVI>();
+        }
     }
 }

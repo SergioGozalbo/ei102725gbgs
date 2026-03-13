@@ -1,16 +1,17 @@
 package es.uji.ei1027.ei102725gbgs.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import es.uji.ei1027.ei102725gbgs.model.Formador;
-import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
 
 /**
  * Data Access Object implementation for {@link Formador} entities.
@@ -20,7 +21,7 @@ import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
  * </p>
  */
 @Repository
-public class FormadorDaoImpl implements Dao<Formador, Integer> {
+public class FormadorDaoImpl {
 
     /** JDBC template used to execute SQL statements against the data source. */
     private JdbcTemplate jdbcTemplate;
@@ -35,74 +36,52 @@ public class FormadorDaoImpl implements Dao<Formador, Integer> {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the trainer identifier to look up
-     * @return the matching {@link Formador}, or {@code null} if not found
-     */
-    @Override
-    public Formador getByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getByID'");
+    // Añadir Formador usando VALUES(?)
+    public void addFormador(Formador formador) {
+        jdbcTemplate.update("INSERT INTO FORMADOR VALUES(?, ?, ?, ?)",
+                formador.getIdFormador(),
+                formador.getNombre(),
+                formador.getApellidos(),
+                formador.getEspecialidad()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return a list of all {@link Formador} records
-     */
-    @Override
-    public List<Formador> getAll() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    // Borrar por ID (Integer)
+    public void deleteFormadorPorId(int idFormador) {
+        jdbcTemplate.update("DELETE FROM FORMADOR WHERE id_formador = ?", idFormador);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link Formador} to persist
-     */
-    @Override
-    public void save(Formador entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    // Borrar por Nombre (String)
+    public void deleteFormadorPorNombre(String nombre) {
+        jdbcTemplate.update("DELETE FROM FORMADOR WHERE nombre = ?", nombre);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link Formador} containing updated values
-     */
-    @Override
-    public void update(Formador entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    // Actualizar Formador
+    public void updateFormador(Formador formador) {
+        jdbcTemplate.update("UPDATE FORMADOR SET nombre = ?, apellidos = ?, especialidad = ? WHERE id_formador = ?",
+                formador.getNombre(),
+                formador.getApellidos(),
+                formador.getEspecialidad(),
+                formador.getIdFormador()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the trainer to update
-     */
-    @Override
-    public void updateByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateByID'");
+    // Obtener un formador por su ID
+    public Formador getFormador(int idFormador) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM FORMADOR WHERE id_formador = ?",
+                    new FormadorRowMapper(), idFormador);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link Formador} to remove
-     */
-    @Override
-    public void delete(Formador entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the trainer to remove
-     */
-    @Override
-    public void deleteByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteByID'");
+    // Listar todos los formadores
+    public List<Formador> getFormadores() {
+        try {
+            return jdbcTemplate.query("SELECT * FROM FORMADOR", new FormadorRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<Formador>();
+        }
     }
 }

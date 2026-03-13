@@ -1,16 +1,17 @@
 package es.uji.ei1027.ei102725gbgs.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import es.uji.ei1027.ei102725gbgs.model.AssistenciaFormacio;
-import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
 
 /**
  * Data Access Object implementation for {@link AssistenciaFormacio} entities.
@@ -20,7 +21,7 @@ import es.uji.ei1027.ei102725gbgs.utils.database.Dao;
  * </p>
  */
 @Repository
-public class AssistenciaFormacioDaoImpl implements Dao<AssistenciaFormacio, Integer> {
+public class AssistenciaFormacioDaoImpl {
 
     /** JDBC template used to execute SQL statements against the data source. */
     private JdbcTemplate jdbcTemplate;
@@ -35,74 +36,54 @@ public class AssistenciaFormacioDaoImpl implements Dao<AssistenciaFormacio, Inte
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the attendance record identifier to look up
-     * @return the matching {@link AssistenciaFormacio}, or {@code null} if not found
-     */
-    @Override
-    public AssistenciaFormacio getByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'getByID'");
+    // Añadir AssistenciaFormacio usando VALUES(?)
+    public void addAssistenciaFormacio(AssistenciaFormacio assistencia) {
+        jdbcTemplate.update("INSERT INTO ASSISTENCIA_FORMACIO VALUES(?, ?, ?, ?, ?)",
+                assistencia.getIdAsistencia(),
+                assistencia.getIdActividad(),
+                assistencia.getIdUsuarioOvi(),
+                assistencia.getIdAsistente(),
+                assistencia.isAsistenciaConfirmada()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @return a list of all {@link AssistenciaFormacio} records
-     */
-    @Override
-    public List<AssistenciaFormacio> getAll() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+    // Borrar por ID de Asistencia (Integer)
+    public void deleteAssistenciaFormacioPorId(int idAsistencia) {
+        jdbcTemplate.update("DELETE FROM ASSISTENCIA_FORMACIO WHERE id_asistencia = ?", idAsistencia);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link AssistenciaFormacio} to persist
-     */
-    @Override
-    public void save(AssistenciaFormacio entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+    // Borrar por ID de Actividad (Integer)
+    public void deleteAssistenciaFormacioPorActividad(int idActividad) {
+        jdbcTemplate.update("DELETE FROM ASSISTENCIA_FORMACIO WHERE id_actividad = ?", idActividad);
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link AssistenciaFormacio} containing updated values
-     */
-    @Override
-    public void update(AssistenciaFormacio entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    // Actualizar AssistenciaFormacio
+    public void updateAssistenciaFormacio(AssistenciaFormacio assistencia) {
+        jdbcTemplate.update("UPDATE ASSISTENCIA_FORMACIO SET id_actividad = ?, id_usuario_ovi = ?, id_asistente = ?, asistencia_confirmada = ? WHERE id_asistencia = ?",
+                assistencia.getIdActividad(),
+                assistencia.getIdUsuarioOvi(),
+                assistencia.getIdAsistente(),
+                assistencia.isAsistenciaConfirmada(),
+                assistencia.getIdAsistencia()
+        );
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the attendance record to update
-     */
-    @Override
-    public void updateByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'updateByID'");
+    // Obtener un registro específico
+    public AssistenciaFormacio getAssistenciaFormacio(int idAsistencia) {
+        try {
+            return jdbcTemplate.queryForObject("SELECT * FROM ASSISTENCIA_FORMACIO WHERE id_asistencia = ?",
+                    new AssistenciaFormacioRowMapper(), idAsistencia);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @param entity the {@link AssistenciaFormacio} to remove
-     */
-    @Override
-    public void delete(AssistenciaFormacio entity) {
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
-    }
-
-    /**
-     * {@inheritDoc}
-     *
-     * @param id the identifier of the attendance record to remove
-     */
-    @Override
-    public void deleteByID(Integer id) {
-        throw new UnsupportedOperationException("Unimplemented method 'deleteByID'");
+    // Listar todos los registros de asistencia
+    public List<AssistenciaFormacio> getAssistenciesFormacio() {
+        try {
+            return jdbcTemplate.query("SELECT * FROM ASSISTENCIA_FORMACIO", new AssistenciaFormacioRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<AssistenciaFormacio>();
+        }
     }
 }
