@@ -3,6 +3,9 @@ package es.uji.ei1027.ei102725gbgs;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * Entry point.
+ */
 @SpringBootApplication
 public class Ei102725gbgsApplication {
 
