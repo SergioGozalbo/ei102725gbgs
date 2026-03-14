@@ -31,17 +31,17 @@ public class RegistreContracteController {
 		return service.getByID(id);
 	}
 
-	@GetMapping
+	@GetMapping("/all")
 	public List<RegistreContracte> getAll() {
 		return service.getAll();
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	public void addRegistreContracte(@RequestBody RegistreContracte entity) {
 		service.addRegistreContracte(entity);
 	}
 
-	@PutMapping
+	@PutMapping("/update")
 	public void updateRegistreContracte(@RequestBody RegistreContracte entity) {
 		service.updateRegistreContracte(entity);
 	}

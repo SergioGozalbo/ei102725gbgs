@@ -31,17 +31,17 @@ public class SelectionController {
 		return service.getByID(id);
 	}
 
-	@GetMapping
+	@GetMapping("/all")
 	public List<Selection> getAll() {
 		return service.getAll();
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	public void addSelection(@RequestBody Selection entity) {
 		service.addSelection(entity);
 	}
 
-	@PutMapping
+	@PutMapping("/update")
 	public void updateSelection(@RequestBody Selection entity) {
 		service.updateSelection(entity);
 	}
@@ -51,7 +51,7 @@ public class SelectionController {
 		service.deleteSelectionPorId(id);
 	}
 
-	@DeleteMapping("/asistente/{idAsistente}")
+	@DeleteMapping("/assistant/{idAsistente}")
 	public void deleteSelectionPorAsistente(@PathVariable String idAsistente) {
 		service.deleteSelectionPorAsistente(idAsistente);
 	}

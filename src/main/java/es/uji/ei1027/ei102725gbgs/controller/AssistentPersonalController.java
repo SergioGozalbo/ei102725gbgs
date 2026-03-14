@@ -32,17 +32,17 @@ public class AssistentPersonalController {
 		return service.getByID(id);
 	}
 
-	@GetMapping
+	@GetMapping("/all")
 	public List<AssistentPersonal> getAll() {
 		return service.getAll();
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	public void addAssistentPersonal(@RequestBody AssistentPersonalRequest entity) {
 		service.addAssistentPersonal(entity);
 	}
 
-	@PutMapping
+	@PutMapping("/update")
 	public void updateAssistentPersonal(@RequestBody AssistentPersonal entity) {
 		service.updateAssistentPersonal(entity);
 	}

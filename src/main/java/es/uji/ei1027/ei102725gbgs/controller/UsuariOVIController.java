@@ -32,17 +32,17 @@ public class UsuariOVIController {
 		return service.getByID(id);
 	}
 
-	@GetMapping
+	@GetMapping("/all")
 	public List<UsuariOVI> getAll() {
 		return service.getAll();
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	public void addUsuariOVI(@RequestBody UsuariOVIRequest entity) {
 		service.addUsuariOVI(entity);
 	}
 
-	@PutMapping
+	@PutMapping("/update")
 	public void updateUsuariOVI(@RequestBody UsuariOVI entity) {
 		service.updateUsuariOVI(entity);
 	}

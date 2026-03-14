@@ -31,17 +31,17 @@ public class APRequestController {
 		return service.getByID(id);
 	}
 
-	@GetMapping
+	@GetMapping("/all")
 	public List<APRequest> getAll() {
 		return service.getAll();
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	public void addAPRequest(@RequestBody APRequest entity) {
 		service.addAPRequest(entity);
 	}
 
-	@PutMapping
+	@PutMapping("/update")
 	public void updateAPRequest(@RequestBody APRequest entity) {
 		service.updateAPRequest(entity);
 	}
@@ -51,7 +51,7 @@ public class APRequestController {
 		service.deleteAPRequestPorId(id);
 	}
 
-	@DeleteMapping("/estado/{estado}")
+	@DeleteMapping("/state/{estado}")
 	public void deleteAPRequestPorEstado(@PathVariable String estado) {
 		service.deleteAPRequestPorEstado(estado);
 	}

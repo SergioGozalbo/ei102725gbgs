@@ -31,17 +31,17 @@ public class AssistenciaFormacioController {
 		return service.getByID(id);
 	}
 
-	@GetMapping
+	@GetMapping("/all")
 	public List<AssistenciaFormacio> getAll() {
 		return service.getAll();
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	public void addAssistenciaFormacio(@RequestBody AssistenciaFormacio entity) {
 		service.addAssistenciaFormacio(entity);
 	}
 
-	@PutMapping
+	@PutMapping("/update")
 	public void updateAssistenciaFormacio(@RequestBody AssistenciaFormacio entity) {
 		service.updateAssistenciaFormacio(entity);
 	}
@@ -51,7 +51,7 @@ public class AssistenciaFormacioController {
 		service.deleteAssistenciaFormacioPorId(id);
 	}
 
-	@DeleteMapping("/actividad/{idActividad}")
+	@DeleteMapping("/activity/{idActividad}")
 	public void deleteAssistenciaFormacioPorActividad(@PathVariable int idActividad) {
 		service.deleteAssistenciaFormacioPorActividad(idActividad);
 	}

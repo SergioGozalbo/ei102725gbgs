@@ -31,17 +31,17 @@ public class FormadorController {
 		return service.getByID(id);
 	}
 
-	@GetMapping
+	@GetMapping("/all")
 	public List<Formador> getAll() {
 		return service.getAll();
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	public void addFormador(@RequestBody Formador entity) {
 		service.addFormador(entity);
 	}
 
-	@PutMapping
+	@PutMapping("/update")
 	public void updateFormador(@RequestBody Formador entity) {
 		service.updateFormador(entity);
 	}
@@ -51,9 +51,8 @@ public class FormadorController {
 		service.deleteFormadorPorId(id);
 	}
 
-	@DeleteMapping("/nombre/{nombre}")
+	@DeleteMapping("/name/{nombre}")
 	public void deleteFormadorPorNombre(@PathVariable String nombre) {
 		service.deleteFormadorPorNombre(nombre);
 	}
-
 }

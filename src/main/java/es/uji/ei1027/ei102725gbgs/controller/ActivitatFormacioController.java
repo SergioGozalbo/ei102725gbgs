@@ -31,17 +31,17 @@ public class ActivitatFormacioController {
 		return service.getByID(id);
 	}
 
-	@GetMapping
+	@GetMapping("/all")
 	public List<ActivitatFormacio> getAll() {
 		return service.getAll();
 	}
 
-	@PostMapping
+	@PostMapping("/create")
 	public void addActivitatFormacio(@RequestBody ActivitatFormacio entity) {
 		service.addActivitatFormacio(entity);
 	}
 
-	@PutMapping
+	@PutMapping("/update")
 	public void updateActivitatFormacio(@RequestBody ActivitatFormacio entity) {
 		service.updateActivitatFormacio(entity);
 	}
@@ -51,7 +51,7 @@ public class ActivitatFormacioController {
 		service.deleteActivitatFormacioPorId(id);
 	}
 
-	@DeleteMapping("/nombre/{nombre}")
+	@DeleteMapping("/name/{nombre}")
 	public void deleteActivitatFormacioPorNombre(@PathVariable String nombre) {
 		service.deleteActivitatFormacioPorNombre(nombre);
 	}
