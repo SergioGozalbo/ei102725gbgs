@@ -2,6 +2,7 @@ package es.uji.ei1027.ei102725gbgs.dao;
 
 import es.uji.ei1027.ei102725gbgs.model.ActivitatFormacio;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 
 public final class ActivitatFormacioRowMapper implements RowMapper<ActivitatFormacio> {
     @Override
-    public ActivitatFormacio mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public ActivitatFormacio mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
         ActivitatFormacio activitat = new ActivitatFormacio();
         activitat.setIdActividad(rs.getInt("id_actividad"));
         activitat.setIdFormador(rs.getInt("id_formador"));

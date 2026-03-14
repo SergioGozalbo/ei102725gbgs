@@ -2,13 +2,14 @@ package es.uji.ei1027.ei102725gbgs.dao;
 
 import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.lang.NonNull;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public final class UsuariOVIRowMapper implements RowMapper<UsuariOVI> {
     @Override
-    public UsuariOVI mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public UsuariOVI mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
         UsuariOVI usuario = new UsuariOVI();
         usuario.setIdUsuario(rs.getString("id_usuario"));
         usuario.setNombre(rs.getString("nombre"));
