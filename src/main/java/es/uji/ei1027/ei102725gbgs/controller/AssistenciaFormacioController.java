@@ -55,5 +55,4 @@ public class AssistenciaFormacioController {
 	public void deleteAssistenciaFormacioPorActividad(@PathVariable int idActividad) {
 		service.deleteAssistenciaFormacioPorActividad(idActividad);
 	}
-
 }

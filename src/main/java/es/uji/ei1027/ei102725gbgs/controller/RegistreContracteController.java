@@ -55,5 +55,4 @@ public class RegistreContracteController {
 	public void deleteRegistreContractePorUrl(@PathVariable String urlPdf) {
 		service.deleteRegistreContractePorUrl(urlPdf);
 	}
-
 }

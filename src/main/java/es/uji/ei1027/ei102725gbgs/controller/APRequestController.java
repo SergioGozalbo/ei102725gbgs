@@ -55,5 +55,4 @@ public class APRequestController {
 	public void deleteAPRequestPorEstado(@PathVariable String estado) {
 		service.deleteAPRequestPorEstado(estado);
 	}
-
 }

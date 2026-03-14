@@ -55,5 +55,4 @@ public class SelectionController {
 	public void deleteSelectionPorAsistente(@PathVariable String idAsistente) {
 		service.deleteSelectionPorAsistente(idAsistente);
 	}
-
 }

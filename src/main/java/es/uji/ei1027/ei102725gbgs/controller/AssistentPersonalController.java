@@ -56,5 +56,4 @@ public class AssistentPersonalController {
 	public void deleteAssistentPersonalPorId(@PathVariable String id) {
 		service.deleteAssistentPersonalPorId(id);
 	}
-
 }

@@ -55,5 +55,4 @@ public class ActivitatFormacioController {
 	public void deleteActivitatFormacioPorNombre(@PathVariable String nombre) {
 		service.deleteActivitatFormacioPorNombre(nombre);
 	}
-
 }

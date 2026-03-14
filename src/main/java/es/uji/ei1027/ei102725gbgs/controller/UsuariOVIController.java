@@ -56,5 +56,4 @@ public class UsuariOVIController {
 	public void deleteUsuariOVIPorId(@PathVariable String id) {
 		service.deleteUsuariOVIPorId(id);
 	}
-
 }
