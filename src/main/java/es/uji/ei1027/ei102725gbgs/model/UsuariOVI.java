@@ -25,8 +25,6 @@ public class UsuariOVI {
     /** Indicates whether GDPR consent has been granted. */
     private boolean consentimientoRgpd;
 
-    /** Approval state of the user account. */
-    private String estadoAprobacion;
 
     /**
      * Builds an empty user profile.
@@ -161,24 +159,6 @@ public class UsuariOVI {
     }
 
     /**
-     * Returns the account approval state.
-     *
-     * @return account approval state
-     */
-    public String getEstadoAprobacion() {
-        return estadoAprobacion;
-    }
-
-    /**
-     * Sets the account approval state.
-     *
-     * @param estadoAprobacion account approval state to assign
-     */
-    public void setEstadoAprobacion(String estadoAprobacion) {
-        this.estadoAprobacion = estadoAprobacion;
-    }
-
-    /**
      * Builds a text representation of the user profile.
      *
      * @return user profile description string
@@ -191,7 +171,6 @@ public class UsuariOVI {
                 nombre='%s',
                 apellidos='%s',
                 email='%s',
-                estadoAprobacion='%s'
-                }""".formatted(idUsuario, nombre, apellidos, email, estadoAprobacion);
+                }""".formatted(idUsuario, nombre, apellidos, email);
     }
 }

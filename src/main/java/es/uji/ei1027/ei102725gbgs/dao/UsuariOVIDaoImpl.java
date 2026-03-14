@@ -38,15 +38,14 @@ public class UsuariOVIDaoImpl {
 
     // Añadir UsuariOVI usando VALUES(?)
     public void addUsuariOVI(UsuariOVI usuario) {
-        jdbcTemplate.update("INSERT INTO USUARIO_OVI VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO USUARIO_OVI VALUES(?, ?, ?, ?, ?, ?, ?)",
                 usuario.getIdUsuario(),
                 usuario.getNombre(),
                 usuario.getApellidos(),
                 usuario.getEmail(),
                 usuario.getPassword(),
                 usuario.getTelefono(),
-                usuario.isConsentimientoRgpd(),
-                usuario.getEstadoAprobacion()
+                usuario.isConsentimientoRgpd()
         );
     }
 
@@ -62,14 +61,13 @@ public class UsuariOVIDaoImpl {
 
     // Actualizar UsuariOVI
     public void updateUsuariOVI(UsuariOVI usuario) {
-        jdbcTemplate.update("UPDATE USUARIO_OVI SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, consentimiento_rgpd = ?, estado_aprobacion = ? WHERE id_usuario = ?",
+        jdbcTemplate.update("UPDATE USUARIO_OVI SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, consentimiento_rgpd = ?, WHERE id_usuario = ?",
                 usuario.getNombre(),
                 usuario.getApellidos(),
                 usuario.getEmail(),
                 usuario.getPassword(),
                 usuario.getTelefono(),
                 usuario.isConsentimientoRgpd(),
-                usuario.getEstadoAprobacion(),
                 usuario.getIdUsuario()
         );
     }

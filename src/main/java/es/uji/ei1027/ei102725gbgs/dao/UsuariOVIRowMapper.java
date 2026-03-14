@@ -17,7 +17,6 @@ public final class UsuariOVIRowMapper implements RowMapper<UsuariOVI> {
         usuario.setPassword(rs.getString("password"));
         usuario.setTelefono(rs.getString("telefono"));
         usuario.setConsentimientoRgpd(rs.getBoolean("consentimiento_rgpd"));
-        usuario.setEstadoAprobacion(rs.getString("estado_aprobacion"));
         return usuario;
     }
 }
