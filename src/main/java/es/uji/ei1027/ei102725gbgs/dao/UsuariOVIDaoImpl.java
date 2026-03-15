@@ -61,7 +61,7 @@ public class UsuariOVIDaoImpl {
 
     // Actualizar UsuariOVI
     public void updateUsuariOVI(UsuariOVI usuario) {
-        jdbcTemplate.update("UPDATE USUARIO_OVI SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, consentimiento_rgpd = ?, WHERE id_usuario = ?",
+        jdbcTemplate.update("UPDATE USUARIO_OVI SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, consentimiento_rgpd = ? WHERE id_usuario = ?",
                 usuario.getNombre(),
                 usuario.getApellidos(),
                 usuario.getEmail(),
