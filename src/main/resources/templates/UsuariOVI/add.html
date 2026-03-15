@@ -2,32 +2,45 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Añadir usuario</title>
 </head>
 <body>
 
 <main>
-    <h1>Afgeix usuari</h1>
+    <h1>Añadir usuario</h1>
 
-    <form th:action="@{/usuario/add}" th:object="${usuario}" method="post">
+    <form th:action="@{/UsuariOVI/add}" th:object="${usuariOVI}" method="post">
 
         <div>
-            <label for="idUsuario">Id usuari:</label>
+            <label for="idUsuario">Id usuario:</label>
             <input type="text" id="idUsuario" th:field="*{idUsuario}">
         </div>
-        <br>
 
         <div>
-            <label for="nombre">Nom:</label>
+            <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" th:field="*{nombre}">
         </div>
-        <br>
-
+        <div>
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" th:field="*{apellidos}">
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" id="email" th:field="*{email}">
+        </div>
+        <div>
+            <label for="password">Contreaseña:</label>
+            <input type="text" id="password" th:field="*{password}">
+        </div>
+        <div>
+            <label for="consentimientoRgpd">Accepto el tractament de dades (RGPD):</label>
+            <input type="checkbox" id="consentimientoRgpd" th:field="*{consentimientoRgpd}">
+        </div>
         <button type="submit">Guardar</button>
     </form>
 
     <br>
-    <a th:href="@{/usuario/list}">Tornar a la llista</a>
+    <a th:href="@{/UsuariOVI/list}">Volver a la lista</a>
 </main>
 
 </body>

@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Lista usuarios</title>
 </head>
 <body>
 
 <main>
 
-<table>
+<table border="1">
     <thead>
     <tr>
     <th>id</th>
-    <th>name</th>
-    <th>surname</th>
-    <th>email</th>
-    <th>password</th>
-    <th>telefono</th>
-        <th>RGPD</th>
-        <th>Actions</th>
+    <th>Nombre</th>
+    <th>Apellidos</th>
+    <th>Email</th>
+    <th>Contraseña</th>
+    <th>teléfono</th>
+        <th>Confirmación RGPD</th>
+        <th>Acciones</th>
     </tr>
     </thead>
     <tbody>
-    <tr th:each="usuario : ${usuarios}">
+    <tr th:each="usuario : ${usuariOVI}">
         <td th:text="${usuario.idUsuario}"></td>
         <td th:text="${usuario.nombre}"></td>
         <td th:text="${usuario.apellidos}"></td>
@@ -31,14 +31,14 @@
         <td th:text="${usuario.telefono}"></td>
         <td th:text="${usuario.consentimientoRgpd ? 'Si' : 'No'}"></td>
         <td>
-            <a th:href="@{/usuario/update/{id}(id=${usuario.id})}">Edita</a>
-            |
-            <a th:href="@{/usuario/delete/{id}(id=${usuario.id})}">Esborra</a>
+            <a th:href="@{/UsuariOVI/update/{id}(id=${usuario.id})}">Edita</a>
+
+            <a th:href="@{/UsuariOVI/delete/{id}(id=${usuario.id})}">Esborra</a>
         </td>
     </tr>
     </tbody>
     </table>
-    <a href="add">Afegeix usuario</a>
+    <a href="UsuariOVI/add">Afegeix usuario</a>
 <br><br>
 <a href="/">Tornar</a>
 </main>

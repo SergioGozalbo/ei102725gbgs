@@ -21,7 +21,7 @@ import es.uji.ei1027.ei102725gbgs.model.ActivitatFormacio;
  * </p>
  */
 @Repository
-public class ActivatFormacioDaoImpl {
+public class ActivitatFormacioDaoImpl {
 
     /** JDBC template used to execute SQL statements against the data source. */
     private JdbcTemplate jdbcTemplate;

@@ -5,16 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.uji.ei1027.ei102725gbgs.dao.ActivatFormacioDaoImpl;
+import es.uji.ei1027.ei102725gbgs.dao.ActivitatFormacioDaoImpl;
 import es.uji.ei1027.ei102725gbgs.model.ActivitatFormacio;
 
 @Service
 public class ActivitatFormacioServiceImpl {
 
-    private final ActivatFormacioDaoImpl dao;
+    private final ActivitatFormacioDaoImpl dao;
 
     @Autowired
-    public ActivitatFormacioServiceImpl(ActivatFormacioDaoImpl dao) {
+    public ActivitatFormacioServiceImpl(ActivitatFormacioDaoImpl dao) {
         this.dao = dao;
     }
 
