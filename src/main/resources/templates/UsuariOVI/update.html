@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<main>
+    <h1>Actualitza usuari</h1>
+
+    <form th:action="@{/usuario/update}" th:object="${usuario}" method="post">
+
+        <div>
+            <label for="idUsuario">Id usuari:</label>
+            <input type="text" id="idUsuario" th:field="*{idUsuario}" readonly>
+        </div>
+        <br>
+
+        <div>
+            <label for="nombre">Nom:</label>
+            <input type="text" id="nombre" th:field="*{nombre}">
+        </div>
+        <br>
+
+        <div>
+            <label for="apellidos">Nom:</label>
+            <input type="text" id="apellidos" th:field="*{apellidos}">
+        </div>
+        <br>
+
+        <div>
+            <label for="email">Nom:</label>
+            <input type="text" id="email" th:field="*{email}">
+        </div>
+        <br>
+
+        <div>
+            <label for="password">Nom:</label>
+            <input type="text" id="password" th:field="*{password}">
+        </div>
+        <br>
+
+        <div>
+            <label for="telefono">Nom:</label>
+            <input type="text" id="telefono" th:field="*{telefono}">
+        </div>
+        <br>
+
+        <div>
+            <label for="consentimientoRgpd">Nom:</label>
+            <input type="text" id="consentimientoRgpd" th:field="*{consentimientoRgpd}">
+        </div>
+        <br>
+
+        <button type="submit">Actualizar</button>
+    </form>
+
+    <br>
+    <a th:href="@{/usuario/list}">Tornar a la llista</a>
+</main>
+
+</body>
+</html>

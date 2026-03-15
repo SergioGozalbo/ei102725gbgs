@@ -1,59 +1,63 @@
 package es.uji.ei1027.ei102725gbgs.controller;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import es.uji.ei1027.ei102725gbgs.dao.UsuariOVIDaoImpl;
 import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
-import es.uji.ei1027.ei102725gbgs.services.UsuariOVIServiceImpl;
-import es.uji.ei1027.ei102725gbgs.utils.request.UsuariOVIRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/usuariovi")
+@Controller
+@RequestMapping("/UsuariOVI")
 public class UsuariOVIController {
 
-	private final UsuariOVIServiceImpl service;
+	private UsuariOVIDaoImpl usuariOVIDao;
 
 	@Autowired
-	public UsuariOVIController(UsuariOVIServiceImpl service) {
-		this.service = service;
+	public void setUsuariOVIDao(UsuariOVIDaoImpl usuariOVIDao) {
+		this.usuariOVIDao = usuariOVIDao;
 	}
 
-	@GetMapping("/{id}")
-	public UsuariOVI getByID(@PathVariable String id) {
-		return service.getByID(id);
+	// Listar
+	@RequestMapping("/list")
+	public String listUsuariOVI(Model model) {
+		model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI());
+		return "UsuariOVI/list";
 	}
 
-	@GetMapping("/all")
-	public List<UsuariOVI> getAll() {
-		return service.getAll();
+	// Añadir: Mostrar formulario
+	@RequestMapping(value="/add")
+	public String addUsuariOVI(Model model) {
+		model.addAttribute("usuariOVI", new UsuariOVI());
+		return "UsuariOVI/add";
 	}
 
-	@PostMapping("/create")
-	public void addUsuariOVI(@RequestBody UsuariOVIRequest entity) {
-		service.addUsuariOVI(entity);
+	// Añadir: Procesar formulario
+	@RequestMapping(value="/add", method=RequestMethod.POST)
+	public String processAddSubmit(@ModelAttribute("usuariOVI") UsuariOVI usuariOVI) {
+		usuariOVIDao.addUsuariOVI(usuariOVI);
+		return "redirect:list";
 	}
 
-	@PutMapping("/update")
-	public void updateUsuariOVI(@RequestBody UsuariOVI entity) {
-		service.updateUsuariOVI(entity);
+	// Modificar: Mostrar formulario
+	@RequestMapping(value="/update/{idUsuario}", method=RequestMethod.GET)
+	public String editUsuariOVI(Model model, @PathVariable String idUsuario) {
+		model.addAttribute("usuariOVI", usuariOVIDao.getUsuariOVI(idUsuario));
+		return "UsuariOVI/update";
 	}
 
-	@DeleteMapping("/email/{email}")
-	public void deleteUsuariOVIPorEmail(@PathVariable String email) {
-		service.deleteUsuariOVIPorEmail(email);
+	// Modificar: Procesar formulario
+	@RequestMapping(value="/update", method=RequestMethod.POST)
+	public String processUpdateSubmit(@ModelAttribute("usuariOVI") UsuariOVI usuariOVI) {
+		usuariOVIDao.updateUsuariOVI(usuariOVI);
+		return "redirect:list";
 	}
 
-	@DeleteMapping("/{id}")
-	public void deleteUsuariOVIPorId(@PathVariable String id) {
-		service.deleteUsuariOVIPorId(id);
+	// Borrar
+	@RequestMapping(value="/delete/{idUsuario}")
+	public String processDelete(@PathVariable String idUsuario) {
+		usuariOVIDao.deleteUsuariOVIPorId(idUsuario);
+		return "redirect:../list";
 	}
 }
+
