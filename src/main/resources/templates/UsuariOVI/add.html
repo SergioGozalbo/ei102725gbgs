@@ -19,6 +19,7 @@
         <div>
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" th:field="*{nombre}">
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red;"></span>
         </div>
         <div>
             <label for="apellidos">Apellidos:</label>
@@ -35,10 +36,12 @@
         <div>
             <label for="telefono">Teléfono:</label>
             <input type="text" id="telefono" th:field="*{telefono}">
+            <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" style="color:red;"></span>
         </div>
         <div>
             <label for="consentimientoRgpd">Accepto el tractament de dades (RGPD):</label>
             <input type="checkbox" id="consentimientoRgpd" th:field="*{consentimientoRgpd}">
+            <span th:if="${#fields.hasErrors('consentimientoRgpd')}" th:errors="*{consentimientoRgpd}" style="color:red;"></span>
         </div>
         <button type="submit">Guardar</button>
     </form>
