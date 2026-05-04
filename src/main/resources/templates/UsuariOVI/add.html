@@ -12,11 +12,6 @@
     <form th:action="@{/UsuariOVI/add}" th:object="${usuariOVI}" method="post">
 
         <div>
-            <label for="idUsuario">Id usuario:</label>
-            <input type="text" id="idUsuario" th:field="*{idUsuario}">
-        </div>
-
-        <div>
             <label for="nombre">Nombre:</label>
             <input type="text" id="nombre" th:field="*{nombre}">
             <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red;"></span>

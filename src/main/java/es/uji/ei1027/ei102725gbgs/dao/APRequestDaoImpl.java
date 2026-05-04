@@ -38,7 +38,7 @@ public class APRequestDaoImpl {
 
     // Añadir APRequest usando VALUES(?)
     public void addAPRequest(APRequest apRequest) {
-        jdbcTemplate.update("INSERT INTO APRequest VALUES(?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO AP_REQUEST VALUES(?, ?, ?, ?, ?, ?)",
                 apRequest.getIdSolicitud(),
                 apRequest.getIdUsuarioOvi(),
                 apRequest.getEstado(),
@@ -50,17 +50,17 @@ public class APRequestDaoImpl {
 
     // Borrar por ID (Integer)
     public void deleteAPRequestPorId(int idSolicitud) {
-        jdbcTemplate.update("DELETE FROM APRequest WHERE id_solicitud = ?", idSolicitud);
+        jdbcTemplate.update("DELETE FROM AP_REQUEST WHERE id_solicitud = ?", idSolicitud);
     }
 
     // Borrar por Estado (String)
     public void deleteAPRequestPorEstado(String estado) {
-        jdbcTemplate.update("DELETE FROM APRequest WHERE estado = ?", estado);
+        jdbcTemplate.update("DELETE FROM AP_REQUEST WHERE estado = ?", estado);
     }
 
     // Actualizar APRequest
     public void updateAPRequest(APRequest apRequest) {
-        jdbcTemplate.update("UPDATE APRequest SET id_usuario_ovi = ?, estado = ?, tipo_asistencia = ?, preferencias = ?, proximidad = ? WHERE id_solicitud = ?",
+        jdbcTemplate.update("UPDATE AP_REQUEST SET id_usuario_ovi = ?, estado = ?, tipo_asistencia = ?, preferencias = ?, proximidad = ? WHERE id_solicitud = ?",
                 apRequest.getIdUsuarioOvi(),
                 apRequest.getEstado(),
                 apRequest.getTipoAsistencia(),
@@ -73,7 +73,7 @@ public class APRequestDaoImpl {
     // Obtener una sola solicitud
     public APRequest getAPRequest(int idSolicitud) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM APRequest WHERE id_solicitud = ?",
+            return jdbcTemplate.queryForObject("SELECT * FROM AP_REQUEST WHERE id_solicitud = ?",
                     new APRequestRowMapper(), idSolicitud);
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -83,7 +83,7 @@ public class APRequestDaoImpl {
     // Listar todas las solicitudes
     public List<APRequest> getAPRequests() {
         try {
-            return jdbcTemplate.query("SELECT * FROM APRequest", new APRequestRowMapper());
+            return jdbcTemplate.query("SELECT * FROM AP_REQUEST", new APRequestRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<APRequest>();
         }

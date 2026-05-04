@@ -99,11 +99,17 @@ public class UsuariOVIController {
 	public String processAddSubmit(@ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
 								   BindingResult bindingResult) {
 
-		// Ejecutar validación
+		// ASIGNACIÓN AUTOMÁTICA DEL ID (Máximo + 1)
+		int nextId = usuariOVIDao.getUsuariosOVI().stream()
+				.mapToInt(u -> Integer.parseInt(u.getIdUsuario().substring(1)))
+				.max().orElse(0) + 1;
+
+		usuariOVI.setIdUsuario("U" + String.format("%03d", nextId));
+
 		usuariOVIValidator.validate(usuariOVI, bindingResult);
 
 		if (bindingResult.hasErrors()) {
-			return "UsuariOVI/add"; // Retorna a la vista de formulario si hay fallos
+			return "UsuariOVI/add";
 		}
 
 		usuariOVIDao.addUsuariOVI(usuariOVI);

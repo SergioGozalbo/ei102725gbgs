@@ -1,58 +1,117 @@
 package es.uji.ei1027.ei102725gbgs.controller;
 
+import es.uji.ei1027.ei102725gbgs.dao.APRequestDaoImpl;
+import es.uji.ei1027.ei102725gbgs.dao.UsuariOVIDaoImpl;
+import es.uji.ei1027.ei102725gbgs.model.APRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+@Component
+class APRequestValidator implements Validator {
+	@Override
+	public boolean supports(Class<?> clazz) {
+		return APRequest.class.equals(clazz);
+	}
 
-import es.uji.ei1027.ei102725gbgs.model.APRequest;
-import es.uji.ei1027.ei102725gbgs.services.APRequestServiceImpl;
+	@Override
+	public void validate(Object obj, Errors errors) {
+		APRequest request = (APRequest) obj;
+		if (request.getIdUsuarioOvi() == null || request.getIdUsuarioOvi().trim().isEmpty()) {
+			errors.rejectValue("idUsuarioOvi", "obligatori", "L'ID d'usuari OVI és obligatori");
+		}
+		if (request.getTipoAsistencia() == null || request.getTipoAsistencia().trim().isEmpty()) {
+			errors.rejectValue("tipoAsistencia", "obligatori", "El tipus d'assistència és obligatori");
+		}
+	}
+}
 
-@RestController
-@RequestMapping("/api/aprequest")
+@Controller
+@RequestMapping("/APRequest")
 public class APRequestController {
 
-	private final APRequestServiceImpl service;
+	private APRequestDaoImpl apRequestDao;
+	private UsuariOVIDaoImpl usuariOVIDao;
+	private APRequestValidator apRequestValidator;
 
 	@Autowired
-	public APRequestController(APRequestServiceImpl service) {
-		this.service = service;
+	public void setApRequestDao(APRequestDaoImpl apRequestDao) { this.apRequestDao = apRequestDao; }
+	@Autowired
+	public void setUsuariOVIDao(UsuariOVIDaoImpl usuariOVIDao) { this.usuariOVIDao = usuariOVIDao; }
+	@Autowired
+	public void setApRequestValidator(APRequestValidator apRequestValidator) { this.apRequestValidator = apRequestValidator; }
+
+	// Lista de provincias estática para usar en varios métodos
+	private List<String> getListaProvincias() {
+		return Arrays.asList("Alicante", "Castellón", "Valencia", "Madrid", "Barcelona", "Murcia");
 	}
 
-	@GetMapping("/{id}")
-	public APRequest getByID(@PathVariable int id) {
-		return service.getByID(id);
+	@RequestMapping("/list")
+	public String listAPRequest(Model model) {
+		model.addAttribute("requests", apRequestDao.getAPRequests());
+		return "APRequest/list";
 	}
 
-	@GetMapping("/all")
-	public List<APRequest> getAll() {
-		return service.getAll();
+	@RequestMapping(value="/add")
+	public String addAPRequest(Model model) {
+		APRequest request = new APRequest();
+		request.setEstado("En revisión");
+
+		model.addAttribute("apRequest", request);
+		model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
+		model.addAttribute("provincias", getListaProvincias());
+		return "APRequest/add";
 	}
 
-	@PostMapping("/create")
-	public void addAPRequest(@RequestBody APRequest entity) {
-		service.addAPRequest(entity);
+	@RequestMapping(value="/add", method=RequestMethod.POST)
+	public String processAddSubmit(@ModelAttribute("apRequest") APRequest apRequest,
+								   BindingResult bindingResult, Model model) {
+
+		// ASIGNACIÓN AUTOMÁTICA DEL ID AQUÍ
+		int nextId = apRequestDao.getAPRequests().stream()
+				.mapToInt(APRequest::getIdSolicitud)
+				.max().orElse(0) + 1;
+		apRequest.setIdSolicitud(nextId);
+
+		apRequestValidator.validate(apRequest, bindingResult);
+
+		if (bindingResult.hasErrors()) {
+			// Si hay error, hay que volver a cargar las listas para el select
+			model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
+			model.addAttribute("provincias", getListaProvincias());
+			return "APRequest/add";
+		}
+
+		apRequestDao.addAPRequest(apRequest);
+		return "redirect:list";
 	}
 
-	@PutMapping("/update")
-	public void updateAPRequest(@RequestBody APRequest entity) {
-		service.updateAPRequest(entity);
+	@RequestMapping(value="/update/{idSolicitud}", method=RequestMethod.GET)
+	public String editAPRequest(Model model, @PathVariable int idSolicitud) {
+		model.addAttribute("apRequest", apRequestDao.getAPRequest(idSolicitud));
+		model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
+		model.addAttribute("provincias", getListaProvincias());
+		return "APRequest/update";
 	}
 
-	@DeleteMapping("/{id}")
-	public void deleteAPRequestPorId(@PathVariable int id) {
-		service.deleteAPRequestPorId(id);
-	}
-
-	@DeleteMapping("/state/{estado}")
-	public void deleteAPRequestPorEstado(@PathVariable String estado) {
-		service.deleteAPRequestPorEstado(estado);
+	@RequestMapping(value="/update", method=RequestMethod.POST)
+	public String processUpdateSubmit(@ModelAttribute("apRequest") APRequest apRequest,
+									  BindingResult bindingResult, Model model) {
+		apRequestValidator.validate(apRequest, bindingResult);
+		if (bindingResult.hasErrors()) {
+			model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
+			model.addAttribute("provincias", getListaProvincias());
+			return "APRequest/update";
+		}
+		apRequestDao.updateAPRequest(apRequest);
+		return "redirect:list";
 	}
 }

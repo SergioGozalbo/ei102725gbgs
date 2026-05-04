@@ -80,8 +80,18 @@ public class AssistentPersonalController {
 	@RequestMapping(value="/add", method=RequestMethod.POST)
 	public String processAdd(@ModelAttribute("assistentPersonal") AssistentPersonal assistentPersonal,
 							 BindingResult bindingResult) {
+
+		int nextId = assistentPersonalDao.getAssistentsPersonals().stream()
+				.mapToInt(ap -> Integer.parseInt(ap.getIdAsistente().substring(1)))
+				.max().orElse(0) + 1;
+
+		assistentPersonal.setIdAsistente("A" + String.format("%03d", nextId));
+
 		assistentPersonalValidator.validate(assistentPersonal, bindingResult);
-		if (bindingResult.hasErrors()) return "AssistentPersonal/add";
+
+		if (bindingResult.hasErrors()) {
+			return "AssistentPersonal/add";
+		}
 
 		assistentPersonalDao.addAssistentPersonal(assistentPersonal);
 		return "redirect:list";

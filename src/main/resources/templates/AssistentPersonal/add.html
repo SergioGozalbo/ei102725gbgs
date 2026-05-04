@@ -9,11 +9,6 @@
     <h1>Alta de Candidat PAP/PATI</h1>
 
     <form th:action="@{/AssistentPersonal/add}" th:object="${assistentPersonal}" method="post">
-        <div>
-            <label for="idAsistente">Id asistente:</label>
-            <input type="text" id="idAsistente" th:field="*{idAsistente}">
-            <span th:if="${#fields.hasErrors('idAsistente')}" th:errors="*{idAsistente}" style="color:red;"></span>
-        </div>
 
         <div>
             <label for="nombre">Nombre:</label>
