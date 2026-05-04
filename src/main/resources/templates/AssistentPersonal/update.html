@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Actualizar asistente</title>
+</head>
+<body>
+<main>
+    <h1>Actualizar asistente</h1>
+
+    <form th:action="@{/AssistentPersonal/update}" th:object="${assistentPersonal}" method="post">
+        <div>
+            <label for="idAsistente">Id asistente:</label>
+            <input type="text" id="idAsistente" th:field="*{idAsistente}" readonly>
+        </div>
+        <br>
+
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" th:field="*{nombre}">
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red;"></span>
+        </div>
+        <br>
+
+        <div>
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" th:field="*{apellidos}">
+        </div>
+        <br>
+
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" id="email" th:field="*{email}">
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red;"></span>
+        </div>
+        <br>
+
+        <div>
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" th:field="*{telefono}">
+            <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" style="color:red;"></span>
+        </div>
+        <br>
+
+        <div>
+            <label for="formacionAcademica">Formación Académica:</label><br>
+            <textarea id="formacionAcademica" th:field="*{formacionAcademica}" rows="4" cols="50"></textarea>
+        </div>
+        <br>
+
+        <div>
+            <label for="experiencia">Experiencia:</label><br>
+            <textarea id="experiencia" th:field="*{experiencia}" rows="4" cols="50"></textarea>
+        </div>
+        <br>
+
+        <div>
+            <label for="estadoAceptado">Estado de Aceptación:</label>
+            <select id="estadoAceptado" th:field="*{estadoAceptado}">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Aceptado">Aceptado</option>
+                <option value="Rechazado">Rechazado</option>
+            </select>
+        </div>
+        <br>
+
+        <input type="hidden" th:field="*{password}">
+
+        <button type="submit">Actualizar</button>
+    </form>
+
+    <br>
+    <a th:href="@{/AssistentPersonal/list}">Volver a la lista</a>
+</main>
+</body>
+</html>

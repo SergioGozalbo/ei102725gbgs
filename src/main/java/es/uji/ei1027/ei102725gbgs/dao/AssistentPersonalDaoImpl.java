@@ -38,7 +38,7 @@ public class AssistentPersonalDaoImpl {
 
     // Añadir AssistentPersonal usando VALUES(?)
     public void addAssistentPersonal(AssistentPersonal asistente) {
-        jdbcTemplate.update("INSERT INTO ASSISTENTE_PERSONAL VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        jdbcTemplate.update("INSERT INTO ASISTENTE_PERSONAL VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 asistente.getIdAsistente(),
                 asistente.getNombre(),
                 asistente.getApellidos(),
@@ -53,17 +53,17 @@ public class AssistentPersonalDaoImpl {
 
     // Borrar por ID (String)
     public void deleteAssistentPersonalPorId(String idAsistente) {
-        jdbcTemplate.update("DELETE FROM ASSISTENTE_PERSONAL WHERE id_asisntente = ?", idAsistente);
+        jdbcTemplate.update("DELETE FROM ASISTENTE_PERSONAL WHERE id_asistente = ?", idAsistente);
     }
 
     // Borrar por Email (String)
     public void deleteAssistentPersonalPorEmail(String email) {
-        jdbcTemplate.update("DELETE FROM ASSISTENTE_PERSONAL WHERE email = ?", email);
+        jdbcTemplate.update("DELETE FROM ASISTENTE_PERSONAL WHERE email = ?", email);
     }
 
     // Actualizar AssistentPersonal
     public void updateAssistentPersonal(AssistentPersonal asistente) {
-        jdbcTemplate.update("UPDATE ASSISTENTE_PERSONAL SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, formacion_academica = ?, experiencia = ?, estado_aceptado = ? WHERE id_asistente = ?",
+        jdbcTemplate.update("UPDATE ASISTENTE_PERSONAL SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, formacion_academica = ?, experiencia = ?, estado_aceptado = ? WHERE id_asistente = ?",
                 asistente.getNombre(),
                 asistente.getApellidos(),
                 asistente.getEmail(),
@@ -79,7 +79,7 @@ public class AssistentPersonalDaoImpl {
     // Obtener un asistente por su ID
     public AssistentPersonal getAssistentPersonal(String idAsistente) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM ASSISTENTE_PERSONAL WHERE id_asistente = ?",
+            return jdbcTemplate.queryForObject("SELECT * FROM ASISTENTE_PERSONAL WHERE id_asistente = ?",
                     new AssistentPersonalRowMapper(), idAsistente);
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -89,7 +89,7 @@ public class AssistentPersonalDaoImpl {
     // Listar todos los asistentes
     public List<AssistentPersonal> getAssistentsPersonals() {
         try {
-            return jdbcTemplate.query("SELECT * FROM ASSISTENTE_PERSONAL", new AssistentPersonalRowMapper());
+            return jdbcTemplate.query("SELECT * FROM ASISTENTE_PERSONAL", new AssistentPersonalRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<AssistentPersonal>();
         }
