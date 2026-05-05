@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>SgOVI</title>
@@ -10,7 +10,12 @@
     <div><a href="/UsuariOVI/list">Anar a la llista d'Usuaris OVI</a></div>
     <div><a href="/AssistentPersonal/list">Anar a la llista d'Assistents Personals</a></div>
     <div><a href="/APRequest/list">Anar a les peticions d'assistents</a></div>
-
 </li>
+
+<ul>
+    <li><a th:href="@{/login}">Iniciar Sesión</a></li>
+    <li><a th:href="@{/registro}">Crear una cuenta</a></li>
+</ul>
+
 </body>
 </html>

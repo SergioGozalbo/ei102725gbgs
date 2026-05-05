@@ -94,4 +94,14 @@ public class AssistentPersonalDaoImpl {
             return new ArrayList<AssistentPersonal>();
         }
     }
+    // Obtener un asistente por su email
+    public AssistentPersonal getAssistentPersonalByEmail(String email) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM ASISTENTE_PERSONAL WHERE email = ?",
+                    new AssistentPersonalRowMapper(), email);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }

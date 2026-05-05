@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Registre</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+</head>
+<body class="bg-light">
+<main class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow p-4 text-center" style="width: 100%; max-width: 480px;">
+        <h1 class="h4 mb-2">SgOVI - Registre</h1>
+        <p class="text-muted mb-4">Tria el tipus de compte que vols crear</p>
+
+        <div class="d-grid gap-3">
+            <a th:href="@{/registro/usuariOVI}" class="btn btn-primary btn-lg">
+                Sóc Usuari OVI
+            </a>
+            <a th:href="@{/registro/assistentPersonal}" class="btn btn-outline-primary btn-lg">
+                Vull ser Assistent Personal
+            </a>
+        </div>
+
+        <hr/>
+        <p class="small mb-0">
+            Ja tens compte? <a th:href="@{/login}">Inicia sessió</a>
+        </p>
+    </div>
+</main>
+</body>
+</html>

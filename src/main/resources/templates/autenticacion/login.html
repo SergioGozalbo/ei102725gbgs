@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Accés</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+</head>
+<body class="bg-light">
+<main class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow p-4" style="width: 100%; max-width: 420px;">
+        <h1 class="h4 mb-4 text-center">SgOVI - Iniciar sessió</h1>
+
+        <!-- Error de credenciales -->
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+        <form th:action="@{/login}" th:object="${usuariOVI}" method="post">
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input id="email" type="email" class="form-control"
+                       th:field="*{email}" placeholder="correu@exemple.com"/>
+                <div th:if="${#fields.hasErrors('email')}"
+                     th:errors="*{email}" class="text-danger small mt-1"></div>
+            </div>
+
+            <div class="mb-3">
+                <label for="password" class="form-label">Contrasenya</label>
+                <input id="password" type="password" class="form-control"
+                       th:field="*{password}" placeholder="••••••••"/>
+                <div th:if="${#fields.hasErrors('password')}"
+                     th:errors="*{password}" class="text-danger small mt-1"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Entrar</button>
+        </form>
+
+        <hr/>
+        <p class="text-center mb-0 small">
+            Ets nou usuari OVI?
+            <a th:href="@{/registro/usuariOVI}">Registra't com a Usuari OVI</a>
+        </p>
+        <p class="text-center mb-0 small">
+            Vols ser assistent personal?
+            <a th:href="@{/registro/assistentPersonal}">Registra't com a Assistent</a>
+        </p>
+    </div>
+</main>
+</body>
+</html>

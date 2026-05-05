@@ -90,4 +90,14 @@ public class UsuariOVIDaoImpl {
             return new ArrayList<UsuariOVI>();
         }
     }
+    // Obtener un usuario por su email
+    public UsuariOVI getUsuariOVIByEmail(String email) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM USUARIO_OVI WHERE email = ?",
+                    new UsuariOVIRowMapper(), email);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }
