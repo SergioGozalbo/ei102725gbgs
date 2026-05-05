@@ -104,4 +104,19 @@ public class AssistentPersonalDaoImpl {
             return null;
         }
     }
+
+    /**
+     * Get a list of personal assistants filtered by their acceptance status.
+     * @param estado the acceptance status to filter by (e.g., "aceptado", "pendiente")
+     * @return a list of {@link AssistentPersonal} entities matching the specified acceptance status, or an empty list if none found
+     */
+    public List<AssistentPersonal> getAssistentsPersonalsByEstado(String estado) {
+    try {
+        return jdbcTemplate.query(
+            "SELECT * FROM ASISTENTE_PERSONAL WHERE estado_aceptado = ?",
+            new AssistentPersonalRowMapper(), estado);
+    } catch (EmptyResultDataAccessException e) {
+        return new ArrayList<>();
+    }
+}
 }

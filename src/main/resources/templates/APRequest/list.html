@@ -26,6 +26,9 @@
             <td th:text="${request.estado}"></td>
             <td th:text="${request.proximidad}"></td>
             <td>
+                <a th:if="${request.estado == 'En revisión'}"
+                   th:href="@{/APRequest/aprobar/{id}(id=${request.idSolicitud})}">Aprovar</a>
+
                 <a th:href="@{/APRequest/update/{id}(id=${request.idSolicitud})}">Edita</a>
                 <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}">Esborra</a>
             </td>

@@ -41,4 +41,12 @@ public class APRequestServiceImpl {
     public void deleteAPRequestPorEstado(String estado) {
         dao.deleteAPRequestPorEstado(estado);
     }
+
+    public List<APRequest> getPendientes() {
+        return dao.getAPRequestsByEstado("pendiente");
+    }
+
+    public void aprobarSolicitud(int idSolicitud) {
+        dao.updateEstado(idSolicitud, "aprobada");
+    }
 }

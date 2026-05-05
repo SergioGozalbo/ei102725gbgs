@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Aprobar solicitud</title>
+</head>
+<body>
+<main>
+    <h1>Aprobar solicitud</h1>
+
+    <!-- Dati della solicitud -->
+    <section>
+        <h2>Solicitud #<span th:text="${solicitud.idSolicitud}"></span></h2>
+        <p>Usuario: <span th:text="${solicitud.idUsuarioOvi}"></span></p>
+        <p>Tipo asistencia: <span th:text="${solicitud.tipoAsistencia}"></span></p>
+        <p>Preferencias: <span th:text="${solicitud.preferencias}"></span></p>
+        <p>Proximidad: <span th:text="${solicitud.proximidad}"></span></p>
+    </section>
+
+    <!-- Candidatos disponibles -->
+    <section>
+        <h2>Candidatos disponibles</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellidos</th>
+                    <th>Email</th>
+                    <th>Formación</th>
+                    <th>Experiencia</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="c : ${candidatos}">
+                    <td th:text="${c.idAsistente}"></td>
+                    <td th:text="${c.nombre}"></td>
+                    <td th:text="${c.apellidos}"></td>
+                    <td th:text="${c.email}"></td>
+                    <td th:text="${c.formacionAcademica}"></td>
+                    <td th:text="${c.experiencia}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Bottone di approvazione -->
+    <form th:action="@{/APRequest/aprobar}" method="post">
+        <input type="hidden" name="idSolicitud" th:value="${solicitud.idSolicitud}"/>
+        <button type="submit">Confirmar aprobación</button>
+    </form>
+
+    <br>
+    <a th:href="@{/APRequest/list}">Tornar</a>
+</main>
+</body>
+</html>

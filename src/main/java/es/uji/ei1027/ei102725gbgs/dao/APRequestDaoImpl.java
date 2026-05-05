@@ -88,4 +88,22 @@ public class APRequestDaoImpl {
             return new ArrayList<APRequest>();
         }
     }
+
+    // Get requests by estado
+    public List<APRequest> getAPRequestsByEstado(String estado) {
+        try {
+            return jdbcTemplate.query(
+                "SELECT * FROM AP_REQUEST WHERE estado = ?",
+                new APRequestRowMapper(), estado);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+    // Change the estado of a request by its ID
+    public void updateEstado(int idSolicitud, String nuevoEstado) {
+    jdbcTemplate.update(
+        "UPDATE AP_REQUEST SET estado = ? WHERE id_solicitud = ?",
+        nuevoEstado, idSolicitud);
+    }
 }
