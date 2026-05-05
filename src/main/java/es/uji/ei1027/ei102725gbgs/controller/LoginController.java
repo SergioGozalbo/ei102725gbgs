@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 
 
-// ─── Validador ────────────────────────────────────────────────────────────────
 class UserValidator implements Validator {
     @Override
     public boolean supports(Class<?> cls) {
@@ -33,7 +32,6 @@ class UserValidator implements Validator {
     }
 }
 
-// ─── Controlador ─────────────────────────────────────────────────────────────
 @Controller
 public class LoginController {
 

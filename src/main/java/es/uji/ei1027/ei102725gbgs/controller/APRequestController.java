@@ -49,9 +49,8 @@ public class APRequestController {
 	@Autowired
 	public void setApRequestValidator(APRequestValidator apRequestValidator) { this.apRequestValidator = apRequestValidator; }
 
-	// Lista de provincias estática para usar en varios métodos
 	private List<String> getListaProvincias() {
-		return Arrays.asList("Alicante", "Castellón", "Valencia", "Madrid", "Barcelona", "Murcia");
+		return Arrays.asList("Alicante", "Castellón", "Valencia", "Madrid", "Barcelona", "Murcia", "");
 	}
 
 	@RequestMapping("/list")
@@ -113,5 +112,11 @@ public class APRequestController {
 		}
 		apRequestDao.updateAPRequest(apRequest);
 		return "redirect:list";
+	}
+
+	@RequestMapping(value="/delete/{idSolicitud}")
+	public String processDelete(@PathVariable int idSolicitud) {
+		apRequestDao.deleteAPRequestPorId(idSolicitud);
+		return "redirect:../list";
 	}
 }

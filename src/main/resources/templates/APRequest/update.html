@@ -9,7 +9,7 @@
     <h1>Actualizar solicitud</h1>
     <form th:action="@{/APRequest/update}" th:object="${apRequest}" method="post">
         <br>
-
+        <input type="hidden" th:field="*{idSolicitud}"/>
         <div>
             <label for="idUsuarioOvi">Usuario OVI:</label>
             <select id="idUsuarioOvi" th:field="*{idUsuarioOvi}">
