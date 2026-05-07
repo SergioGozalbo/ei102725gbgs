@@ -106,4 +106,14 @@ public class APRequestDaoImpl {
         "UPDATE AP_REQUEST SET estado = ? WHERE id_solicitud = ?",
         nuevoEstado, idSolicitud);
     }
+
+    public List<APRequest> getAPRequestsByUsuari(String idUsuarioOvi) {
+        try {
+            return jdbcTemplate.query(
+                    "SELECT * FROM AP_REQUEST WHERE id_usuario_ovi = ?",
+                    new APRequestRowMapper(), idUsuarioOvi);
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
 }

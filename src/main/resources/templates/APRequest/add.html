@@ -9,15 +9,7 @@
     <h1>Añadir solicitud</h1>
     <form th:action="@{/APRequest/add}" th:object="${apRequest}" method="post">
 
-        <div>
-            <label for="idUsuarioOvi">Usuario OVI:</label>
-            <select id="idUsuarioOvi" th:field="*{idUsuarioOvi}">
-                <option th:each="user : ${usuariosOvi}"
-                        th:value="${user.idUsuario}"
-                        th:text="${user.idUsuario} + ' - ' + ${user.nombre}"></option>
-            </select>
-        </div>
-        <br>
+        <input type="hidden" th:field="*{idUsuarioOvi}"/>
 
         <div>
             <label for="tipoAsistencia">Tipo Asistencia:</label>

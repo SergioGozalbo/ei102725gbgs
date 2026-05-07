@@ -13,6 +13,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
+import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.Arrays;
 import java.util.List;
@@ -75,13 +77,27 @@ public class APRequestController {
     }
 
     @RequestMapping(value="/add", method=RequestMethod.GET)
-    public String addAPRequest(Model model) {
+    public String addAPRequest(Model model, HttpSession session) {
+        UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
+        if (usuari == null) return "redirect:/login";
+
         APRequest request = new APRequest();
         request.setEstado("En revisión");
+        request.setIdUsuarioOvi(usuari.getIdUsuario());
         model.addAttribute("apRequest", request);
-        model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
         model.addAttribute("provincias", getListaProvincias());
         return "APRequest/add";
+    }
+
+    @RequestMapping(value="/mylist", method=RequestMethod.GET)
+    public String listMyRequests(Model model, HttpSession session) {
+        UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
+        if (usuari == null) return "redirect:/login";
+
+        model.addAttribute("requests",
+                apRequestDao.getAPRequestsByUsuari(usuari.getIdUsuario()));
+        model.addAttribute("usuari", usuari);
+        return "APRequest/mylist";
     }
 
     @RequestMapping(value="/add", method=RequestMethod.POST)
