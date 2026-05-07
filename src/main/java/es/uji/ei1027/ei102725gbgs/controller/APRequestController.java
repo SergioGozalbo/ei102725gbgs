@@ -156,7 +156,7 @@ public class APRequestController {
 
     @RequestMapping(value="/aprobar", method=RequestMethod.POST)
     public String processAprobar(@RequestParam int idSolicitud) {
-        apRequestDao.updateEstado(idSolicitud, "aprobada");
+        apRequestDao.updateEstado(idSolicitud, "Aprobada");
         return "redirect:/APRequest/list";
     }
 }
