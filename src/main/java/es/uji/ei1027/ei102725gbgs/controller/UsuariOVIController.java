@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.stereotype.Component;
+
+
 @Component
 class UsuariOVIValidator implements Validator {
 
@@ -66,15 +68,13 @@ class UsuariOVIValidator implements Validator {
 @RequestMapping("/UsuariOVI")
 public class UsuariOVIController {
 
-	private UsuariOVIDaoImpl usuariOVIDao;
+	private final UsuariOVIDaoImpl usuariOVIDao;
+	private final UsuariOVIValidator usuariOVIValidator;
 
 	@Autowired
-	UsuariOVIValidator usuariOVIValidator;
-
-
-	@Autowired
-	public void setUsuariOVIDao(UsuariOVIDaoImpl usuariOVIDao) {
+	public UsuariOVIController(UsuariOVIDaoImpl usuariOVIDao, UsuariOVIValidator usuariOVIValidator) {
 		this.usuariOVIDao = usuariOVIDao;
+		this.usuariOVIValidator = usuariOVIValidator;
 	}
 
 	// Listar

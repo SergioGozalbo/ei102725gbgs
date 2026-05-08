@@ -38,30 +38,21 @@ class APRequestValidator implements Validator {
 @RequestMapping("/APRequest")
 public class APRequestController {
 
-    private APRequestDaoImpl apRequestDao;
-    private UsuariOVIDaoImpl usuariOVIDao;
-    private AssistentPersonalDaoImpl assistentPersonalDao;
-    private APRequestValidator apRequestValidator;
+    private final APRequestDaoImpl apRequestDao;
+    private final UsuariOVIDaoImpl usuariOVIDao;
+    private final AssistentPersonalDaoImpl assistentPersonalDao;
+    private final APRequestValidator apRequestValidator;
 
     @Autowired
-	public void setApRequestDao(APRequestDaoImpl d) {
-		 this.apRequestDao = d;
-	}
-
-    @Autowired
-	public void setUsuariOVIDao(UsuariOVIDaoImpl d) {
-		this.usuariOVIDao = d;
-	}
-
-    @Autowired
-	public void setAssistentPersonalDao(AssistentPersonalDaoImpl d) {
-		this.assistentPersonalDao = d;
-	}
-
-    @Autowired
-	public void setApRequestValidator(APRequestValidator v) {
-		this.apRequestValidator = v;
-	}
+    public APRequestController(APRequestDaoImpl apRequestDao,
+                                UsuariOVIDaoImpl usuariOVIDao,
+                                AssistentPersonalDaoImpl assistentPersonalDao,
+                                APRequestValidator apRequestValidator) {
+        this.apRequestDao = apRequestDao;
+        this.usuariOVIDao = usuariOVIDao;
+        this.assistentPersonalDao = assistentPersonalDao;
+        this.apRequestValidator = apRequestValidator;
+    }
 
     private List<String> getListaProvincias() {
         return Arrays.asList(

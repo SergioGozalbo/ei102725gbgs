@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import es.uji.ei1027.ei102725gbgs.dao.AssistentPersonalDaoImpl;
 import es.uji.ei1027.ei102725gbgs.model.AssistentPersonal;
+import java.util.concurrent.atomic.AtomicInteger;
 import es.uji.ei1027.ei102725gbgs.utils.request.AssistentPersonalRequest;
 
 @Service
@@ -14,7 +15,7 @@ public class AssistentPersonalServiceImpl {
 
     private final AssistentPersonalDaoImpl dao;
 
-    private static int counter = 0;
+    private static final AtomicInteger counter = new AtomicInteger(0);
 
     @Autowired
     public AssistentPersonalServiceImpl(AssistentPersonalDaoImpl dao) {
@@ -30,7 +31,7 @@ public class AssistentPersonalServiceImpl {
     }
 
     public void addAssistentPersonal(AssistentPersonalRequest entity) {
-        int newId = counter++;
+        int newId = counter.getAndIncrement();
         String generatedId = String.format("A%03d", newId);
 
         AssistentPersonal assistant = new AssistentPersonal();

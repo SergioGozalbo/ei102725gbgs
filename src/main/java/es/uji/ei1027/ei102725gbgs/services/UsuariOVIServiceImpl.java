@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import es.uji.ei1027.ei102725gbgs.dao.UsuariOVIDaoImpl;
 import es.uji.ei1027.ei102725gbgs.model.ActivitatFormacio;
 import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
+import java.util.concurrent.atomic.AtomicInteger;
 import es.uji.ei1027.ei102725gbgs.utils.request.UsuariOVIRequest;
 import io.micrometer.common.lang.NonNull;
 
@@ -21,7 +22,7 @@ public class UsuariOVIServiceImpl {
     /**
      * A simple counter to generate unique IDs.
      */
-    private static int counter = 0;
+    private static final AtomicInteger counter = new AtomicInteger(0);
 
     /**
      * Creates a new instance of {@link UsuariOVIServiceImpl} with the given DAO.
@@ -42,7 +43,7 @@ public class UsuariOVIServiceImpl {
 
     public void addUsuariOVI(UsuariOVIRequest entity) {
 
-        int newId = counter++;
+        int newId = counter.getAndIncrement();
         String generatedId = String.format("U%03d", newId);
 
         UsuariOVI ent = new UsuariOVI();

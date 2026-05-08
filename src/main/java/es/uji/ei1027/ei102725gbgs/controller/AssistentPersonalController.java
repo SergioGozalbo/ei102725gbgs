@@ -50,16 +50,13 @@ class AssistentPersonalValidator implements Validator {
 @RequestMapping("/AssistentPersonal")
 public class AssistentPersonalController {
 
-	private AssistentPersonalDaoImpl assistentPersonalDao;
-	private AssistentPersonalValidator assistentPersonalValidator;
+	private final AssistentPersonalDaoImpl assistentPersonalDao;
+	private final AssistentPersonalValidator assistentPersonalValidator;
 
 	@Autowired
-	public void setAssistentPersonalDao(AssistentPersonalDaoImpl assistentPersonalDao) {
+	public AssistentPersonalController(AssistentPersonalDaoImpl assistentPersonalDao,
+										AssistentPersonalValidator assistentPersonalValidator) {
 		this.assistentPersonalDao = assistentPersonalDao;
-	}
-
-	@Autowired
-	public void setAssistentPersonalValidator(AssistentPersonalValidator assistentPersonalValidator) {
 		this.assistentPersonalValidator = assistentPersonalValidator;
 	}
 
