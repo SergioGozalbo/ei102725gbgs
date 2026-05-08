@@ -19,40 +19,40 @@ import es.uji.ei1027.ei102725gbgs.services.SelectionServiceImpl;
 @RequestMapping("/api/selection")
 public class SelectionController {
 
-	private final SelectionServiceImpl service;
+    private final SelectionServiceImpl service;
 
-	@Autowired
-	public SelectionController(SelectionServiceImpl service) {
-		this.service = service;
-	}
+    @Autowired
+    public SelectionController(SelectionServiceImpl service) {
+        this.service = service;
+    }
 
-	@GetMapping("/{id}")
-	public Selection getByID(@PathVariable int id) {
-		return service.getByID(id);
-	}
+    @GetMapping("/{id}")
+    public Selection getByID(@PathVariable int id) {
+        return service.getByID(id);
+    }
 
-	@GetMapping("/all")
-	public List<Selection> getAll() {
-		return service.getAll();
-	}
+    @GetMapping("/all")
+    public List<Selection> getAll() {
+        return service.getAll();
+    }
 
-	@PostMapping("/create")
-	public void addSelection(@RequestBody Selection entity) {
-		service.addSelection(entity);
-	}
+    @PostMapping("/create")
+    public void addSelection(@RequestBody Selection entity) {
+        service.addSelection(entity);
+    }
 
-	@PutMapping("/update")
-	public void updateSelection(@RequestBody Selection entity) {
-		service.updateSelection(entity);
-	}
+    @PutMapping("/update")
+    public void updateSelection(@RequestBody Selection entity) {
+        service.updateSelection(entity);
+    }
 
-	@DeleteMapping("/{id}")
-	public void deleteSelectionPorId(@PathVariable int id) {
-		service.deleteSelectionPorId(id);
-	}
+    @DeleteMapping("/{id}")
+    public void deleteSelectionPorId(@PathVariable int id) {
+        service.deleteSelectionPorId(id);
+    }
 
-	@DeleteMapping("/assistant/{idAsistente}")
-	public void deleteSelectionPorAsistente(@PathVariable String idAsistente) {
-		service.deleteSelectionPorAsistente(idAsistente);
-	}
+    @DeleteMapping("/assistant/{idAsistente}")
+    public void deleteSelectionPorAsistente(@PathVariable String idAsistente) {
+        service.deleteSelectionPorAsistente(idAsistente);
+    }
 }

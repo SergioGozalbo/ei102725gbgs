@@ -19,42 +19,42 @@ import es.uji.ei1027.ei102725gbgs.services.AssistenciaFormacioServiceImpl;
 @RequestMapping("/api/assistenciaformacio")
 public class AssistenciaFormacioController {
 
-	private final AssistenciaFormacioServiceImpl service;
+    private final AssistenciaFormacioServiceImpl service;
 
-	@Autowired
-	public AssistenciaFormacioController(AssistenciaFormacioServiceImpl service) {
-		this.service = service;
-	}
+    @Autowired
+    public AssistenciaFormacioController(AssistenciaFormacioServiceImpl service) {
+        this.service = service;
+    }
 
-	@GetMapping("/{id}")
-	public AssistenciaFormacio getByID(@PathVariable int id) {
-		return service.getByID(id);
-	}
+    @GetMapping("/{id}")
+    public AssistenciaFormacio getByID(@PathVariable int id) {
+        return service.getByID(id);
+    }
 
-	@GetMapping("/all")
-	public List<AssistenciaFormacio> getAll() {
-		return service.getAll();
-	}
+    @GetMapping("/all")
+    public List<AssistenciaFormacio> getAll() {
+        return service.getAll();
+    }
 
-	@PostMapping("/create")
-	public void addAssistenciaFormacio(@RequestBody AssistenciaFormacio entity) {
-		service.addAssistenciaFormacio(entity);
-	}
+    @PostMapping("/create")
+    public void addAssistenciaFormacio(@RequestBody AssistenciaFormacio entity) {
+        service.addAssistenciaFormacio(entity);
+    }
 
-	@PutMapping("/update")
-	public void updateAssistenciaFormacio(
-			@RequestBody AssistenciaFormacio entity) {
-		service.updateAssistenciaFormacio(entity);
-	}
+    @PutMapping("/update")
+    public void updateAssistenciaFormacio(
+            @RequestBody AssistenciaFormacio entity) {
+        service.updateAssistenciaFormacio(entity);
+    }
 
-	@DeleteMapping("/{id}")
-	public void deleteAssistenciaFormacioPorId(@PathVariable int id) {
-		service.deleteAssistenciaFormacioPorId(id);
-	}
+    @DeleteMapping("/{id}")
+    public void deleteAssistenciaFormacioPorId(@PathVariable int id) {
+        service.deleteAssistenciaFormacioPorId(id);
+    }
 
-	@DeleteMapping("/activity/{idActividad}")
-	public void deleteAssistenciaFormacioPorActividad(
-			@PathVariable int idActividad) {
-		service.deleteAssistenciaFormacioPorActividad(idActividad);
-	}
+    @DeleteMapping("/activity/{idActividad}")
+    public void deleteAssistenciaFormacioPorActividad(
+            @PathVariable int idActividad) {
+        service.deleteAssistenciaFormacioPorActividad(idActividad);
+    }
 }

@@ -19,40 +19,40 @@ import es.uji.ei1027.ei102725gbgs.services.ActivitatFormacioServiceImpl;
 @RequestMapping("/api/activitatformacio")
 public class ActivitatFormacioController {
 
-	private final ActivitatFormacioServiceImpl service;
+    private final ActivitatFormacioServiceImpl service;
 
-	@Autowired
-	public ActivitatFormacioController(ActivitatFormacioServiceImpl service) {
-		this.service = service;
-	}
+    @Autowired
+    public ActivitatFormacioController(ActivitatFormacioServiceImpl service) {
+        this.service = service;
+    }
 
-	@GetMapping("/{id}")
-	public ActivitatFormacio getByID(@PathVariable int id) {
-		return service.getByID(id);
-	}
+    @GetMapping("/{id}")
+    public ActivitatFormacio getByID(@PathVariable int id) {
+        return service.getByID(id);
+    }
 
-	@GetMapping("/all")
-	public List<ActivitatFormacio> getAll() {
-		return service.getAll();
-	}
+    @GetMapping("/all")
+    public List<ActivitatFormacio> getAll() {
+        return service.getAll();
+    }
 
-	@PostMapping("/create")
-	public void addActivitatFormacio(@RequestBody ActivitatFormacio entity) {
-		service.addActivitatFormacio(entity);
-	}
+    @PostMapping("/create")
+    public void addActivitatFormacio(@RequestBody ActivitatFormacio entity) {
+        service.addActivitatFormacio(entity);
+    }
 
-	@PutMapping("/update")
-	public void updateActivitatFormacio(@RequestBody ActivitatFormacio entity) {
-		service.updateActivitatFormacio(entity);
-	}
+    @PutMapping("/update")
+    public void updateActivitatFormacio(@RequestBody ActivitatFormacio entity) {
+        service.updateActivitatFormacio(entity);
+    }
 
-	@DeleteMapping("/{id}")
-	public void deleteActivitatFormacioPorId(@PathVariable int id) {
-		service.deleteActivitatFormacioPorId(id);
-	}
+    @DeleteMapping("/{id}")
+    public void deleteActivitatFormacioPorId(@PathVariable int id) {
+        service.deleteActivitatFormacioPorId(id);
+    }
 
-	@DeleteMapping("/name/{nombre}")
-	public void deleteActivitatFormacioPorNombre(@PathVariable String nombre) {
-		service.deleteActivitatFormacioPorNombre(nombre);
-	}
+    @DeleteMapping("/name/{nombre}")
+    public void deleteActivitatFormacioPorNombre(@PathVariable String nombre) {
+        service.deleteActivitatFormacioPorNombre(nombre);
+    }
 }

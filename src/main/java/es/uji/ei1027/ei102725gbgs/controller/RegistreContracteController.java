@@ -19,40 +19,40 @@ import es.uji.ei1027.ei102725gbgs.services.RegistreContracteServiceImpl;
 @RequestMapping("/api/registrecontracte")
 public class RegistreContracteController {
 
-	private final RegistreContracteServiceImpl service;
+    private final RegistreContracteServiceImpl service;
 
-	@Autowired
-	public RegistreContracteController(RegistreContracteServiceImpl service) {
-		this.service = service;
-	}
+    @Autowired
+    public RegistreContracteController(RegistreContracteServiceImpl service) {
+        this.service = service;
+    }
 
-	@GetMapping("/{id}")
-	public RegistreContracte getByID(@PathVariable int id) {
-		return service.getByID(id);
-	}
+    @GetMapping("/{id}")
+    public RegistreContracte getByID(@PathVariable int id) {
+        return service.getByID(id);
+    }
 
-	@GetMapping("/all")
-	public List<RegistreContracte> getAll() {
-		return service.getAll();
-	}
+    @GetMapping("/all")
+    public List<RegistreContracte> getAll() {
+        return service.getAll();
+    }
 
-	@PostMapping("/create")
-	public void addRegistreContracte(@RequestBody RegistreContracte entity) {
-		service.addRegistreContracte(entity);
-	}
+    @PostMapping("/create")
+    public void addRegistreContracte(@RequestBody RegistreContracte entity) {
+        service.addRegistreContracte(entity);
+    }
 
-	@PutMapping("/update")
-	public void updateRegistreContracte(@RequestBody RegistreContracte entity) {
-		service.updateRegistreContracte(entity);
-	}
+    @PutMapping("/update")
+    public void updateRegistreContracte(@RequestBody RegistreContracte entity) {
+        service.updateRegistreContracte(entity);
+    }
 
-	@DeleteMapping("/{id}")
-	public void deleteRegistreContractePorId(@PathVariable int id) {
-		service.deleteRegistreContractePorId(id);
-	}
+    @DeleteMapping("/{id}")
+    public void deleteRegistreContractePorId(@PathVariable int id) {
+        service.deleteRegistreContractePorId(id);
+    }
 
-	@DeleteMapping("/url/{urlPdf}")
-	public void deleteRegistreContractePorUrl(@PathVariable String urlPdf) {
-		service.deleteRegistreContractePorUrl(urlPdf);
-	}
+    @DeleteMapping("/url/{urlPdf}")
+    public void deleteRegistreContractePorUrl(@PathVariable String urlPdf) {
+        service.deleteRegistreContractePorUrl(urlPdf);
+    }
 }

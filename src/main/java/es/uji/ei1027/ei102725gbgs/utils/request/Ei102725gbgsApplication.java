@@ -11,12 +11,12 @@ import java.util.logging.Logger;
 @SpringBootApplication
 public class Ei102725gbgsApplication {
 
-	@SuppressWarnings("unused")
-	private static final Logger log =
-		Logger.getLogger(Ei102725gbgsApplication.class.getName());
+    @SuppressWarnings("unused")
+    private static final Logger log =
+        Logger.getLogger(Ei102725gbgsApplication.class.getName());
 
 
-	public static void main(String[] args) {
-		SpringApplication.run(Ei102725gbgsApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Ei102725gbgsApplication.class, args);
+    }
 }
