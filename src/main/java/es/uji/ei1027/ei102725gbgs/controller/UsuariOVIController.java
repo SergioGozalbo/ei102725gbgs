@@ -26,9 +26,11 @@ class UsuariOVIValidator implements Validator {
 
         // 1. Validar Email (formato básico)
         if (usuario.getEmail().trim().isEmpty()) {
-            errors.rejectValue("email", "obligatori", "L'email és obligatori");
+            errors.rejectValue("email",
+			"obligatori", "L'email és obligatori");
         } else if (!usuario.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            errors.rejectValue("email", "format", "El format de l'email no és vàlid");
+            errors.rejectValue("email",
+			"format", "El format de l'email no és vàlid");
         }
 
         // 2. Validar Teléfono (exactamente 9 dígitos)
@@ -39,16 +41,21 @@ class UsuariOVIValidator implements Validator {
 
         // 3. Validar Consentimiento RGPD (debe estar marcado)
         if (!usuario.isConsentimientoRgpd()) {
-                errors.rejectValue("consentimientoRgpd", "obligatori",
-                    "Has d'acceptar el tractament de dades per a continuar");
+                errors.rejectValue("consentimientoRgpd",
+				"obligatori",
+                "Has d'acceptar el tractament de dades per a continuar");
         }
 
         // 4. Validar Nombre (sin números)
         if (usuario.getNombre().matches(".*\\d.*")) {
-            errors.rejectValue("nombre", "format", "El nom no pot contenir números");
+            errors.rejectValue("nombre",
+			"format",
+			"El nom no pot contenir números");
         }
         if (usuario.getNombre().trim().isEmpty()) {
-            errors.rejectValue("nombre", "obligatori", "El nom és obligatori");
+            errors.rejectValue("nombre",
+			"obligatori",
+			"El nom és obligatori");
         }
 
         // 5. Validar Apellidos (sin números)
@@ -57,13 +64,16 @@ class UsuariOVIValidator implements Validator {
                     "Els cognoms no poden contenir números");
         }
         if (usuario.getApellidos().trim().isEmpty()) {
-            errors.rejectValue("apellidos", "obligatori", "Els cognoms són obligatoris");
+            errors.rejectValue("apellidos",
+			"obligatori",
+			"Els cognoms són obligatoris");
         }
 
         // 6. Validar ID (obligatorio)
         if (usuario.getIdUsuario().trim().isEmpty()) {
-                errors.rejectValue("idUsuario", "obligatori",
-                    "L'identificador d'usuari és obligatori");
+                errors.rejectValue("idUsuario",
+			"obligatori",
+			"L'identificador d'usuari és obligatori");
         }
     }
 }
