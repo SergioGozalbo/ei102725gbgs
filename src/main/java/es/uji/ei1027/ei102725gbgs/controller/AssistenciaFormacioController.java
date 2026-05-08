@@ -22,9 +22,9 @@ public class AssistenciaFormacioController {
     private final AssistenciaFormacioServiceImpl service;
 
     @Autowired
-    public AssistenciaFormacioController(
-		AssistenciaFormacioServiceImpl service) {
-        this.service = service;
+    public AssistenciaFormacioController(AssistenciaFormacioServiceImpl service) {
+
+                this.service = service;
     }
 
     @GetMapping("/{id}")
@@ -39,7 +39,7 @@ public class AssistenciaFormacioController {
 
     @PostMapping("/create")
     public void addAssistenciaFormacio(
-		@RequestBody AssistenciaFormacio entity) {
+        @RequestBody AssistenciaFormacio entity) {
         service.addAssistenciaFormacio(entity);
     }
 

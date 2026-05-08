@@ -8,7 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.validation.Validator;
 
 @Component
@@ -28,32 +31,31 @@ class AssistentPersonalValidator implements Validator {
                     "L'identificador és obligatori");
         }
 
-        if (asistente.getNombre() == null ||
-		    asistente.getNombre().trim().isEmpty()) {
+        if (asistente.getNombre() == null || asistente.getNombre().trim().isEmpty()) {
             errors.rejectValue("nombre",
-			"obligatori",
-			"El nom és obligatori");
-		}
+                    "obligatori",
+                    "El nom és obligatori");
+        }
 
         if (asistente.getEmail().trim().isEmpty()) {
             errors.rejectValue("email",
-			"obligatori",
-			"L'email és obligatori");
+                    "obligatori",
+                    "L'email és obligatori");
         } else if (!asistente.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             errors.rejectValue("email",
-			"format",
-			"El format de l'email no és vàlid");
+                    "format",
+                    "El format de l'email no és vàlid");
         }
 
         if (asistente.getTelefono() == null
-            || asistente.getTelefono().trim().isEmpty()) {
+                || asistente.getTelefono().trim().isEmpty()) {
             errors.rejectValue("telefono",
-			"obligatori",
-			"El telèfon és obligatori");
+                    "obligatori",
+                    "El telèfon és obligatori");
         } else if (!asistente.getTelefono().matches("\\d{9}")) {
             errors.rejectValue("telefono",
-			"format",
-			"El telèfon ha de tenir 9 dígits");
+                    "format",
+                    "El telèfon ha de tenir 9 dígits");
         }
         if (asistente.getFormacionAcademica().trim().isEmpty()) {
             errors.rejectValue("formacionAcademica", "obligatori",
@@ -98,15 +100,15 @@ public class AssistentPersonalController {
     @RequestMapping(value = "/add", method = RequestMethod.POST)
         public String processAdd(
             @ModelAttribute("assistentPersonal")
-			AssistentPersonal assistentPersonal,
+            AssistentPersonal assistentPersonal,
             BindingResult bindingResult) {
 
         int nextId = assistentPersonalDao.getAssistentsPersonals().stream()
                 .mapToInt(ap -> {
-					return Integer.parseInt(
-						ap.getIdAsistente().substring(1)
-					);
-				}).max().orElse(0) + 1;
+                    return Integer.parseInt(
+                            ap.getIdAsistente().substring(1)
+                    );
+                }).max().orElse(0) + 1;
 
         assistentPersonal.setIdAsistente("A" + String.format("%03d", nextId));
 
@@ -130,12 +132,12 @@ public class AssistentPersonalController {
     @RequestMapping(value = "/update", method = RequestMethod.POST)
         public String processUpdate(
             @ModelAttribute("assistentPersonal")
-			AssistentPersonal assistentPersonal,
+            AssistentPersonal assistentPersonal,
             BindingResult bindingResult) {
         assistentPersonalValidator.validate(assistentPersonal, bindingResult);
         if (bindingResult.hasErrors()) {
-			return "AssistentPersonal/update";
-		}
+            return "AssistentPersonal/update";
+        }
 
         assistentPersonalDao.updateAssistentPersonal(assistentPersonal);
         return "redirect:list";
