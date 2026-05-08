@@ -1,4 +1,4 @@
-package es.uji.ei1027.ei102725gbgs.utils.request;
+package es.uji.ei1027.ei102725gbgs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
