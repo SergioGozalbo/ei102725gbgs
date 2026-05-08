@@ -11,6 +11,7 @@ import java.util.logging.Logger;
 @SpringBootApplication
 public class Ei102725gbgsApplication {
 
+	@SuppressWarnings("unused")
 	private static final Logger log = Logger.getLogger(Ei102725gbgsApplication .class.getName());
 
 

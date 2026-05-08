@@ -4,7 +4,6 @@ import es.uji.ei1027.ei102725gbgs.dao.AssistentPersonalDaoImpl;
 import es.uji.ei1027.ei102725gbgs.dao.UsuariOVIDaoImpl;
 import es.uji.ei1027.ei102725gbgs.model.AssistentPersonal;
 import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
-import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

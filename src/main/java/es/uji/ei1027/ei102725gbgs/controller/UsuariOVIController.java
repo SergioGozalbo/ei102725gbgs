@@ -7,9 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-
-import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.stereotype.Component;
