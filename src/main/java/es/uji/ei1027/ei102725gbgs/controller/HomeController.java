@@ -18,7 +18,7 @@ public class HomeController {
         if (Boolean.TRUE.equals(session.getAttribute("admin"))) {
             return "redirect:/dashboard/admin";
         }
-        
+
         return "home";
     }
 }
