@@ -51,6 +51,8 @@ class AssistentPersonalValidator implements Validator {
 		// El estado por defecto suele ser 'pendent' si no se indica nada
 	}
 }
+
+
 @Controller
 @RequestMapping("/AssistentPersonal")
 public class AssistentPersonalController {
