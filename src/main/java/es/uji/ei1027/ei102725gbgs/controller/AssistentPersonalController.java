@@ -89,9 +89,9 @@ public class AssistentPersonalController {
      */
     private final AssistentPersonalDaoImpl assistentPersonalDao;
 
-	/**
-	 * Validator for validating AssistentPersonal data before processing it.
-	 */
+    /**
+     * Validator for validating AssistentPersonal data before processing it.
+     */
     private final AssistentPersonalValidator assistentPersonalValidator;
 
     /**
