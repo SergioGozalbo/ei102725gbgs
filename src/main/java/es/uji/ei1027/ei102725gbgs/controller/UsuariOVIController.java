@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.stereotype.Component;
@@ -27,10 +30,10 @@ class UsuariOVIValidator implements Validator {
         // 1. Validar Email (formato básico)
         if (usuario.getEmail().trim().isEmpty()) {
             errors.rejectValue("email",
-			"obligatori", "L'email és obligatori");
+            "obligatori", "L'email és obligatori");
         } else if (!usuario.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
             errors.rejectValue("email",
-			"format", "El format de l'email no és vàlid");
+            "format", "El format de l'email no és vàlid");
         }
 
         // 2. Validar Teléfono (exactamente 9 dígitos)
@@ -42,20 +45,20 @@ class UsuariOVIValidator implements Validator {
         // 3. Validar Consentimiento RGPD (debe estar marcado)
         if (!usuario.isConsentimientoRgpd()) {
                 errors.rejectValue("consentimientoRgpd",
-				"obligatori",
+                "obligatori",
                 "Has d'acceptar el tractament de dades per a continuar");
         }
 
         // 4. Validar Nombre (sin números)
         if (usuario.getNombre().matches(".*\\d.*")) {
             errors.rejectValue("nombre",
-			"format",
-			"El nom no pot contenir números");
+            "format",
+            "El nom no pot contenir números");
         }
         if (usuario.getNombre().trim().isEmpty()) {
             errors.rejectValue("nombre",
-			"obligatori",
-			"El nom és obligatori");
+            "obligatori",
+            "El nom és obligatori");
         }
 
         // 5. Validar Apellidos (sin números)
@@ -65,15 +68,15 @@ class UsuariOVIValidator implements Validator {
         }
         if (usuario.getApellidos().trim().isEmpty()) {
             errors.rejectValue("apellidos",
-			"obligatori",
-			"Els cognoms són obligatoris");
+            "obligatori",
+            "Els cognoms són obligatoris");
         }
 
         // 6. Validar ID (obligatorio)
         if (usuario.getIdUsuario().trim().isEmpty()) {
                 errors.rejectValue("idUsuario",
-			"obligatori",
-			"L'identificador d'usuari és obligatori");
+            "obligatori",
+            "L'identificador d'usuari és obligatori");
         }
     }
 }

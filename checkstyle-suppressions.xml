@@ -10,6 +10,6 @@
     <!-- Temporary: ignore final-related checks (FinalParameters, FinalClass, etc.) -->
     <suppress checks=".*Final.*" files=".*"/>
 
-    <!-- Temporary: ignore field hiding checks -->
-    <suppress checks="HiddenField" files=".*"/>
+    <!-- Permanent: ignore field hiding checks -->
+    <suppress checks="HiddenField" files=".*"/>>
 </suppressions>

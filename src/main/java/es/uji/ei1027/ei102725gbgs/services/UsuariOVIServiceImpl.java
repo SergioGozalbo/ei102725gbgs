@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.uji.ei1027.ei102725gbgs.dao.UsuariOVIDaoImpl;
-import es.uji.ei1027.ei102725gbgs.model.ActivitatFormacio;
 import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
 import java.util.concurrent.atomic.AtomicInteger;
 import es.uji.ei1027.ei102725gbgs.utils.request.UsuariOVIRequest;
