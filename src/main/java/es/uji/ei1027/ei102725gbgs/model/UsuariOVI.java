@@ -1,9 +1,13 @@
 package es.uji.ei1027.ei102725gbgs.model;
 
+import java.io.Serializable;
+
 /**
  * Represents an OVI user profile.
  */
-public class UsuariOVI {
+public class UsuariOVI implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /** Unique user identifier. */
     private String idUsuario;
 
