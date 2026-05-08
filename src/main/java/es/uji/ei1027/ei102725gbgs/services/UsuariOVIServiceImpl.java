@@ -22,7 +22,7 @@ public class UsuariOVIServiceImpl {
     /**
      * A simple counter to generate unique IDs.
      */
-    private static final AtomicInteger counter = new AtomicInteger(0);
+    private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
     /** Creates a new instance with the given DAO. */
     @Autowired
@@ -41,7 +41,7 @@ public class UsuariOVIServiceImpl {
 
     public void addUsuariOVI(UsuariOVIRequest entity) {
 
-        int newId = counter.getAndIncrement();
+        int newId = COUNTER.getAndIncrement();
         String generatedId = String.format("U%03d", newId);
 
         UsuariOVI ent = new UsuariOVI();
