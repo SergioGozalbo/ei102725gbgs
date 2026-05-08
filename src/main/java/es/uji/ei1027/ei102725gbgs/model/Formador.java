@@ -101,12 +101,11 @@ public class Formador {
      */
     @Override
     public String toString() {
-        return """
-                Formador {%n\
-                    idFormador=%d,%n\
-                    nombre='%s',%n\
-                    apellidos='%s',%n\
-                    especialidad='%s'%n\
-                }""".formatted(idFormador, nombre, apellidos, especialidad);
+        return ("Formador {%n"
+            + "    idFormador=%d,%n"
+            + "    nombre='%s',%n"
+            + "    apellidos='%s',%n"
+            + "    especialidad='%s'%n"
+            + "}").formatted(idFormador, nombre, apellidos, especialidad);
     }
 }

@@ -165,12 +165,11 @@ public class UsuariOVI {
      */
     @Override
     public String toString() {
-        return """
-                UsuariOVI {%n\
-                idUsuario='%s',%n\
-                nombre='%s',%n\
-                apellidos='%s',%n\
-                email='%s',%n\
-                }""".formatted(idUsuario, nombre, apellidos, email);
+        return ("UsuariOVI {%n"
+            + "idUsuario='%s',%n"
+            + "nombre='%s',%n"
+            + "apellidos='%s',%n"
+            + "email='%s',%n"
+            + "}").formatted(idUsuario, nombre, apellidos, email);
     }
 }

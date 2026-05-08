@@ -143,12 +143,11 @@ public class APRequest {
      */
 @Override
 public String toString() {
-    return """
-            APRequest {%n\
-            idSolicitud=%d,%n\
-            idUsuarioOvi='%s',%n\
-            estado='%s',%n\
-            tipoAsistencia='%s'%n\
-            }""".formatted(idSolicitud, idUsuarioOvi, estado, tipoAsistencia);
+    return ("APRequest {%n"
+            + "idSolicitud=%d,%n"
+            + "idUsuarioOvi='%s',%n"
+            + "estado='%s',%n"
+            + "tipoAsistencia='%s'%n"
+            + "}").formatted(idSolicitud, idUsuarioOvi, estado, tipoAsistencia);
     }
 }

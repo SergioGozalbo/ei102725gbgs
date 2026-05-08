@@ -124,12 +124,11 @@ public class RegistreContracte {
      */
     @Override
     public String toString() {
-        return """
-                RegistreContracte {%n\
-                    idContrato=%d,%n\
-                    idSeleccion=%d,%n\
-                    fechaInicio=%s,%n\
-                    fechaFin=%s%n\
-                }""".formatted(idContrato, idSeleccion, fechaInicio, fechaFin);
+        return ("RegistreContracte {%n"
+            + "    idContrato=%d,%n"
+            + "    idSeleccion=%d,%n"
+            + "    fechaInicio=%s,%n"
+            + "    fechaFin=%s%n"
+            + "}").formatted(idContrato, idSeleccion, fechaInicio, fechaFin);
     }
 }
