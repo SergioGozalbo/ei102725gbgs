@@ -9,7 +9,8 @@ import java.sql.SQLException;
 
 public final class FormadorRowMapper implements RowMapper<Formador> {
     @Override
-    public Formador mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+    public Formador mapRow(@NonNull ResultSet rs,
+            int rowNum) throws SQLException {
         Formador formador = new Formador();
         formador.setIdFormador(rs.getInt("id_formador"));
         formador.setNombre(rs.getString("nombre"));

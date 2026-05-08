@@ -24,10 +24,12 @@ class UserValidator implements Validator {
     public void validate(Object obj, Errors errors) {
         UsuariOVI form = (UsuariOVI) obj;
         if (form.getEmail() == null || form.getEmail().trim().isEmpty()) {
-            errors.rejectValue("email", "obligatorio", "El camp Email és obligatori");
+            errors.rejectValue("email", "obligatorio",
+                    "El camp Email és obligatori");
         }
         if (form.getPassword() == null || form.getPassword().trim().isEmpty()) {
-            errors.rejectValue("password", "obligatorio", "El camp Password és obligatori");
+            errors.rejectValue("password", "obligatorio",
+                    "El camp Password és obligatori");
         }
     }
 }
@@ -85,7 +87,8 @@ public class LoginController {
         }
 
         // 4. Buscar como AssistentPersonal
-        AssistentPersonal assistent = assistentPersonalDao.getAssistentPersonalByEmail(email);
+        AssistentPersonal assistent =
+            assistentPersonalDao.getAssistentPersonalByEmail(email);
         if (assistent != null && password.equals(assistent.getPassword())) {
             session.setAttribute("assistentPersonal", assistent);
             return "redirect:/dashboard/assistentPersonal";

@@ -33,12 +33,14 @@ class UsuariOVIValidator implements Validator {
 
 		// 2. Validar Teléfono (exactamente 9 dígitos)
 		if (!usuario.getTelefono().matches("\\d{9}")) {
-			errors.rejectValue("telefono", "format", "El telèfon ha de tenir exactament 9 dígits numèrics");
+			    errors.rejectValue("telefono", "format",
+				    "El telèfon ha de tenir exactament 9 dígits numèrics");
 		}
 
 		// 3. Validar Consentimiento RGPD (debe estar marcado)
 		if (!usuario.isConsentimientoRgpd()) {
-			errors.rejectValue("consentimientoRgpd", "obligatori", "Has d'acceptar el tractament de dades per a continuar");
+			    errors.rejectValue("consentimientoRgpd", "obligatori",
+				    "Has d'acceptar el tractament de dades per a continuar");
 		}
 
 		// 4. Validar Nombre (sin números)
@@ -51,7 +53,8 @@ class UsuariOVIValidator implements Validator {
 
 		// 5. Validar Apellidos (sin números)
 		if (usuario.getApellidos().matches(".*\\d.*")) {
-			errors.rejectValue("apellidos", "format", "Els cognoms no poden contenir números");
+			    errors.rejectValue("apellidos", "format",
+				    "Els cognoms no poden contenir números");
 		}
 		if (usuario.getApellidos().trim().isEmpty()) {
 			errors.rejectValue("apellidos", "obligatori", "Els cognoms són obligatoris");
@@ -59,7 +62,8 @@ class UsuariOVIValidator implements Validator {
 
 		// 6. Validar ID (obligatorio)
 		if (usuario.getIdUsuario().trim().isEmpty()) {
-			errors.rejectValue("idUsuario", "obligatori", "L'identificador d'usuari és obligatori");
+			    errors.rejectValue("idUsuario", "obligatori",
+				    "L'identificador d'usuari és obligatori");
 		}
 	}
 }
@@ -72,7 +76,9 @@ public class UsuariOVIController {
 	private final UsuariOVIValidator usuariOVIValidator;
 
 	@Autowired
-	public UsuariOVIController(UsuariOVIDaoImpl usuariOVIDao, UsuariOVIValidator usuariOVIValidator) {
+	    public UsuariOVIController(
+		    UsuariOVIDaoImpl usuariOVIDao,
+		    UsuariOVIValidator usuariOVIValidator) {
 		this.usuariOVIDao = usuariOVIDao;
 		this.usuariOVIValidator = usuariOVIValidator;
 	}
@@ -93,8 +99,9 @@ public class UsuariOVIController {
 
 
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public String processAddSubmit(@ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
-								   BindingResult bindingResult) {
+	    public String processAddSubmit(
+		    @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
+		    BindingResult bindingResult) {
 
 		// ASIGNACIÓN AUTOMÁTICA DEL ID (Máximo + 1)
 		int nextId = usuariOVIDao.getUsuariosOVI().stream()
@@ -123,8 +130,9 @@ public class UsuariOVIController {
 
 
 	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public String processUpdateSubmit(@ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
-									  BindingResult bindingResult) {
+	    public String processUpdateSubmit(
+		    @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
+		    BindingResult bindingResult) {
 
 		usuariOVIValidator.validate(usuariOVI, bindingResult);
 

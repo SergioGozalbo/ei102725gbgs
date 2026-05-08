@@ -27,7 +27,7 @@ public class FormadorDaoImpl {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * Injects the data source and initialises the internal {@link JdbcTemplate}.
+    * Injects the data source and initialises the internal JDBC template.
      *
      * @param dataSource the data source to use; must not be {@code null}
      */
@@ -38,17 +38,19 @@ public class FormadorDaoImpl {
 
     // Añadir Formador usando VALUES(?)
     public void addFormador(Formador formador) {
-        jdbcTemplate.update("INSERT INTO FORMADOR VALUES(?, ?, ?, ?)",
-                formador.getIdFormador(),
-                formador.getNombre(),
-                formador.getApellidos(),
-                formador.getEspecialidad()
-        );
+        jdbcTemplate.update(
+            "INSERT INTO FORMADOR VALUES(?, ?, ?, ?)",
+            formador.getIdFormador(),
+            formador.getNombre(),
+            formador.getApellidos(),
+            formador.getEspecialidad());
     }
 
     // Borrar por ID (Integer)
     public void deleteFormadorPorId(int idFormador) {
-        jdbcTemplate.update("DELETE FROM FORMADOR WHERE id_formador = ?", idFormador);
+        jdbcTemplate.update(
+            "DELETE FROM FORMADOR WHERE id_formador = ?",
+            idFormador);
     }
 
     // Borrar por Nombre (String)
@@ -58,18 +60,20 @@ public class FormadorDaoImpl {
 
     // Actualizar Formador
     public void updateFormador(Formador formador) {
-        jdbcTemplate.update("UPDATE FORMADOR SET nombre = ?, apellidos = ?, especialidad = ? WHERE id_formador = ?",
-                formador.getNombre(),
-                formador.getApellidos(),
-                formador.getEspecialidad(),
-                formador.getIdFormador()
-        );
+        jdbcTemplate.update(
+            "UPDATE FORMADOR SET nombre = ?, apellidos = ?, "
+                + "especialidad = ? WHERE id_formador = ?",
+            formador.getNombre(),
+            formador.getApellidos(),
+            formador.getEspecialidad(),
+            formador.getIdFormador());
     }
 
     // Obtener un formador por su ID
     public Formador getFormador(int idFormador) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM FORMADOR WHERE id_formador = ?",
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM FORMADOR WHERE id_formador = ?",
                     new FormadorRowMapper(), idFormador);
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -79,7 +83,8 @@ public class FormadorDaoImpl {
     // Listar todos los formadores
     public List<Formador> getFormadores() {
         try {
-            return jdbcTemplate.query("SELECT * FROM FORMADOR", new FormadorRowMapper());
+            return jdbcTemplate.query("SELECT * FROM FORMADOR",
+                    new FormadorRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<Formador>();
         }

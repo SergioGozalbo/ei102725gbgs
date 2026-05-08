@@ -27,7 +27,7 @@ public class APRequestDaoImpl {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * Injects the data source and initialises the internal {@link JdbcTemplate}.
+    * Injects the data source and initialises the internal JDBC template.
      *
      * @param dataSource the data source to use; must not be {@code null}
      */
@@ -38,19 +38,21 @@ public class APRequestDaoImpl {
 
     // Añadir APRequest usando VALUES(?)
     public void addAPRequest(APRequest apRequest) {
-        jdbcTemplate.update("INSERT INTO AP_REQUEST VALUES(?, ?, ?, ?, ?, ?)",
-                apRequest.getIdSolicitud(),
-                apRequest.getIdUsuarioOvi(),
-                apRequest.getEstado(),
-                apRequest.getTipoAsistencia(),
-                apRequest.getPreferencias(),
-                apRequest.getProximidad()
-        );
+        jdbcTemplate.update(
+            "INSERT INTO AP_REQUEST VALUES(?, ?, ?, ?, ?, ?)",
+            apRequest.getIdSolicitud(),
+            apRequest.getIdUsuarioOvi(),
+            apRequest.getEstado(),
+            apRequest.getTipoAsistencia(),
+            apRequest.getPreferencias(),
+            apRequest.getProximidad());
     }
 
     // Borrar por ID (Integer)
     public void deleteAPRequestPorId(int idSolicitud) {
-        jdbcTemplate.update("DELETE FROM AP_REQUEST WHERE id_solicitud = ?", idSolicitud);
+        jdbcTemplate.update(
+            "DELETE FROM AP_REQUEST WHERE id_solicitud = ?",
+            idSolicitud);
     }
 
     // Borrar por Estado (String)
@@ -60,20 +62,23 @@ public class APRequestDaoImpl {
 
     // Actualizar APRequest
     public void updateAPRequest(APRequest apRequest) {
-        jdbcTemplate.update("UPDATE AP_REQUEST SET id_usuario_ovi = ?, estado = ?, tipo_asistencia = ?, preferencias = ?, proximidad = ? WHERE id_solicitud = ?",
-                apRequest.getIdUsuarioOvi(),
-                apRequest.getEstado(),
-                apRequest.getTipoAsistencia(),
-                apRequest.getPreferencias(),
-                apRequest.getProximidad(),
-                apRequest.getIdSolicitud()
-        );
+        jdbcTemplate.update(
+            "UPDATE AP_REQUEST SET id_usuario_ovi = ?, estado = ?, "
+                + "tipo_asistencia = ?, preferencias = ?, proximidad = ? "
+                + "WHERE id_solicitud = ?",
+            apRequest.getIdUsuarioOvi(),
+            apRequest.getEstado(),
+            apRequest.getTipoAsistencia(),
+            apRequest.getPreferencias(),
+            apRequest.getProximidad(),
+            apRequest.getIdSolicitud());
     }
 
     // Obtener una sola solicitud
     public APRequest getAPRequest(int idSolicitud) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM AP_REQUEST WHERE id_solicitud = ?",
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM AP_REQUEST WHERE id_solicitud = ?",
                     new APRequestRowMapper(), idSolicitud);
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -83,7 +88,8 @@ public class APRequestDaoImpl {
     // Listar todas las solicitudes
     public List<APRequest> getAPRequests() {
         try {
-            return jdbcTemplate.query("SELECT * FROM AP_REQUEST", new APRequestRowMapper());
+            return jdbcTemplate.query("SELECT * FROM AP_REQUEST",
+                    new APRequestRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<APRequest>();
         }
@@ -102,9 +108,9 @@ public class APRequestDaoImpl {
 
     // Change the estado of a request by its ID
     public void updateEstado(int idSolicitud, String nuevoEstado) {
-    jdbcTemplate.update(
-        "UPDATE AP_REQUEST SET estado = ? WHERE id_solicitud = ?",
-        nuevoEstado, idSolicitud);
+        jdbcTemplate.update(
+                "UPDATE AP_REQUEST SET estado = ? WHERE id_solicitud = ?",
+                nuevoEstado, idSolicitud);
     }
 
     public List<APRequest> getAPRequestsByUsuari(String idUsuarioOvi) {

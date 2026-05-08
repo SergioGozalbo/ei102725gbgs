@@ -9,7 +9,8 @@ import java.sql.SQLException;
 
 public final class UsuariOVIRowMapper implements RowMapper<UsuariOVI> {
     @Override
-    public UsuariOVI mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+    public UsuariOVI mapRow(@NonNull ResultSet rs,
+            int rowNum) throws SQLException {
         UsuariOVI usuario = new UsuariOVI();
         usuario.setIdUsuario(rs.getString("id_usuario"));
         usuario.setNombre(rs.getString("nombre"));

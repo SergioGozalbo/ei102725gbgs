@@ -27,7 +27,7 @@ public class SelectionDaoImpl {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * Injects the data source and initialises the internal {@link JdbcTemplate}.
+    * Injects the data source and initialises the internal JDBC template.
      *
      * @param dataSource the data source to use; must not be {@code null}
      */
@@ -38,36 +38,42 @@ public class SelectionDaoImpl {
 
     // Añadir Selection usando VALUES(?)
     public void addSelection(Selection selection) {
-        jdbcTemplate.update("INSERT INTO SELECCION VALUES(?, ?, ?)",
-                selection.getIdSeleccion(),
-                selection.getIdSolicitud(),
-                selection.getIdAsistente()
-        );
+        jdbcTemplate.update(
+            "INSERT INTO SELECCION VALUES(?, ?, ?)",
+            selection.getIdSeleccion(),
+            selection.getIdSolicitud(),
+            selection.getIdAsistente());
     }
 
     // Borrar por ID de Selección (Integer)
     public void deleteSelectionPorId(int idSeleccion) {
-        jdbcTemplate.update("DELETE FROM SELECCION WHERE id_seleccion = ?", idSeleccion);
+        jdbcTemplate.update(
+            "DELETE FROM SELECCION WHERE id_seleccion = ?",
+            idSeleccion);
     }
 
     // Borrar por ID de Asistente (String)
     public void deleteSelectionPorAsistente(String idAsistente) {
-        jdbcTemplate.update("DELETE FROM SELECCION WHERE id_asistente = ?", idAsistente);
+        jdbcTemplate.update(
+            "DELETE FROM SELECCION WHERE id_asistente = ?",
+            idAsistente);
     }
 
     // Actualizar Selection
     public void updateSelection(Selection selection) {
-        jdbcTemplate.update("UPDATE SELECCION SET id_solicitud = ?, id_asistente = ? WHERE id_seleccion = ?",
-                selection.getIdSolicitud(),
-                selection.getIdAsistente(),
-                selection.getIdSeleccion()
-        );
+        jdbcTemplate.update(
+            "UPDATE SELECCION SET id_solicitud = ?, id_asistente = ? "
+                + "WHERE id_seleccion = ?",
+            selection.getIdSolicitud(),
+            selection.getIdAsistente(),
+            selection.getIdSeleccion());
     }
 
     // Obtener una selección específica
     public Selection getSelection(int idSeleccion) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM SELECCION WHERE id_seleccion = ?",
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM SELECCION WHERE id_seleccion = ?",
                     new SelectionRowMapper(), idSeleccion);
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -77,7 +83,8 @@ public class SelectionDaoImpl {
     // Listar todas las selecciones
     public List<Selection> getSelections() {
         try {
-            return jdbcTemplate.query("SELECT * FROM SELECCION", new SelectionRowMapper());
+            return jdbcTemplate.query("SELECT * FROM SELECCION",
+                    new SelectionRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<Selection>();
         }
