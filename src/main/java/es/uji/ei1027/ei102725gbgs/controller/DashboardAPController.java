@@ -15,8 +15,9 @@ public class DashboardAPController {
     public String dashboardAP(HttpSession session, Model model) {
         AssistentPersonal assistent =
                 (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (assistent == null)
+        if (assistent == null) {
             return "redirect:/login";
+        }
 
         model.addAttribute("assistent", assistent);
         return "dashboard/assistentPersonal";
