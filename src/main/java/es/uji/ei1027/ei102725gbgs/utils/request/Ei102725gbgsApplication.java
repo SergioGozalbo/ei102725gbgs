@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class Ei102725gbgsApplication {
 
     @SuppressWarnings("unused")
-    private static final Logger log =
+    private static final Logger LOG =
         Logger.getLogger(Ei102725gbgsApplication.class.getName());
 
 

@@ -15,7 +15,7 @@ public class AssistentPersonalServiceImpl {
 
     private final AssistentPersonalDaoImpl dao;
 
-    private static final AtomicInteger counter = new AtomicInteger(0);
+    private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
     @Autowired
     public AssistentPersonalServiceImpl(AssistentPersonalDaoImpl dao) {
@@ -31,7 +31,7 @@ public class AssistentPersonalServiceImpl {
     }
 
     public void addAssistentPersonal(AssistentPersonalRequest entity) {
-        int newId = counter.getAndIncrement();
+        int newId = COUNTER.getAndIncrement();
         String generatedId = String.format("A%03d", newId);
 
         AssistentPersonal assistant = new AssistentPersonal();
