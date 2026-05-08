@@ -28,8 +28,9 @@ class AssistentPersonalValidator implements Validator {
                     "L'identificador és obligatori");
         }
 
-        if (asistente.getNombre() == null || asistente.getNombre().trim().isEmpty())
+        if (asistente.getNombre() == null || asistente.getNombre().trim().isEmpty()) {
             errors.rejectValue("nombre", "obligatori", "El nom és obligatori");
+		}
 
         if (asistente.getEmail().trim().isEmpty()) {
             errors.rejectValue("email", "obligatori", "L'email és obligatori");
@@ -116,7 +117,9 @@ public class AssistentPersonalController {
             @ModelAttribute("assistentPersonal") AssistentPersonal assistentPersonal,
             BindingResult bindingResult) {
         assistentPersonalValidator.validate(assistentPersonal, bindingResult);
-        if (bindingResult.hasErrors()) return "AssistentPersonal/update";
+        if (bindingResult.hasErrors()) {
+			return "AssistentPersonal/update";
+		}
 
         assistentPersonalDao.updateAssistentPersonal(assistentPersonal);
         return "redirect:list";

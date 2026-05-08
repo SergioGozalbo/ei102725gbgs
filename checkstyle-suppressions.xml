@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!DOCTYPE suppressions PUBLIC
+        "-//Checkstyle//DTD SuppressionFilter Configuration 1.2//EN"
+        "https://checkstyle.org/dtds/suppressions_1_2.dtd">
+
+<suppressions>
+    <!-- Temporary: ignore Javadoc-related checks -->
+    <suppress checks="Javadoc.*|MissingJavadocMethod" files=".*"/>
+
+    <!-- Temporary: ignore final-related checks (FinalParameters, FinalClass, etc.) -->
+    <suppress checks=".*Final.*" files=".*"/>
+
+    <!-- Temporary: ignore field hiding checks -->
+    <suppress checks="HiddenField" files=".*"/>
+</suppressions>

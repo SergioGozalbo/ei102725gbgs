@@ -80,7 +80,9 @@ public class APRequestController {
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String addAPRequest(Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         APRequest request = new APRequest();
         request.setEstado("En revisión");
@@ -93,7 +95,9 @@ public class APRequestController {
     @RequestMapping(value = "/mylist", method = RequestMethod.GET)
     public String listMyRequests(Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         model.addAttribute("requests",
                 apRequestDao.getAPRequestsByUsuari(usuari.getIdUsuario()));
@@ -157,7 +161,6 @@ public class APRequestController {
         model.addAttribute("candidatos", candidatos);
         return "APRequest/aprobar";
     }
-
 
     @RequestMapping(value = "/aprobar", method = RequestMethod.POST)
     public String processAprobar(@RequestParam int idSolicitud) {

@@ -14,8 +14,9 @@ public class DashboardOVIController {
     @GetMapping("/usuariOVI")
     public String dashboardOVI(HttpSession session, Model model) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null)
+        if (usuari == null) {
             return "redirect:/login";
+        }
 
         model.addAttribute("usuari", usuari);
         return "dashboard/usuariOVI";

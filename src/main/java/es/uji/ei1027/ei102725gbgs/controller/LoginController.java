@@ -48,12 +48,15 @@ public class LoginController {
     // GET /login → muestra el formulario
     @GetMapping("/login")
     public String showLoginForm(Model model, HttpSession session) {
-        if (session.getAttribute("usuariOVI") != null)
+        if (session.getAttribute("usuariOVI") != null) {
             return "redirect:/dashboard/usuariOVI";
-        if (session.getAttribute("assistentPersonal") != null)
+        }
+        if (session.getAttribute("assistentPersonal") != null) {
             return "redirect:/dashboard/assistentPersonal";
-        if (Boolean.TRUE.equals(session.getAttribute("admin")))
+        }
+        if (Boolean.TRUE.equals(session.getAttribute("admin"))) {
             return "redirect:/dashboard/admin";
+        }
 
         model.addAttribute("usuariOVI", new UsuariOVI());
         return "autenticacion/login";
