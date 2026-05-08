@@ -7,6 +7,8 @@ import org.springframework.validation.Validator;
 
 public class UsuariOviValidator implements Validator {
 
+    private static final int MIN_PASSWORD_LENGTH = 8;
+
     private UsuariOVIDaoImpl usuariDao;
     public UsuariOviValidator(UsuariOVIDaoImpl usuariDao) {
         this.usuariDao = usuariDao;
@@ -66,7 +68,7 @@ public class UsuariOviValidator implements Validator {
             "La contraseña es obligatoria");
         } else {
             String password = usuari.getPassword();
-            if (password.length() < 8) {
+            if (password.length() < MIN_PASSWORD_LENGTH) {
                 errors.rejectValue("password",
                 "invalid",
                 "Minimo 8 caracters");
