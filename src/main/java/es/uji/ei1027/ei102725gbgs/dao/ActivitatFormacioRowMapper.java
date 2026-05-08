@@ -8,9 +8,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-public final class ActivitatFormacioRowMapper implements RowMapper<ActivitatFormacio> {
+public final class ActivitatFormacioRowMapper
+        implements RowMapper<ActivitatFormacio> {
     @Override
-    public ActivitatFormacio mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+    public ActivitatFormacio mapRow(@NonNull ResultSet rs,
+            int rowNum) throws SQLException {
         ActivitatFormacio activitat = new ActivitatFormacio();
         activitat.setIdActividad(rs.getInt("id_actividad"));
         activitat.setIdFormador(rs.getInt("id_formador"));

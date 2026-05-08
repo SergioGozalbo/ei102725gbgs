@@ -9,7 +9,8 @@ import java.sql.SQLException;
 
 public final class SelectionRowMapper implements RowMapper<Selection> {
     @Override
-    public Selection mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+    public Selection mapRow(@NonNull ResultSet rs,
+            int rowNum) throws SQLException {
         Selection selection = new Selection();
         selection.setIdSeleccion(rs.getInt("id_seleccion"));
         selection.setIdSolicitud(rs.getInt("id_solicitud"));

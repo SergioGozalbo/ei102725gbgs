@@ -7,9 +7,11 @@ import org.springframework.lang.NonNull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public final class AssistentPersonalRowMapper implements RowMapper<AssistentPersonal> {
+public final class AssistentPersonalRowMapper
+        implements RowMapper<AssistentPersonal> {
     @Override
-    public AssistentPersonal mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+    public AssistentPersonal mapRow(@NonNull ResultSet rs,
+            int rowNum) throws SQLException {
         AssistentPersonal asistente = new AssistentPersonal();
         asistente.setIdAsistente(rs.getString("id_asistente"));
         asistente.setNombre(rs.getString("nombre"));

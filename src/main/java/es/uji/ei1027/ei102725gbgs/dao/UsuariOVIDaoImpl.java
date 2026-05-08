@@ -27,7 +27,7 @@ public class UsuariOVIDaoImpl {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * Injects the data source and initialises the internal {@link JdbcTemplate}.
+    * Injects the data source and initialises the internal JDBC template.
      *
      * @param dataSource the data source to use; must not be {@code null}
      */
@@ -38,20 +38,22 @@ public class UsuariOVIDaoImpl {
 
     // Añadir UsuariOVI usando VALUES(?)
     public void addUsuariOVI(UsuariOVI usuario) {
-        jdbcTemplate.update("INSERT INTO USUARIO_OVI VALUES(?, ?, ?, ?, ?, ?, ?)",
-                usuario.getIdUsuario(),
-                usuario.getNombre(),
-                usuario.getApellidos(),
-                usuario.getEmail(),
-                usuario.getPassword(),
-                usuario.getTelefono(),
-                usuario.isConsentimientoRgpd()
-        );
+        jdbcTemplate.update(
+            "INSERT INTO USUARIO_OVI VALUES(?, ?, ?, ?, ?, ?, ?)",
+            usuario.getIdUsuario(),
+            usuario.getNombre(),
+            usuario.getApellidos(),
+            usuario.getEmail(),
+            usuario.getPassword(),
+            usuario.getTelefono(),
+            usuario.isConsentimientoRgpd());
     }
 
     // Borrar por ID (String)
     public void deleteUsuariOVIPorId(String idUsuario) {
-        jdbcTemplate.update("DELETE FROM USUARIO_OVI WHERE id_usuario = ?", idUsuario);
+        jdbcTemplate.update(
+            "DELETE FROM USUARIO_OVI WHERE id_usuario = ?",
+            idUsuario);
     }
 
     // Borrar por Email (String)
@@ -61,21 +63,24 @@ public class UsuariOVIDaoImpl {
 
     // Actualizar UsuariOVI
     public void updateUsuariOVI(UsuariOVI usuario) {
-        jdbcTemplate.update("UPDATE USUARIO_OVI SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, consentimiento_rgpd = ? WHERE id_usuario = ?",
-                usuario.getNombre(),
-                usuario.getApellidos(),
-                usuario.getEmail(),
-                usuario.getPassword(),
-                usuario.getTelefono(),
-                usuario.isConsentimientoRgpd(),
-                usuario.getIdUsuario()
-        );
+        jdbcTemplate.update(
+            "UPDATE USUARIO_OVI SET nombre = ?, apellidos = ?, email = ?, "
+                + "password = ?, telefono = ?, consentimiento_rgpd = ? "
+                + "WHERE id_usuario = ?",
+            usuario.getNombre(),
+            usuario.getApellidos(),
+            usuario.getEmail(),
+            usuario.getPassword(),
+            usuario.getTelefono(),
+            usuario.isConsentimientoRgpd(),
+            usuario.getIdUsuario());
     }
 
     // Obtener un usuario por su ID
     public UsuariOVI getUsuariOVI(String idUsuario) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM USUARIO_OVI WHERE id_usuario = ?",
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM USUARIO_OVI WHERE id_usuario = ?",
                     new UsuariOVIRowMapper(), idUsuario);
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -85,7 +90,8 @@ public class UsuariOVIDaoImpl {
     // Listar todos los usuarios OVI
     public List<UsuariOVI> getUsuariosOVI() {
         try {
-            return jdbcTemplate.query("SELECT * FROM USUARIO_OVI", new UsuariOVIRowMapper());
+            return jdbcTemplate.query("SELECT * FROM USUARIO_OVI",
+                    new UsuariOVIRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<UsuariOVI>();
         }

@@ -27,7 +27,7 @@ public class ActivitatFormacioDaoImpl {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * Injects the data source and initialises the internal {@link JdbcTemplate}.
+    * Injects the data source and initialises the internal JDBC template.
      *
      * @param dataSource the data source to use; must not be {@code null}
      */
@@ -38,37 +38,50 @@ public class ActivitatFormacioDaoImpl {
 
     ///Añadir Aportacion
     public void addAportacion(ActivitatFormacio actFormacio) {
-        jdbcTemplate.update("INSERT INTO ACTIVITAT_FORMACIO VALUES(?, ?, ?, ?, ?)", actFormacio.getIdActividad(), actFormacio.getIdFormador(), actFormacio.getNombre(), actFormacio.getTipo(), actFormacio.getFecha());
+        jdbcTemplate.update(
+            "INSERT INTO ACTIVITAT_FORMACIO VALUES(?, ?, ?, ?, ?)",
+            actFormacio.getIdActividad(),
+            actFormacio.getIdFormador(),
+            actFormacio.getNombre(),
+            actFormacio.getTipo(),
+            actFormacio.getFecha());
 
     }
 
     // Borrar por ID (Integer)
     public void deleteActivitatFormacioPorId(int idActividad) {
-        jdbcTemplate.update("DELETE FROM ACTIVITAT_FORMACIO WHERE id_actividad = ?", idActividad);
+        jdbcTemplate.update(
+            "DELETE FROM ACTIVITAT_FORMACIO WHERE id_actividad = ?",
+            idActividad);
     }
 
     // Borrar por Nombre (String)
     public void deleteActivitatFormacioPorNombre(String nombre) {
-        jdbcTemplate.update("DELETE FROM ACTIVITAT_FORMACIO WHERE nombre = ?", nombre);
+        jdbcTemplate.update(
+            "DELETE FROM ACTIVITAT_FORMACIO WHERE nombre = ?",
+            nombre);
     }
 
     // Actualizar ActivitatFormacio
     public void updateActivitatFormacio(ActivitatFormacio actFormacio) {
-        jdbcTemplate.update("UPDATE ACTIVITAT_FORMACIO SET id_formador = ?, nombre = ?, descripcion = ?, tipo = ?, fecha = ?, aforo_max = ? WHERE id_actividad = ?",
-                actFormacio.getIdFormador(),
-                actFormacio.getNombre(),
-                actFormacio.getDescripcion(),
-                actFormacio.getTipo(),
-                actFormacio.getFecha(),
-                actFormacio.getAforoMax(),
-                actFormacio.getIdActividad()
-        );
+        jdbcTemplate.update(
+            "UPDATE ACTIVITAT_FORMACIO SET id_formador = ?, nombre = ?, "
+                + "descripcion = ?, tipo = ?, fecha = ?, aforo_max = ? "
+                + "WHERE id_actividad = ?",
+            actFormacio.getIdFormador(),
+            actFormacio.getNombre(),
+            actFormacio.getDescripcion(),
+            actFormacio.getTipo(),
+            actFormacio.getFecha(),
+            actFormacio.getAforoMax(),
+            actFormacio.getIdActividad());
     }
 
     // Obtener una sola actividad
     public ActivitatFormacio getActivitatFormacio(int idActividad) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM ACTIVITAT_FORMACIO WHERE id_actividad = ?",
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM ACTIVITAT_FORMACIO WHERE id_actividad = ?",
                     new ActivitatFormacioRowMapper(), idActividad);
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -78,7 +91,8 @@ public class ActivitatFormacioDaoImpl {
     // Listar todas las actividades
     public List<ActivitatFormacio> getActivitatsFormacio() {
         try {
-            return jdbcTemplate.query("SELECT * FROM ACTIVITAT_FORMACIO", new ActivitatFormacioRowMapper());
+            return jdbcTemplate.query("SELECT * FROM ACTIVITAT_FORMACIO",
+                    new ActivitatFormacioRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<ActivitatFormacio>();
         }

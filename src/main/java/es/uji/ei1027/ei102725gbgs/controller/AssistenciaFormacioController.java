@@ -42,7 +42,8 @@ public class AssistenciaFormacioController {
 	}
 
 	@PutMapping("/update")
-	public void updateAssistenciaFormacio(@RequestBody AssistenciaFormacio entity) {
+	public void updateAssistenciaFormacio(
+			@RequestBody AssistenciaFormacio entity) {
 		service.updateAssistenciaFormacio(entity);
 	}
 
@@ -52,7 +53,8 @@ public class AssistenciaFormacioController {
 	}
 
 	@DeleteMapping("/activity/{idActividad}")
-	public void deleteAssistenciaFormacioPorActividad(@PathVariable int idActividad) {
+	public void deleteAssistenciaFormacioPorActividad(
+			@PathVariable int idActividad) {
 		service.deleteAssistenciaFormacioPorActividad(idActividad);
 	}
 }

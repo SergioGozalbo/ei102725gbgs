@@ -9,7 +9,8 @@ import java.sql.SQLException;
 
 public final class APRequestRowMapper implements RowMapper<APRequest> {
     @Override
-    public APRequest mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+    public APRequest mapRow(@NonNull ResultSet rs,
+            int rowNum) throws SQLException {
         APRequest request = new APRequest();
         request.setIdSolicitud(rs.getInt("id_solicitud"));
         request.setIdUsuarioOvi(rs.getString("id_usuario_ovi"));

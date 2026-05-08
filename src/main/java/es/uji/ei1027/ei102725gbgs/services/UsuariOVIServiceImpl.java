@@ -24,9 +24,7 @@ public class UsuariOVIServiceImpl {
      */
     private static final AtomicInteger counter = new AtomicInteger(0);
 
-    /**
-     * Creates a new instance of {@link UsuariOVIServiceImpl} with the given DAO.
-     */
+    /** Creates a new instance with the given DAO. */
     @Autowired
     public UsuariOVIServiceImpl(UsuariOVIDaoImpl dao) {
         this.dao = dao;

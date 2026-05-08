@@ -23,7 +23,8 @@ public class FormadorValidator implements Validator {
         if (f.getNombre() != null && !f.getNombre().isEmpty()) {
             char first = f.getNombre().charAt(0);
             if (!Character.isUpperCase(first)) {
-                errors.rejectValue("nombre", "invalid", "Name must start with capital letter");
+                errors.rejectValue("nombre", "invalid",
+                        "Name must start with capital letter");
             }
         }
 
@@ -34,12 +35,14 @@ public class FormadorValidator implements Validator {
         if (f.getApellidos() != null && !f.getApellidos().isEmpty()) {
             char first = f.getApellidos().charAt(0);
             if (!Character.isUpperCase(first)) {
-                errors.rejectValue("apellidos", "invalid", "Surname must start with capital letter");
+                errors.rejectValue("apellidos", "invalid",
+                        "Surname must start with capital letter");
             }
         }
 
         if (f.getEspecialidad() == null || f.getEspecialidad().isEmpty()) {
-            errors.rejectValue("especialidad", "required", "Specialty is required");
+            errors.rejectValue("especialidad", "required",
+                    "Specialty is required");
         }
     }
 }

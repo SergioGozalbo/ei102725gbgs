@@ -27,7 +27,7 @@ public class RegistreContracteDaoImpl {
     private JdbcTemplate jdbcTemplate;
 
     /**
-     * Injects the data source and initialises the internal {@link JdbcTemplate}.
+    * Injects the data source and initialises the internal JDBC template.
      *
      * @param dataSource the data source to use; must not be {@code null}
      */
@@ -38,40 +38,47 @@ public class RegistreContracteDaoImpl {
 
     // Añadir RegistreContracte usando VALUES(?)
     public void addRegistreContracte(RegistreContracte contracte) {
-        jdbcTemplate.update("INSERT INTO REGISTRE_CONTRACTE VALUES(?, ?, ?, ?, ?)",
-                contracte.getIdContrato(),
-                contracte.getIdSeleccion(),
-                contracte.getFechaInicio(),
-                contracte.getFechaFin(),
-                contracte.getUrlPdf()
-        );
+        jdbcTemplate.update(
+            "INSERT INTO REGISTRE_CONTRACTE VALUES(?, ?, ?, ?, ?)",
+            contracte.getIdContrato(),
+            contracte.getIdSeleccion(),
+            contracte.getFechaInicio(),
+            contracte.getFechaFin(),
+            contracte.getUrlPdf());
     }
 
     // Borrar por ID de Contrato (Integer)
     public void deleteRegistreContractePorId(int idContrato) {
-        jdbcTemplate.update("DELETE FROM REGISTRE_CONTRACTE WHERE id_contrato = ?", idContrato);
+        jdbcTemplate.update(
+            "DELETE FROM REGISTRE_CONTRACTE WHERE id_contrato = ?",
+            idContrato);
     }
 
     // Borrar por URL del PDF (String)
     public void deleteRegistreContractePorUrl(String urlPdf) {
-        jdbcTemplate.update("DELETE FROM REGISTRE_CONTRACTE WHERE url_pdf = ?", urlPdf);
+        jdbcTemplate.update(
+            "DELETE FROM REGISTRE_CONTRACTE WHERE url_pdf = ?",
+            urlPdf);
     }
 
     // Actualizar RegistreContracte
     public void updateRegistreContracte(RegistreContracte contracte) {
-        jdbcTemplate.update("UPDATE REGISTRE_CONTRACTE SET id_seleccion = ?, fecha_inicio = ?, fecha_fin = ?, url_pdf = ? WHERE id_contrato = ?",
-                contracte.getIdSeleccion(),
-                contracte.getFechaInicio(),
-                contracte.getFechaFin(),
-                contracte.getUrlPdf(),
-                contracte.getIdContrato()
-        );
+        jdbcTemplate.update(
+            "UPDATE REGISTRE_CONTRACTE SET id_seleccion = ?, "
+                + "fecha_inicio = ?, fecha_fin = ?, url_pdf = ? "
+                + "WHERE id_contrato = ?",
+            contracte.getIdSeleccion(),
+            contracte.getFechaInicio(),
+            contracte.getFechaFin(),
+            contracte.getUrlPdf(),
+            contracte.getIdContrato());
     }
 
     // Obtener un contrato específico
     public RegistreContracte getRegistreContracte(int idContrato) {
         try {
-            return jdbcTemplate.queryForObject("SELECT * FROM REGISTRE_CONTRACTE WHERE id_contrato = ?",
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM REGISTRE_CONTRACTE WHERE id_contrato = ?",
                     new RegistreContracteRowMapper(), idContrato);
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -81,7 +88,9 @@ public class RegistreContracteDaoImpl {
     // Listar todos los contratos
     public List<RegistreContracte> getRegistresContractes() {
         try {
-            return jdbcTemplate.query("SELECT * FROM REGISTRE_CONTRACTE", new RegistreContracteRowMapper());
+            return jdbcTemplate.query(
+                    "SELECT * FROM REGISTRE_CONTRACTE",
+                    new RegistreContracteRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<RegistreContracte>();
         }

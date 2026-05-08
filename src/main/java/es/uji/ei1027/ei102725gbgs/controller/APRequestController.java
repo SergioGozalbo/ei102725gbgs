@@ -22,15 +22,23 @@ import java.util.List;
 @Component
 class APRequestValidator implements Validator {
     @Override
-    public boolean supports(Class<?> clazz) { return APRequest.class.equals(clazz); }
+    public boolean supports(Class<?> clazz) {
+        return APRequest.class.equals(clazz);
+    }
 
     @Override
     public void validate(Object obj, Errors errors) {
         APRequest request = (APRequest) obj;
-        if (request.getIdUsuarioOvi() == null || request.getIdUsuarioOvi().trim().isEmpty())
-            errors.rejectValue("idUsuarioOvi", "obligatori", "L'ID d'usuari OVI és obligatori");
-        if (request.getTipoAsistencia() == null || request.getTipoAsistencia().trim().isEmpty())
-            errors.rejectValue("tipoAsistencia", "obligatori", "El tipus d'assistència és obligatori");
+        if (request.getIdUsuarioOvi() == null
+                || request.getIdUsuarioOvi().trim().isEmpty()) {
+            errors.rejectValue("idUsuarioOvi", "obligatori",
+                    "L'ID d'usuari OVI és obligatori");
+        }
+        if (request.getTipoAsistencia() == null
+                || request.getTipoAsistencia().trim().isEmpty()) {
+            errors.rejectValue("tipoAsistencia", "obligatori",
+                    "El tipus d'assistència és obligatori");
+        }
     }
 }
 
@@ -92,8 +100,10 @@ public class APRequestController {
     }
 
     @RequestMapping(value="/add", method=RequestMethod.POST)
-    public String processAddSubmit(@ModelAttribute("apRequest") APRequest apRequest,
-                                   BindingResult bindingResult, Model model) {
+        public String processAddSubmit(
+            @ModelAttribute("apRequest") APRequest apRequest,
+            BindingResult bindingResult,
+            Model model) {
         int nextId = apRequestDao.getAPRequests().stream()
                 .mapToInt(APRequest::getIdSolicitud).max().orElse(0) + 1;
         apRequest.setIdSolicitud(nextId);
@@ -116,8 +126,10 @@ public class APRequestController {
     }
 
     @RequestMapping(value="/update", method=RequestMethod.POST)
-    public String processUpdateSubmit(@ModelAttribute("apRequest") APRequest apRequest,
-                                      BindingResult bindingResult, Model model) {
+        public String processUpdateSubmit(
+            @ModelAttribute("apRequest") APRequest apRequest,
+            BindingResult bindingResult,
+            Model model) {
         apRequestValidator.validate(apRequest, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());

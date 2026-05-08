@@ -216,6 +216,11 @@ public class AssistentPersonal implements Serializable {
             + "    apellidos='%s',%n"
             + "    email='%s',%n"
             + "    estadoAceptado='%s'%n"
-            + "}").formatted(idAsistente, nombre, apellidos, email, estadoAceptado);
+            + "}").formatted(
+                    idAsistente,
+                    nombre,
+                    apellidos,
+                    email,
+                    estadoAceptado);
     }
 }
