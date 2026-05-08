@@ -49,7 +49,7 @@ public class UsuariOviValidator implements Validator {
             errors.rejectValue("email", "invalid", "formato de email incorrecto");
         }
 
-        if(usuariDao.existeEmail(usuari.getEmail())) {
+        if(usuariDao.getUsuariOVIByEmail(usuari.getEmail())!= null) {
             errors.rejectValue("email", "duplicate", "Este email ya està registrado");
         }
 
