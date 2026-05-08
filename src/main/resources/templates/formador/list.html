@@ -23,7 +23,7 @@
             <td th:text="${f.especialidad}"></td>
 
             <td>
-                <a th:href="@{/api/formador/delete/{id}(id=$f.idFormador})}">
+                <a th:href="@{/api/formador/delete/{id}(id=${f.idFormador})}">
                     Delete
                 </a>
             </td>
