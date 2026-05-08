@@ -207,12 +207,12 @@ public class AssistentPersonal {
     @Override
     public String toString() {
         return """
-                AssistentPersonal {
-                    idAsistente='%s',
-                    nombre='%s',
-                    apellidos='%s',
-                    email='%s',
-                    estadoAceptado='%s'
+                AssistentPersonal {%n\
+                    idAsistente='%s',%n\
+                    nombre='%s',%n\
+                    apellidos='%s',%n\
+                    email='%s',%n\
+                    estadoAceptado='%s'%n\
                 }""".formatted(idAsistente, nombre, apellidos, email, estadoAceptado);
     }
 }

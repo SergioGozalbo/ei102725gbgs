@@ -81,10 +81,10 @@ public class Selection {
     @Override
     public String toString() {
         return """
-                Selection {
-                idSeleccion=%d,
-                idSolicitud=%d,
-                idAsistente='%s'
+                Selection {%n\
+                idSeleccion=%d,%n\
+                idSolicitud=%d,%n\
+                idAsistente='%s'%n\
                 }""".formatted(idSeleccion, idSolicitud, idAsistente);
     }
 }

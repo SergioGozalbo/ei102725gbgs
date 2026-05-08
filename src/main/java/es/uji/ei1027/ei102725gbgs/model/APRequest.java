@@ -141,14 +141,14 @@ public class APRequest {
      *
      * @return request description string
      */
-    @Override
-    public String toString() {
-        return """
-                APRequest {
-                idSolicitud=%d,
-                idUsuarioOvi='%s',
-                estado='%s',
-                tipoAsistencia='%s'
-                }""".formatted(idSolicitud, idUsuarioOvi, estado, tipoAsistencia);
+@Override
+public String toString() {
+    return """
+            APRequest {%n\
+            idSolicitud=%d,%n\
+            idUsuarioOvi='%s',%n\
+            estado='%s',%n\
+            tipoAsistencia='%s'%n\
+            }""".formatted(idSolicitud, idUsuarioOvi, estado, tipoAsistencia);
     }
 }
