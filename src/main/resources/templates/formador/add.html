@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create new formador</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+<main class="container">
+    <h1>New formador</h1>
+    <form class="form-horizontal" th:action="@{/api/formador/add}"
+          th:object="${formador}" method="post">
+
+        <div class="form-group row">
+            <label for="nombre" class="control-label col-sm-2">Name:</label>
+            <input id="nombre" type="text" th:field="*{nombre}" class="form-control col-sm-4">
+            <div th:if="${#fields.hasErrors('nombre')}"
+                 th:errors="*{nombre}"
+                 class="error"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="apellidos" class="control-label col-sm-2">Surname:</label>
+            <input id="apellidos" type="text" th:field="*{apellidos}" class="form-control col-sm-4">
+            <div th:if="${#fields.hasErrors('apellidos')}"
+                 th:errors="*{apellidos}"
+                 class="error"></div>
+        </div>
+
+        <div class="form-group row">
+            <label for="especialidad" class="control-label col-sm-2">Specialty:</label>
+            <input id="especialidad" type="text"
+                   th:field="*{especialidad}"
+                   class="form-control col-sm-4">
+            <div th:if="${#fields.hasErrors('especialidad')}"
+                 th:errors="*{especialidad}"
+                 class="error"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create formador</button>
+    </form>
+
+</main>
+
+</body>
+</html>

@@ -90,4 +90,17 @@ public class UsuariOVIDaoImpl {
             return new ArrayList<UsuariOVI>();
         }
     }
+
+    public boolean existeEmail(String email) {
+        try {
+            jdbcTemplate.queryForObject(
+                    "SELECT * FROM UsuariOVI WHERE email = ?",
+                    new UsuariOVIRowMapper(),
+                    email
+            );
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
+    }
 }

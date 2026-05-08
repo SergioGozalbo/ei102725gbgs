@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Formadors</title>
+</head>
+<body>
+
+<main>
+    <h1>Formadors</h1>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Specialty</th>
+            <th>Actions</th>
+        </tr>
+
+        <tr th:each="f : ${formadors}">
+            <td th:text="${f.nombre}"></td>
+            <td th:text="${f.apellidos}"></td>
+            <td th:text="${f.especialidad}"></td>
+
+            <td>
+                <a th:href="@{/api/formador/delete/{id}(id=$f.idFormador})}">
+                    Delete
+                </a>
+            </td>
+        </tr>
+    </table>
+</main>
+
+</body>
+</html>
