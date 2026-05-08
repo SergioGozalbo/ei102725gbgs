@@ -122,14 +122,13 @@ public class AssistenciaFormacio {
      */
     @Override
     public String toString() {
-        return """
-                AssistenciaFormacio {
-                    idAsistencia=%d,
-                    idActividad=%d,
-                    idUsuarioOvi='%s',
-                    idAsistente='%s',
-                    asistenciaConfirmada=%s
-                    }""".formatted(
+        return ("AssistenciaFormacio {%n"
+            + "    idAsistencia=%d,%n"
+            + "    idActividad=%d,%n"
+            + "    idUsuarioOvi='%s',%n"
+            + "    idAsistente='%s',%n"
+            + "    asistenciaConfirmada=%s%n"
+            + "    }").formatted(
                 idAsistencia,
                 idActividad,
                 idUsuarioOvi,

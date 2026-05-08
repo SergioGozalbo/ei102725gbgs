@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Actualizar solicitud</title>
+</head>
+<body>
+<main>
+    <h1>Actualizar solicitud</h1>
+    <form th:action="@{/APRequest/update}" th:object="${apRequest}" method="post">
+        <br>
+        <input type="hidden" th:field="*{idSolicitud}"/>
+        <div>
+            <label for="idUsuarioOvi">Usuario OVI:</label>
+            <select id="idUsuarioOvi" th:field="*{idUsuarioOvi}">
+                <option th:each="user : ${usuariosOvi}"
+                        th:value="${user.idUsuario}"
+                        th:text="${user.idUsuario} + ' - ' + ${user.nombre}"></option>
+            </select>
+        </div>
+        <br>
+
+        <div>
+            <label for="tipoAsistencia">Tipo Asistencia:</label>
+            <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
+                <option value="PAP">PAP</option>
+                <option value="PATI">PATI</option>
+            </select>
+        </div>
+        <br>
+
+        <div>
+            <label for="proximidad">Provincia:</label>
+            <select id="proximidad" th:field="*{proximidad}">
+                <option th:each="prov : ${provincias}" th:value="${prov}" th:text="${prov}"></option>
+            </select>
+        </div>
+        <br>
+
+        <div>
+            <label for="estado">Estado:</label>
+            <select id="estado" th:field="*{estado}">
+                <option value="En revisión">En revisión</option>
+                <option value="Aprobada">Aprobada</option>
+                <option value="Rechazada">Rechazada</option>
+            </select>
+        </div>
+        <br>
+
+        <div>
+            <label for="preferencias">Preferencias:</label><br>
+            <textarea id="preferencias" th:field="*{preferencias}" rows="4" cols="50"></textarea>
+        </div>
+        <br>
+
+        <button type="submit">Actualizar</button>
+    </form>
+    <br>
+    <a th:href="@{/APRequest/list}">Volver a la lista</a>
+</main>
+</body>
+</html>

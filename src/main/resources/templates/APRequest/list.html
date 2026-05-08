@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista solicitudes</title>
+</head>
+<body>
+<main>
+    <h1>Solicituds d'Assistència</h1>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID Solicitud</th>
+            <th>ID Usuario OVI</th>
+            <th>Tipo Asistencia</th>
+            <th>Estado</th>
+            <th>Proximidad</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="request : ${requests}">
+            <td th:text="${request.idSolicitud}"></td>
+            <td th:text="${request.idUsuarioOvi}"></td>
+            <td th:text="${request.tipoAsistencia}"></td>
+            <td th:text="${request.estado}"></td>
+            <td th:text="${request.proximidad}"></td>
+            <td>
+                <a th:if="${request.estado == 'En revisión'}"
+                   th:href="@{/APRequest/aprobar/{id}(id=${request.idSolicitud})}">Aprovar</a>
+
+                <a th:href="@{/APRequest/update/{id}(id=${request.idSolicitud})}">Edita</a>
+                <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}">Esborra</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <a th:href="@{/APRequest/add}">Afegeix sol·licitud</a>
+    <br><br>
+    <a th:href="@{/}">Tornar</a>
+</main>
+</body>
+</html>

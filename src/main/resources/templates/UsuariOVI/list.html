@@ -22,7 +22,7 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="usuario : ${usuariOVI}">
+    <tr th:each="usuario : ${usuarios}">
         <td th:text="${usuario.idUsuario}"></td>
         <td th:text="${usuario.nombre}"></td>
         <td th:text="${usuario.apellidos}"></td>
@@ -31,14 +31,13 @@
         <td th:text="${usuario.telefono}"></td>
         <td th:text="${usuario.consentimientoRgpd ? 'Si' : 'No'}"></td>
         <td>
-            <a th:href="@{/UsuariOVI/update/{id}(id=${usuario.id})}">Edita</a>
-
-            <a th:href="@{/UsuariOVI/delete/{id}(id=${usuario.id})}">Esborra</a>
+            <a th:href="@{/UsuariOVI/update/{id}(id=${usuario.idUsuario})}">Edita</a>
+            <a th:href="@{/UsuariOVI/delete/{id}(id=${usuario.idUsuario})}">Esborra</a>
         </td>
     </tr>
     </tbody>
     </table>
-    <a href="UsuariOVI/add">Afegeix usuario</a>
+    <a href="/UsuariOVI/add">Afegeix usuario</a>
 <br><br>
 <a href="/">Tornar</a>
 </main>

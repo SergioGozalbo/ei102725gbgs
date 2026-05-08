@@ -61,7 +61,7 @@ public class UsuariOVIDaoImpl {
 
     // Actualizar UsuariOVI
     public void updateUsuariOVI(UsuariOVI usuario) {
-        jdbcTemplate.update("UPDATE USUARIO_OVI SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, consentimiento_rgpd = ?, WHERE id_usuario = ?",
+        jdbcTemplate.update("UPDATE USUARIO_OVI SET nombre = ?, apellidos = ?, email = ?, password = ?, telefono = ?, consentimiento_rgpd = ? WHERE id_usuario = ?",
                 usuario.getNombre(),
                 usuario.getApellidos(),
                 usuario.getEmail(),
@@ -90,17 +90,14 @@ public class UsuariOVIDaoImpl {
             return new ArrayList<UsuariOVI>();
         }
     }
-
-    public boolean existeEmail(String email) {
+    // Obtener un usuario por su email
+    public UsuariOVI getUsuariOVIByEmail(String email) {
         try {
-            jdbcTemplate.queryForObject(
-                    "SELECT * FROM UsuariOVI WHERE email = ?",
-                    new UsuariOVIRowMapper(),
-                    email
-            );
-            return true;
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM USUARIO_OVI WHERE email = ?",
+                    new UsuariOVIRowMapper(), email);
         } catch (EmptyResultDataAccessException e) {
-            return false;
+            return null;
         }
     }
 }

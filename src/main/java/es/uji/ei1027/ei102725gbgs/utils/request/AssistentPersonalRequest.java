@@ -183,12 +183,11 @@ public class AssistentPersonalRequest {
      */
     @Override
     public String toString() {
-        return """
-                AssistentPersonal {
-                    nombre='%s',
-                    apellidos='%s',
-                    email='%s',
-                    estadoAceptado='%s'
-                }""".formatted(nombre, apellidos, email, estadoAceptado);
+        return ("AssistentPersonal {%n"
+                + "    nombre='%s',%n"
+                + "    apellidos='%s',%n"
+                + "    email='%s',%n"
+                + "    estadoAceptado='%s'%n"
+                + "}").formatted(nombre, apellidos, email, estadoAceptado);
     }
 }

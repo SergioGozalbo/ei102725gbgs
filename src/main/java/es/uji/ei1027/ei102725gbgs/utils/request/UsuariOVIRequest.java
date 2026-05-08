@@ -161,12 +161,11 @@ public class UsuariOVIRequest {
      */
     @Override
     public String toString() {
-        return """
-                UsuariOVI {
-                nombre='%s',
-                apellidos='%s',
-                email='%s',
-                estadoAprobacion='%s'
-                }""".formatted(nombre, apellidos, email, estadoAprobacion);
+        return ("UsuariOVI {%n"
+            + "nombre='%s',%n"
+            + "apellidos='%s',%n"
+            + "email='%s',%n"
+            + "estadoAprobacion='%s'%n"
+            + "}").formatted(nombre, apellidos, email, estadoAprobacion);
     }
 }

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Añadir asistente</title>
+</head>
+<body>
+<main>
+    <h1>Alta de Candidat PAP/PATI</h1>
+
+    <form th:action="@{/AssistentPersonal/add}" th:object="${assistentPersonal}" method="post">
+
+        <div>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" th:field="*{nombre}">
+            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red;"></span>
+        </div>
+
+        <div>
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" id="apellidos" th:field="*{apellidos}">
+        </div>
+
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" id="email" th:field="*{email}">
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red;"></span>
+        </div>
+
+        <div>
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" th:field="*{password}">
+        </div>
+
+        <div>
+            <label for="telefono">Teléfono:</label>
+            <input type="text" id="telefono" th:field="*{telefono}">
+            <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" style="color:red;"></span>
+        </div>
+
+        <div>
+            <label for="formacionAcademica">Formación Académica:</label><br>
+            <textarea id="formacionAcademica" th:field="*{formacionAcademica}" rows="3" cols="40"></textarea>
+            <span th:if="${#fields.hasErrors('formacionAcademica')}" th:errors="*{formacionAcademica}" style="color:red;"></span>
+        </div>
+
+        <div>
+            <label for="experiencia">Experiencia:</label><br>
+            <textarea id="experiencia" th:field="*{experiencia}" rows="3" cols="40"></textarea>
+        </div>
+
+        <!-- Estado por defecto -->
+        <input type="hidden" th:field="*{estadoAceptado}">
+
+        <br>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <br>
+    <a th:href="@{/AssistentPersonal/list}">Volver a la lista</a>
+</main>
+</body>
+</html>

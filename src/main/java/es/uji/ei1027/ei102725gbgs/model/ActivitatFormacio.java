@@ -166,13 +166,12 @@ public class ActivitatFormacio {
      */
     @Override
     public String toString() {
-        return """
-                ActivitatFormacio {
-                idActividad=%d,
-                idFormador=%d,
-                nombre='%s',
-                tipo='%s',
-                fecha=%s
-                }""".formatted(idActividad, idFormador, nombre, tipo, fecha).strip();
+        return ("ActivitatFormacio {%n"
+                + "idActividad=%d,%n"
+                + "idFormador=%d,%n"
+                + "nombre='%s',%n"
+                + "tipo='%s',%n"
+                + "fecha=%s%n"
+                + "}").formatted(idActividad, idFormador, nombre, tipo, fecha);
     }
 }

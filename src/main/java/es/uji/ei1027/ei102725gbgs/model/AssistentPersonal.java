@@ -1,9 +1,13 @@
 package es.uji.ei1027.ei102725gbgs.model;
 
+import java.io.Serializable;
+
 /**
  * Represents a personal assistant in the OVI system.
  */
-public class AssistentPersonal {
+public class AssistentPersonal implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     /** Unique assistant identifier. */
     private String idAsistente;
 
@@ -206,13 +210,12 @@ public class AssistentPersonal {
      */
     @Override
     public String toString() {
-        return """
-                AssistentPersonal {
-                    idAsistente='%s',
-                    nombre='%s',
-                    apellidos='%s',
-                    email='%s',
-                    estadoAceptado='%s'
-                }""".formatted(idAsistente, nombre, apellidos, email, estadoAceptado);
+        return ("AssistentPersonal {%n"
+            + "    idAsistente='%s',%n"
+            + "    nombre='%s',%n"
+            + "    apellidos='%s',%n"
+            + "    email='%s',%n"
+            + "    estadoAceptado='%s'%n"
+            + "}").formatted(idAsistente, nombre, apellidos, email, estadoAceptado);
     }
 }

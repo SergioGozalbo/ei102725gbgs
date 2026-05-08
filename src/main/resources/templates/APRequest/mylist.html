@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Mis solicitudes</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+</head>
+<body class="bg-light">
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <span class="navbar-brand">SgOVI</span>
+        <div class="ms-auto">
+            <span class="text-light me-3 small"
+                  th:text="'Bienvenido, ' + ${usuari.nombre}"></span>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+    <h1 class="mb-4">Mis solicitudes de asistencia</h1>
+
+    <div th:if="${#lists.isEmpty(requests)}" class="alert alert-info">
+        Todavía no tienes solicitudes. ¡Crea una!
+    </div>
+
+    <table th:if="${!#lists.isEmpty(requests)}" class="table table-bordered table-hover">
+        <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Tipo asistencia</th>
+            <th>Estado</th>
+            <th>Proximidad</th>
+            <th>Preferencias</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="request : ${requests}">
+            <td th:text="${request.idSolicitud}"></td>
+            <td th:text="${request.tipoAsistencia}"></td>
+            <td>
+                <span th:classappend="${request.estado == 'aprobada'} ? 'badge bg-success' :
+                                      (${request.estado == 'En revisión'} ? 'badge bg-warning text-dark' :
+                                      'badge bg-secondary')"
+                      th:text="${request.estado}"></span>
+            </td>
+            <td th:text="${request.proximidad}"></td>
+            <td th:text="${request.preferencias}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/APRequest/add}" class="btn btn-success">Nueva solicitud</a>
+    <a th:href="@{/dashboard/usuariOVI}" class="btn btn-secondary ms-2">Volver al panel</a>
+</main>
+</body>
+</html>

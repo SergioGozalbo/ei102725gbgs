@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Llista d'Assistents</title>
+</head>
+<body>
+<main>
+    <h1>Assistents Personals Registrats</h1>
+    <table border="1">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Telèfon</th>
+            <th>Formació</th>
+            <th>Experiència</th>
+            <th>Estat</th>
+            <th>Accions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="asistente : ${asistentes}">
+            <td th:text="${asistente.idAsistente}"></td>
+            <td th:text="${asistente.nombre} + ' ' + ${asistente.apellidos}"></td>
+            <td th:text="${asistente.email}"></td>
+            <td th:text="${asistente.telefono}"></td>
+            <td th:text="${asistente.formacionAcademica}"></td>
+            <td th:text="${asistente.experiencia}"></td>
+            <td th:text="${asistente.estadoAceptado}"></td>
+            <td>
+                <a th:href="@{/AssistentPersonal/update/{id}(id=${asistente.idAsistente})}">Editar</a>
+                <a th:href="@{/AssistentPersonal/delete/{id}(id=${asistente.idAsistente})}">Esborrar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <br>
+    <a th:href="@{/AssistentPersonal/add}">Registrar Nou Assistent</a> | <a th:href="@{/}">Tornar al menú</a>
+</main>
+</body>
+</html>
