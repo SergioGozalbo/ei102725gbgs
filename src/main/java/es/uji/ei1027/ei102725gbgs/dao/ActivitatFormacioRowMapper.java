@@ -8,8 +8,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/**
+ * A row mapper for converting database rows to {@link ActivitatFormacio} instances.
+ */
 public final class ActivitatFormacioRowMapper
         implements RowMapper<ActivitatFormacio> {
+    /**
+     * Maps a row from the result set to an {@link ActivitatFormacio} instance.
+     *
+     * @param rs the result set; must not be {@code null}
+     * @param rowNum the row number; must not be negative
+     * @return the mapped {@link ActivitatFormacio} instance; never {@code null}
+     * @throws SQLException if an error occurs while accessing the result set
+     */
     @Override
     public ActivitatFormacio mapRow(@NonNull ResultSet rs,
             int rowNum) throws SQLException {

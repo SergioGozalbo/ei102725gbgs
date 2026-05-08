@@ -5,20 +5,44 @@ import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * Validator class for validating UsuariOVI entities.
+ */
 public class UsuariOviValidator implements Validator {
 
+    /**
+     * Minimum password length requirement for validation.
+     */
     private static final int MIN_PASSWORD_LENGTH = 8;
 
+    /**
+     * DAO for accessing UsuariOVI data, used to validate unique email addresses.
+     */
     private UsuariOVIDaoImpl usuariDao;
+
+    /**
+     * Constructor for UsuariOviValidator.
+     * @param usuariDao the UsuariOVIDaoImpl instance to be used for validating unique email addresses
+     */
     public UsuariOviValidator(UsuariOVIDaoImpl usuariDao) {
         this.usuariDao = usuariDao;
     }
 
+    /**
+     * Checks if the given class is supported by this validator.
+     * @param cls the class to check for support
+     * @return true if the class is UsuariOVI, false otherwise
+     */
     @Override
     public boolean supports(Class<?> cls) {
         return UsuariOVI.class.equals(cls);
     }
 
+    /**
+     * Validates the given object.
+     * @param obj the object to validate
+     * @param errors the errors object to store validation errors
+     */
     @Override
     public void validate(Object obj, Errors errors) {
         UsuariOVI usuari = (UsuariOVI) obj;

@@ -18,11 +18,21 @@ import org.springframework.stereotype.Component;
 @Component
 class UsuariOVIValidator implements Validator {
 
+    /**
+     * Checks whether this validator supports UsuariOVI.
+     * @param clazz class to check
+     * @return true if supported
+     */
     @Override
     public boolean supports(Class<?> clazz) {
         return UsuariOVI.class.equals(clazz);
     }
 
+    /**
+     * Validates a UsuariOVI.
+     * @param obj object to validate
+     * @param errors validation errors
+     */
     @Override
     public void validate(Object obj, Errors errors) {
         UsuariOVI usuario = (UsuariOVI) obj;
@@ -84,10 +94,21 @@ class UsuariOVIValidator implements Validator {
 @Controller
 @RequestMapping("/UsuariOVI")
 public class UsuariOVIController {
-
+	/**
+	 * DAO for accessing UsuariOVI data, used to manage user information in the application.
+	 */
     private final UsuariOVIDaoImpl usuariOVIDao;
+
+	/**
+	 * Validator for validating UsuariOVI data.
+	 */
     private final UsuariOVIValidator usuariOVIValidator;
 
+    /**
+     * Creates a new controller.
+     * @param usuariOVIDao user DAO
+     * @param usuariOVIValidator user validator
+     */
     @Autowired
         public UsuariOVIController(
             UsuariOVIDaoImpl usuariOVIDao,
@@ -96,21 +117,34 @@ public class UsuariOVIController {
         this.usuariOVIValidator = usuariOVIValidator;
     }
 
-    // Listar
+    /**
+     * Shows the user list.
+     * @param model model for the view
+     * @return the list view
+     */
     @RequestMapping("/list")
     public String listUsuariOVI(Model model) {
         model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI());
         return "UsuariOVI/list";
     }
 
-    // Añadir: Mostrar formulario
+    /**
+     * Shows the add form.
+     * @param model model for the view
+     * @return the add view
+     */
     @RequestMapping(value = "/add")
     public String addUsuariOVI(Model model) {
         model.addAttribute("usuariOVI", new UsuariOVI());
         return "UsuariOVI/add";
     }
 
-
+    /**
+     * Processes a new user.
+     * @param usuariOVI user data
+     * @param bindingResult validation errors
+     * @return redirect or add view on error
+     */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
         public String processAddSubmit(
             @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
@@ -133,15 +167,24 @@ public class UsuariOVIController {
         return "redirect:list";
     }
 
-    // Modificar: Mostrar formulario
+    /**
+     * Shows the update form.
+     * @param model model for the view
+     * @param idUsuario user identifier
+     * @return the update view
+     */
     @RequestMapping(value = "/update/{idUsuario}", method = RequestMethod.GET)
     public String editUsuariOVI(Model model, @PathVariable String idUsuario) {
         model.addAttribute("usuariOVI", usuariOVIDao.getUsuariOVI(idUsuario));
         return "UsuariOVI/update";
     }
 
-
-
+    /**
+     * Processes an updated user.
+     * @param usuariOVI user data
+     * @param bindingResult validation errors
+     * @return redirect or update view on error
+     */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
         public String processUpdateSubmit(
             @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
@@ -157,7 +200,11 @@ public class UsuariOVIController {
         return "redirect:list";
     }
 
-    // Borrar
+    /**
+     * Deletes a user.
+     * @param idUsuario user identifier
+     * @return redirect to the list view
+     */
     @RequestMapping(value = "/delete/{idUsuario}")
     public String processDelete(@PathVariable String idUsuario) {
         usuariOVIDao.deleteUsuariOVIPorId(idUsuario);

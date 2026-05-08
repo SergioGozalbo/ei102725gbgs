@@ -36,7 +36,10 @@ public class AssistentPersonalDaoImpl {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    // Añadir AssistentPersonal usando VALUES(?)
+    /**
+     * Adds a new AssistentPersonal to the database.
+     * @param asistente the AssistentPersonal entity to add; must not be {@code null}
+     */
     public void addAssistentPersonal(AssistentPersonal asistente) {
         jdbcTemplate.update(
             "INSERT INTO ASISTENTE_PERSONAL VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -51,21 +54,30 @@ public class AssistentPersonalDaoImpl {
             asistente.getEstadoAceptado());
     }
 
-    // Borrar por ID (String)
+    /**
+     * Deletes the AssistentPersonal with the given ID from the database.
+     * @param idAsistente the ID of the AssistentPersonal to delete; must not be {@code null}
+     */
     public void deleteAssistentPersonalPorId(String idAsistente) {
         jdbcTemplate.update(
             "DELETE FROM ASISTENTE_PERSONAL WHERE id_asistente = ?",
             idAsistente);
     }
 
-    // Borrar por Email (String)
+    /**
+     * Deletes the AssistentPersonal entities associated with the given acceptance status from the database.
+     * @param email the email of the AssistentPersonal entities to delete; must not be {@code null}
+     */
     public void deleteAssistentPersonalPorEmail(String email) {
         jdbcTemplate.update(
             "DELETE FROM ASISTENTE_PERSONAL WHERE email = ?",
             email);
     }
 
-    // Actualizar AssistentPersonal
+    /**
+     * Updates an existing AssistentPersonal in the database with the given data.
+     * @param asistente the AssistentPersonal data to update; must not be {@code null}
+     */
     public void updateAssistentPersonal(AssistentPersonal asistente) {
         jdbcTemplate.update(
             "UPDATE ASISTENTE_PERSONAL SET nombre = ?, apellidos = ?, "
@@ -83,7 +95,11 @@ public class AssistentPersonalDaoImpl {
             asistente.getIdAsistente());
     }
 
-    // Obtener un asistente por su ID
+    /**
+     * Retrieves the AssistentPersonal with the given ID from the database.
+     * @param idAsistente the ID of the AssistentPersonal to retrieve; must not be {@code null}
+     * @return the AssistentPersonal with the given ID, or {@code null} if no such AssistentPersonal exists
+     */
     public AssistentPersonal getAssistentPersonal(String idAsistente) {
         try {
             return jdbcTemplate.queryForObject(
@@ -94,7 +110,10 @@ public class AssistentPersonalDaoImpl {
         }
     }
 
-    // Listar todos los asistentes
+    /**
+     * Retrieves a list of all AssistentPersonal entities from the database.
+     * @return a list of all AssistentPersonal entities; never {@code null}
+     */
     public List<AssistentPersonal> getAssistentsPersonals() {
         try {
             return jdbcTemplate.query("SELECT * FROM ASISTENTE_PERSONAL",
@@ -103,7 +122,12 @@ public class AssistentPersonalDaoImpl {
             return new ArrayList<AssistentPersonal>();
         }
     }
-    // Obtener un asistente por su email
+
+    /**
+     * Retrieves the AssistentPersonal with the given email from the database.
+     * @param email the email of the AssistentPersonal to retrieve; must not be {@code null}
+     * @return the AssistentPersonal with the given email, or {@code null} if no such AssistentPersonal exists
+     */
     public AssistentPersonal getAssistentPersonalByEmail(String email) {
         try {
             return jdbcTemplate.queryForObject(

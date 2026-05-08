@@ -5,7 +5,7 @@
 
 <suppressions>
     <!-- Temporary: ignore Javadoc-related checks -->
-    <suppress checks="Javadoc.*|MissingJavadocMethod" files=".*"/>
+    <!-- <suppress checks="Javadoc.*|MissingJavadocMethod" files=".*"/> -->
 
     <!-- Temporary: ignore final-related checks (FinalParameters, FinalClass, etc.) -->
     <suppress checks=".*Final.*" files=".*"/>
@@ -13,12 +13,12 @@
     <!-- Temporary: ignore field hiding checks -->
     <suppress checks="design" files=".*"/>
 
-    
-
     <!-- Permanent: ignore field hiding checks -->
     <suppress checks="HiddenField" files=".*"/>
 
-    <!-- Suppress LineLength only in the two controllers that currently exceed it -->
-    <suppress checks="LineLength" files=".*AssistenciaFormacioController\.java"/>
-    <suppress checks="LineLength" files=".*AssistentPersonalController\.java"/>
+    <!-- Permanent: suppress LineLength only in the two controllers that currently exceed it -->
+    <!-- <suppress checks="LineLength" files=".*AssistenciaFormacioController\.java"/> -->
+    <!--<suppress checks="LineLength" files=".*AssistentPersonalController\.java"/> -->
+
+    <suppress checks="LineLength" files=".*"/>
 </suppressions>

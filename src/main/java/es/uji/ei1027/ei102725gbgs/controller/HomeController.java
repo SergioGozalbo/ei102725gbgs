@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
+    /**
+     * Shows the home page.
+     * @param session session data
+     * @return the home view or a redirect to the dashboard
+     */
     @GetMapping("/")
     public String home(HttpSession session) {
         if (session.getAttribute("usuariOVI") != null) {

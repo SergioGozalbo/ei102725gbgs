@@ -17,11 +17,21 @@ import org.springframework.validation.Validator;
 @Component
 class AssistentPersonalValidator implements Validator {
 
+    /**
+     * Checks whether this validator supports AssistentPersonal.
+     * @param clazz class to check
+     * @return true if supported
+     */
     @Override
     public boolean supports(Class<?> clazz) {
         return AssistentPersonal.class.equals(clazz);
     }
 
+    /**
+     * Validates an AssistentPersonal.
+     * @param obj object to validate
+     * @param errors validation errors
+     */
     @Override
     public void validate(Object obj, Errors errors) {
         AssistentPersonal asistente = (AssistentPersonal) obj;
@@ -67,13 +77,28 @@ class AssistentPersonalValidator implements Validator {
 }
 
 
+/**
+ * Controller for managing AssistentPersonal entities.
+ */
 @Controller
 @RequestMapping("/AssistentPersonal")
 public class AssistentPersonalController {
 
+    /**
+     * The DAO used to access the data store to manage {@link AssistentPersonal}.
+     */
     private final AssistentPersonalDaoImpl assistentPersonalDao;
+
+	/**
+	 * Validator for validating AssistentPersonal data before processing it.
+	 */
     private final AssistentPersonalValidator assistentPersonalValidator;
 
+    /**
+     * Creates a new controller.
+     * @param assistentPersonalDao DAO for AssistentPersonal data
+     * @param assistentPersonalValidator validator for AssistentPersonal data
+     */
     @Autowired
         public AssistentPersonalController(
             AssistentPersonalDaoImpl assistentPersonalDao,
@@ -82,6 +107,11 @@ public class AssistentPersonalController {
         this.assistentPersonalValidator = assistentPersonalValidator;
     }
 
+    /**
+     * Shows the list of assistants.
+     * @param model model for the view
+     * @return the list view
+     */
     @RequestMapping("/list")
     public String list(Model model) {
         model.addAttribute("asistentes",
@@ -89,6 +119,11 @@ public class AssistentPersonalController {
         return "AssistentPersonal/list";
     }
 
+    /**
+     * Shows the add form.
+     * @param model model for the view
+     * @return the add view
+     */
     @RequestMapping(value = "/add")
     public String add(Model model) {
         AssistentPersonal ap = new AssistentPersonal();
@@ -97,6 +132,12 @@ public class AssistentPersonalController {
         return "AssistentPersonal/add";
     }
 
+    /**
+     * Processes a new assistant.
+     * @param assistentPersonal assistant data
+     * @param bindingResult validation errors
+     * @return redirect to the list or the add view on error
+     */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
         public String processAdd(
             @ModelAttribute("assistentPersonal")
@@ -122,6 +163,12 @@ public class AssistentPersonalController {
         return "redirect:list";
     }
 
+    /**
+     * Shows the update form.
+     * @param model model for the view
+     * @param idAsistente assistant identifier
+     * @return the update view
+     */
     @RequestMapping(value = "/update/{idAsistente}", method = RequestMethod.GET)
     public String edit(Model model, @PathVariable String idAsistente) {
         model.addAttribute("assistentPersonal",
@@ -129,6 +176,12 @@ public class AssistentPersonalController {
         return "AssistentPersonal/update";
     }
 
+    /**
+     * Processes an updated assistant.
+     * @param assistentPersonal assistant data
+     * @param bindingResult validation errors
+     * @return redirect to the list or the update view on error
+     */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
         public String processUpdate(
             @ModelAttribute("assistentPersonal")
@@ -143,6 +196,11 @@ public class AssistentPersonalController {
         return "redirect:list";
     }
 
+    /**
+     * Deletes an assistant.
+     * @param idAsistente assistant identifier
+     * @return redirect to the list view
+     */
     @RequestMapping(value = "/delete/{idAsistente}")
     public String processDelete(@PathVariable String idAsistente) {
         assistentPersonalDao.deleteAssistentPersonalPorId(idAsistente);
