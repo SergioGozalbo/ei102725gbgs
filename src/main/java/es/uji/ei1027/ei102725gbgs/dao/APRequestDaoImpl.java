@@ -36,7 +36,10 @@ public class APRequestDaoImpl {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    // Añadir APRequest usando VALUES(?)
+    /**
+     * Adds a new APRequest to the database.
+     * @param apRequest the APRequest entity to add; must not be {@code null}
+     */
     public void addAPRequest(APRequest apRequest) {
         jdbcTemplate.update(
             "INSERT INTO AP_REQUEST VALUES(?, ?, ?, ?, ?, ?)",
@@ -48,19 +51,28 @@ public class APRequestDaoImpl {
             apRequest.getProximidad());
     }
 
-    // Borrar por ID (Integer)
+    /**
+     * Deletes the APRequest with the given ID from the database.
+     * @param idSolicitud the ID of the APRequest to delete; must not be {@code null}
+     */
     public void deleteAPRequestPorId(int idSolicitud) {
         jdbcTemplate.update(
             "DELETE FROM AP_REQUEST WHERE id_solicitud = ?",
             idSolicitud);
     }
 
-    // Borrar por Estado (String)
+    /**
+     * Deletes the APRequest entities associated with the given estado from the database.
+     * @param estado the state of the APRequest entities to delete; must not be {@code null}
+     */
     public void deleteAPRequestPorEstado(String estado) {
         jdbcTemplate.update("DELETE FROM AP_REQUEST WHERE estado = ?", estado);
     }
 
-    // Actualizar APRequest
+    /**
+     * Updates an existing APRequest in the database with the given data.
+     * @param apRequest the APRequest data to update; must not be {@code null}
+     */
     public void updateAPRequest(APRequest apRequest) {
         jdbcTemplate.update(
             "UPDATE AP_REQUEST SET id_usuario_ovi = ?, estado = ?, "
@@ -74,7 +86,11 @@ public class APRequestDaoImpl {
             apRequest.getIdSolicitud());
     }
 
-    // Obtener una sola solicitud
+    /**
+     * Retrieves the APRequest with the given ID from the database.
+     * @param idSolicitud the ID of the APRequest to retrieve; must not be {@code null}
+     * @return the APRequest with the given ID, or {@code null} if no such APRequest exists
+     */
     public APRequest getAPRequest(int idSolicitud) {
         try {
             return jdbcTemplate.queryForObject(
@@ -85,7 +101,10 @@ public class APRequestDaoImpl {
         }
     }
 
-    // Listar todas las solicitudes
+    /**
+     * Retrieves a list of all APRequest entities from the database.
+     * @return a list of all APRequest entities; never {@code null}
+     */
     public List<APRequest> getAPRequests() {
         try {
             return jdbcTemplate.query("SELECT * FROM AP_REQUEST",
@@ -95,7 +114,11 @@ public class APRequestDaoImpl {
         }
     }
 
-    // Get requests by estado
+    /**
+     * Retrieves a list of APRequest entities with the given estado from the database.
+     * @param estado the state of the APRequest entities to retrieve; must not be {@code null}
+     * @return a list of APRequest entities with the given estado; never {@code null}
+     */
     public List<APRequest> getAPRequestsByEstado(String estado) {
         try {
             return jdbcTemplate.query(
@@ -106,13 +129,22 @@ public class APRequestDaoImpl {
         }
     }
 
-    // Change the estado of a request by its ID
+    /**
+     * Updates the estado of the APRequest with the given ID in the database.
+     * @param idSolicitud the ID of the APRequest to update; must not be {@code null}
+     * @param nuevoEstado the new estado to set; must not be {@code null}
+     */
     public void updateEstado(int idSolicitud, String nuevoEstado) {
         jdbcTemplate.update(
                 "UPDATE AP_REQUEST SET estado = ? WHERE id_solicitud = ?",
                 nuevoEstado, idSolicitud);
     }
 
+    /**
+     * Retrieves a list of APRequest entities associated with the given OVI user ID from the database.
+     * @param idUsuarioOvi the ID of the OVI user whose APRequest entities to retrieve; must not be {@code null}
+     * @return a list of APRequest entities associated with the given OVI user ID; never {@code null}
+     */
     public List<APRequest> getAPRequestsByUsuari(String idUsuarioOvi) {
         try {
             return jdbcTemplate.query(

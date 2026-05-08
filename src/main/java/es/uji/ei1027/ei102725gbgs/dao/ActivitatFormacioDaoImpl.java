@@ -36,7 +36,10 @@ public class ActivitatFormacioDaoImpl {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    ///Añadir Aportacion
+    /**
+     * Adds a new ActivitatFormacio to the database.
+     * @param actFormacio the ActivitatFormacio entity to add; must not be {@code null}
+     */
     public void addAportacion(ActivitatFormacio actFormacio) {
         jdbcTemplate.update(
             "INSERT INTO ACTIVITAT_FORMACIO VALUES(?, ?, ?, ?, ?)",
@@ -48,21 +51,30 @@ public class ActivitatFormacioDaoImpl {
 
     }
 
-    // Borrar por ID (Integer)
+    /**
+     * Deletes the ActivitatFormacio with the given ID from the database.
+     * @param idActividad the ID of the ActivitatFormacio to delete; must not be {@code null}
+     */
     public void deleteActivitatFormacioPorId(int idActividad) {
         jdbcTemplate.update(
             "DELETE FROM ACTIVITAT_FORMACIO WHERE id_actividad = ?",
             idActividad);
     }
 
-    // Borrar por Nombre (String)
+    /**
+     * Deletes the ActivitatFormacio entities associated with the given activity name from the database.
+     * @param nombre the name of the activity whose ActivitatFormacio entities to delete; must not be {@code null}
+     */
     public void deleteActivitatFormacioPorNombre(String nombre) {
         jdbcTemplate.update(
             "DELETE FROM ACTIVITAT_FORMACIO WHERE nombre = ?",
             nombre);
     }
 
-    // Actualizar ActivitatFormacio
+    /**
+     * Updates an existing ActivitatFormacio in the database with the given data.
+     * @param actFormacio the ActivitatFormacio data to update; must not be {@code null}
+     */
     public void updateActivitatFormacio(ActivitatFormacio actFormacio) {
         jdbcTemplate.update(
             "UPDATE ACTIVITAT_FORMACIO SET id_formador = ?, nombre = ?, "
@@ -77,7 +89,11 @@ public class ActivitatFormacioDaoImpl {
             actFormacio.getIdActividad());
     }
 
-    // Obtener una sola actividad
+    /**
+     * Retrieves the ActivitatFormacio with the given ID from the database.
+     * @param idActividad the ID of the ActivitatFormacio to retrieve; must not be {@code null}
+     * @return the ActivitatFormacio with the given ID, or {@code null} if no such ActivitatFormacio exists
+     */
     public ActivitatFormacio getActivitatFormacio(int idActividad) {
         try {
             return jdbcTemplate.queryForObject(
@@ -88,7 +104,10 @@ public class ActivitatFormacioDaoImpl {
         }
     }
 
-    // Listar todas las actividades
+    /**
+     * Retrieves a list of all ActivitatFormacio entities from the database.
+     * @return a list of all ActivitatFormacio entities; never {@code null}
+     */
     public List<ActivitatFormacio> getActivitatsFormacio() {
         try {
             return jdbcTemplate.query("SELECT * FROM ACTIVITAT_FORMACIO",

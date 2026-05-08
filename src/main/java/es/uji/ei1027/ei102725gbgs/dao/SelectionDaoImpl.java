@@ -36,7 +36,10 @@ public class SelectionDaoImpl {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    // Añadir Selection usando VALUES(?)
+    /**
+     * Adds a new Selection to the database.
+     * @param selection the Selection entity to add; must not be {@code null}
+     */
     public void addSelection(Selection selection) {
         jdbcTemplate.update(
             "INSERT INTO SELECCION VALUES(?, ?, ?)",
@@ -45,21 +48,30 @@ public class SelectionDaoImpl {
             selection.getIdAsistente());
     }
 
-    // Borrar por ID de Selección (Integer)
+    /**
+     * Deletes the Selection with the given ID from the database.
+     * @param idSeleccion the ID of the Selection to delete; must not be {@code null}
+     */
     public void deleteSelectionPorId(int idSeleccion) {
         jdbcTemplate.update(
             "DELETE FROM SELECCION WHERE id_seleccion = ?",
             idSeleccion);
     }
 
-    // Borrar por ID de Asistente (String)
+    /**
+     * Deletes the Selection with the given assistant ID from the database.
+     * @param idAsistente the assistant ID of the Selection to delete; must not be {@code null}
+     */
     public void deleteSelectionPorAsistente(String idAsistente) {
         jdbcTemplate.update(
             "DELETE FROM SELECCION WHERE id_asistente = ?",
             idAsistente);
     }
 
-    // Actualizar Selection
+    /**
+     * Deletes the Selection with the given request ID from the database.
+     * @param selection the request ID of the Selection to delete; must not be {@code null}
+     */
     public void updateSelection(Selection selection) {
         jdbcTemplate.update(
             "UPDATE SELECCION SET id_solicitud = ?, id_asistente = ? "
@@ -69,7 +81,11 @@ public class SelectionDaoImpl {
             selection.getIdSeleccion());
     }
 
-    // Obtener una selección específica
+    /**
+     * Retrieves the Selection with the given ID from the database.
+     * @param idSeleccion the ID of the Selection to retrieve; must not be {@code null}
+     * @return the Selection with the given ID, or {@code null} if no such Selection exists
+     */
     public Selection getSelection(int idSeleccion) {
         try {
             return jdbcTemplate.queryForObject(
@@ -80,7 +96,10 @@ public class SelectionDaoImpl {
         }
     }
 
-    // Listar todas las selecciones
+    /**
+     * Retrieves a list of all Selection entities from the database.
+     * @return a list of all Selection entities; never {@code null}
+     */
     public List<Selection> getSelections() {
         try {
             return jdbcTemplate.query("SELECT * FROM SELECCION",

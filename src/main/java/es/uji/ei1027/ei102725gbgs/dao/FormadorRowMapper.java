@@ -7,7 +7,18 @@ import org.springframework.lang.NonNull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * A row mapper for converting database rows to {@link Formador} entities.
+ */
 public final class FormadorRowMapper implements RowMapper<Formador> {
+    /**
+     * Maps a row from the database result set to a {@link Formador} entity.
+     *
+     * @param rs the result set containing the row data
+     * @param rowNum the row number
+     * @return the mapped {@link Formador} entity
+     * @throws SQLException if an error occurs while reading the result set
+     */
     @Override
     public Formador mapRow(@NonNull ResultSet rs,
             int rowNum) throws SQLException {

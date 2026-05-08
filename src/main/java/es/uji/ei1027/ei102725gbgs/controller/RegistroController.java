@@ -19,13 +19,22 @@ import java.util.UUID;
 @RequestMapping("/registro")
 public class RegistroController {
 
+    /**
+     * DAO for accessing UsuariOVI data, used to create new OVI users during registration.
+     */
     @Autowired
     private UsuariOVIDaoImpl usuariOVIDao;
 
+    /**
+     * DAO for accessing AssistentPersonal data, used to create new assistant users during registration.
+     */
     @Autowired
     private AssistentPersonalDaoImpl assistentPersonalDao;
 
-    // GET /registro → página de elección
+    /**
+     * Shows the registration choice page.
+     * @return the registration choice view
+     */
     @GetMapping("")
     public String registro() {
         return "autenticacion/registro";
@@ -33,12 +42,24 @@ public class RegistroController {
 
     // UsuariOVI
 
+    /**
+     * Shows the UsuariOVI registration form.
+     * @param model model for the view
+     * @return the registration view
+     */
     @GetMapping("/usuariOVI")
     public String showRegistroUsuariOVI(Model model) {
         model.addAttribute("usuariOVI", new UsuariOVI());
         return "autenticacion/registroUsuariOVI";
     }
 
+    /**
+     * Processes a UsuariOVI registration.
+     * @param usuariOVI user data
+     * @param bindingResult validation errors
+     * @param model model for the view
+     * @return redirect or registration view on error
+     */
     @PostMapping("/usuariOVI")
     public String processRegistroUsuariOVI(
             @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
@@ -77,14 +98,24 @@ public class RegistroController {
         return "redirect:/login";
     }
 
-    // AssistentPersonal
-
+    /**
+     * Shows the AssistentPersonal registration form.
+     * @param model model for the view
+     * @return the registration view
+     */
     @GetMapping("/assistentPersonal")
     public String showRegistroAssistent(Model model) {
         model.addAttribute("assistentPersonal", new AssistentPersonal());
         return "autenticacion/registroAssistent";
     }
 
+    /**
+     * Processes an AssistentPersonal registration.
+     * @param assistent assistant data
+     * @param bindingResult validation errors
+     * @param model model for the view
+     * @return redirect or registration view on error
+     */
     @PostMapping("/assistentPersonal")
     public String processRegistroAssistent(
             @ModelAttribute("assistentPersonal") AssistentPersonal assistent,

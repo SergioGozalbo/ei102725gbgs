@@ -1,5 +1,8 @@
 package es.uji.ei1027.ei102725gbgs.utils.request;
 
+/**
+ * Request class for creating or updating an assistant personal profile.
+ */
 public class AssistentPersonalRequest {
 
     /** Assistant first name. */

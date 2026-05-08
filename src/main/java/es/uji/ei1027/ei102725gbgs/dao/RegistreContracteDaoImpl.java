@@ -36,7 +36,10 @@ public class RegistreContracteDaoImpl {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    // Añadir RegistreContracte usando VALUES(?)
+    /**
+     * Adds a new RegistreContracte to the database.
+     * @param contracte the RegistreContracte entity to add; must not be {@code null}
+     */
     public void addRegistreContracte(RegistreContracte contracte) {
         jdbcTemplate.update(
             "INSERT INTO REGISTRE_CONTRACTE VALUES(?, ?, ?, ?, ?)",
@@ -47,21 +50,30 @@ public class RegistreContracteDaoImpl {
             contracte.getUrlPdf());
     }
 
-    // Borrar por ID de Contrato (Integer)
+    /**
+     * Deletes the RegistreContracte with the given ID from the database.
+     * @param idContrato the ID of the RegistreContracte to delete; must not be {@code null}
+     */
     public void deleteRegistreContractePorId(int idContrato) {
         jdbcTemplate.update(
             "DELETE FROM REGISTRE_CONTRACTE WHERE id_contrato = ?",
             idContrato);
     }
 
-    // Borrar por URL del PDF (String)
+    /**
+     * Deletes the RegistreContracte with the given URL from the database.
+     * @param urlPdf the URL of the RegistreContracte to delete; must not be {@code null}
+     */
     public void deleteRegistreContractePorUrl(String urlPdf) {
         jdbcTemplate.update(
             "DELETE FROM REGISTRE_CONTRACTE WHERE url_pdf = ?",
             urlPdf);
     }
 
-    // Actualizar RegistreContracte
+    /**
+     * Updates an existing RegistreContracte in the database with the given data.
+     * @param contracte the RegistreContracte data to update; must not be {@code null}
+     */
     public void updateRegistreContracte(RegistreContracte contracte) {
         jdbcTemplate.update(
             "UPDATE REGISTRE_CONTRACTE SET id_seleccion = ?, "
@@ -74,7 +86,11 @@ public class RegistreContracteDaoImpl {
             contracte.getIdContrato());
     }
 
-    // Obtener un contrato específico
+    /**
+     * Retrieves the RegistreContracte with the given ID from the database.
+     * @param idContrato the ID of the RegistreContracte to retrieve; must not be {@code null}
+     * @return the RegistreContracte with the given ID, or {@code null} if no such RegistreContracte exists
+     */
     public RegistreContracte getRegistreContracte(int idContrato) {
         try {
             return jdbcTemplate.queryForObject(
@@ -85,7 +101,10 @@ public class RegistreContracteDaoImpl {
         }
     }
 
-    // Listar todos los contratos
+    /**
+     * Retrieves a list of all RegistreContracte entities from the database.
+     * @return a list of all RegistreContracte entities; never {@code null}
+     */
     public List<RegistreContracte> getRegistresContractes() {
         try {
             return jdbcTemplate.query(

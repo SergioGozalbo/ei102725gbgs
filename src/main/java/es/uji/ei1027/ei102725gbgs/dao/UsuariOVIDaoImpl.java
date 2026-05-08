@@ -36,7 +36,10 @@ public class UsuariOVIDaoImpl {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    // Añadir UsuariOVI usando VALUES(?)
+    /**
+     * Adds a new UsuariOVI to the database.
+     * @param usuario the UsuariOVI entity to add; must not be {@code null}
+     */
     public void addUsuariOVI(UsuariOVI usuario) {
         jdbcTemplate.update(
             "INSERT INTO USUARIO_OVI VALUES(?, ?, ?, ?, ?, ?, ?)",
@@ -49,19 +52,28 @@ public class UsuariOVIDaoImpl {
             usuario.isConsentimientoRgpd());
     }
 
-    // Borrar por ID (String)
+    /**
+     * Deletes the UsuariOVI with the given ID from the database.
+     * @param idUsuario the ID of the UsuariOVI to delete; must not be {@code null}
+     */
     public void deleteUsuariOVIPorId(String idUsuario) {
         jdbcTemplate.update(
             "DELETE FROM USUARIO_OVI WHERE id_usuario = ?",
             idUsuario);
     }
 
-    // Borrar por Email (String)
+    /**
+     * Deletes the UsuariOVI with the given email from the database.
+     * @param email the email of the UsuariOVI to delete; must not be {@code null}
+     */
     public void deleteUsuariOVIPorEmail(String email) {
         jdbcTemplate.update("DELETE FROM USUARIO_OVI WHERE email = ?", email);
     }
 
-    // Actualizar UsuariOVI
+    /**
+     * Updates an existing UsuariOVI in the database with the given data.
+     * @param usuario the UsuariOVI data to update; must not be {@code null}
+     */
     public void updateUsuariOVI(UsuariOVI usuario) {
         jdbcTemplate.update(
             "UPDATE USUARIO_OVI SET nombre = ?, apellidos = ?, email = ?, "
@@ -76,7 +88,11 @@ public class UsuariOVIDaoImpl {
             usuario.getIdUsuario());
     }
 
-    // Obtener un usuario por su ID
+    /**
+     * Retrieves the UsuariOVI with the given ID from the database.
+     * @param idUsuario the ID of the UsuariOVI to retrieve; must not be {@code null}
+     * @return the UsuariOVI with the given ID, or {@code null} if no such UsuariOVI exists
+     */
     public UsuariOVI getUsuariOVI(String idUsuario) {
         try {
             return jdbcTemplate.queryForObject(
@@ -87,7 +103,10 @@ public class UsuariOVIDaoImpl {
         }
     }
 
-    // Listar todos los usuarios OVI
+    /**
+     * Retrieves a list of all UsuariOVI entities from the database.
+     * @return a list of all UsuariOVI entities; never {@code null}
+     */
     public List<UsuariOVI> getUsuariosOVI() {
         try {
             return jdbcTemplate.query("SELECT * FROM USUARIO_OVI",
@@ -96,7 +115,12 @@ public class UsuariOVIDaoImpl {
             return new ArrayList<UsuariOVI>();
         }
     }
-    // Obtener un usuario por su email
+
+    /**
+     * Retrieves the UsuariOVI with the given email from the database.
+     * @param email the email of the UsuariOVI to retrieve; must not be {@code null}
+     * @return the UsuariOVI with the given email, or {@code null} if no such UsuariOVI exists
+     */
     public UsuariOVI getUsuariOVIByEmail(String email) {
         try {
             return jdbcTemplate.queryForObject(

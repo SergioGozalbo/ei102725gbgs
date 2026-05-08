@@ -36,7 +36,10 @@ public class AssistenciaFormacioDaoImpl {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    // Añadir AssistenciaFormacio usando VALUES(?)
+    /**
+     * Adds a new AssistenciaFormacio to the database.
+     * @param assistencia the AssistenciaFormacio entity to add; must not be {@code null}
+     */
     public void addAssistenciaFormacio(AssistenciaFormacio assistencia) {
         jdbcTemplate.update(
             "INSERT INTO ASSISTENCIA_FORMACIO VALUES(?, ?, ?, ?, ?)",
@@ -47,21 +50,30 @@ public class AssistenciaFormacioDaoImpl {
             assistencia.isAsistenciaConfirmada());
     }
 
-    // Borrar por ID de Asistencia (Integer)
+    /**
+     * Deletes the AssistenciaFormacio with the given ID from the database.
+     * @param idAsistencia the ID of the AssistenciaFormacio to delete; must not be {@code null}
+     */
     public void deleteAssistenciaFormacioPorId(int idAsistencia) {
         jdbcTemplate.update(
             "DELETE FROM ASSISTENCIA_FORMACIO WHERE id_asistencia = ?",
             idAsistencia);
     }
 
-    // Borrar por ID de Actividad (Integer)
+    /**
+     * Deletes the AssistenciaFormacio entities associated with the given actividad ID from the database.
+     * @param idActividad the ID of the actividad whose AssistenciaFormacio entities to delete; must not be {@code null}
+     */
     public void deleteAssistenciaFormacioPorActividad(int idActividad) {
         jdbcTemplate.update(
             "DELETE FROM ASSISTENCIA_FORMACIO WHERE id_actividad = ?",
             idActividad);
     }
 
-    // Actualizar AssistenciaFormacio
+    /**
+     * Updates an existing AssistenciaFormacio in the database with the given data.
+     * @param assistencia the AssistenciaFormacio data to update; must not be {@code null}
+     */
     public void updateAssistenciaFormacio(AssistenciaFormacio assistencia) {
         jdbcTemplate.update(
             "UPDATE ASSISTENCIA_FORMACIO SET id_actividad = ?, "
@@ -74,7 +86,11 @@ public class AssistenciaFormacioDaoImpl {
             assistencia.getIdAsistencia());
     }
 
-    // Obtener un registro específico
+    /**
+     * Retrieves the AssistenciaFormacio with the given ID from the database.
+     * @param idAsistencia the ID of the AssistenciaFormacio to retrieve; must not be {@code null}
+     * @return the AssistenciaFormacio with the given ID, or {@code null} if no such AssistenciaFormacio exists
+     */
     public AssistenciaFormacio getAssistenciaFormacio(int idAsistencia) {
         try {
             return jdbcTemplate.queryForObject(
@@ -86,7 +102,10 @@ public class AssistenciaFormacioDaoImpl {
         }
     }
 
-    // Listar todos los registros de asistencia
+    /**
+     * Retrieves a list of all AssistenciaFormacio entities from the database.
+     * @return a list of all AssistenciaFormacio entities; never {@code null}
+     */
     public List<AssistenciaFormacio> getAssistenciesFormacio() {
         try {
             return jdbcTemplate.query("SELECT * FROM ASSISTENCIA_FORMACIO",

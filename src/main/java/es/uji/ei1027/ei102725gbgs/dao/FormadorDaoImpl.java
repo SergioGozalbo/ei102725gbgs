@@ -36,7 +36,10 @@ public class FormadorDaoImpl {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));
     }
 
-    // Añadir Formador usando VALUES(?)
+    /**
+     * Adds a new Formador to the database.
+     * @param formador the Formador entity to add; must not be {@code null}
+     */
     public void addFormador(Formador formador) {
         jdbcTemplate.update(
             "INSERT INTO FORMADOR VALUES(?, ?, ?, ?)",
@@ -46,19 +49,28 @@ public class FormadorDaoImpl {
             formador.getEspecialidad());
     }
 
-    // Borrar por ID (Integer)
+    /**
+     * Deletes the Formador with the given ID from the database.
+     * @param idFormador the ID of the Formador to delete; must not be {@code null}
+     */
     public void deleteFormadorPorId(int idFormador) {
         jdbcTemplate.update(
             "DELETE FROM FORMADOR WHERE id_formador = ?",
             idFormador);
     }
 
-    // Borrar por Nombre (String)
+    /**
+     * Deletes the Formador entities with the given name from the database.
+     * @param nombre the name of the Formador entities to delete; must not be {@code null}
+     */
     public void deleteFormadorPorNombre(String nombre) {
         jdbcTemplate.update("DELETE FROM FORMADOR WHERE nombre = ?", nombre);
     }
 
-    // Actualizar Formador
+    /**
+     * Updates an existing Formador in the database with the given data.
+     * @param formador the Formador data to update; must not be {@code null}
+     */
     public void updateFormador(Formador formador) {
         jdbcTemplate.update(
             "UPDATE FORMADOR SET nombre = ?, apellidos = ?, "
@@ -69,7 +81,11 @@ public class FormadorDaoImpl {
             formador.getIdFormador());
     }
 
-    // Obtener un formador por su ID
+    /**
+     * Retrieves the Formador with the given ID from the database.
+     * @param idFormador the ID of the Formador to retrieve; must not be {@code null}
+     * @return the Formador with the given ID, or {@code null} if no such Formador exists
+     */
     public Formador getFormador(int idFormador) {
         try {
             return jdbcTemplate.queryForObject(
@@ -80,7 +96,10 @@ public class FormadorDaoImpl {
         }
     }
 
-    // Listar todos los formadores
+    /**
+     * Retrieves a list of all Formador entities from the database.
+     * @return a list of all Formador entities; never {@code null}
+     */
     public List<Formador> getFormadores() {
         try {
             return jdbcTemplate.query("SELECT * FROM FORMADOR",

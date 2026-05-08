@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/dashboard")
 public class DashboardOVIController {
 
+    /**
+     * Shows the OVI user dashboard.
+     * @param session session data
+     * @param model model for the view
+     * @return the dashboard view or a redirect to login
+     */
     @GetMapping("/usuariOVI")
     public String dashboardOVI(HttpSession session, Model model) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");

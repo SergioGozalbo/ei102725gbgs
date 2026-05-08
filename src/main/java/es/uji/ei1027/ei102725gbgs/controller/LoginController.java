@@ -16,12 +16,25 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import jakarta.servlet.http.HttpSession;
 
 
+/**
+ * Validator for the login form, checking that email and password are not empty.
+ */
 class UserValidator implements Validator {
+    /**
+     * Checks whether this validator supports UsuariOVI.
+     * @param cls class to check
+     * @return true if supported
+     */
     @Override
     public boolean supports(Class<?> cls) {
         return UsuariOVI.class.isAssignableFrom(cls);
     }
 
+    /**
+     * Validates a login form.
+     * @param obj object to validate
+     * @param errors validation errors
+     */
     @Override
     public void validate(Object obj, Errors errors) {
         UsuariOVI form = (UsuariOVI) obj;
@@ -38,16 +51,30 @@ class UserValidator implements Validator {
 
 
 
+/**
+ * Controller for handling login operations.
+ */
 @Controller
 public class LoginController {
 
+    /**
+     * DAO for accessing UsuariOVI data, used to validate login credentials.
+     */
     @Autowired
     private UsuariOVIDaoImpl usuariOVIDao;
 
+    /**
+     * DAO for accessing AssistentPersonal data, used to validate login credentials.
+     */
     @Autowired
     private AssistentPersonalDaoImpl assistentPersonalDao;
 
-    // GET /login → muestra el formulario
+    /**
+     * Shows the login form.
+     * @param model model for the view
+     * @param session session data
+     * @return the login view or a redirect to the dashboard
+     */
     @GetMapping("/login")
     public String showLoginForm(Model model, HttpSession session) {
         if (session.getAttribute("usuariOVI") != null) {
@@ -64,6 +91,14 @@ public class LoginController {
         return "autenticacion/login";
     }
 
+    /**
+     * Processes the login.
+     * @param form login data
+     * @param bindingResult validation errors
+     * @param model model for the view
+     * @param session session data
+     * @return redirect or login view on error
+     */
     @PostMapping("/login")
     public String processLogin(
             @ModelAttribute("usuariOVI") UsuariOVI form,
@@ -107,7 +142,11 @@ public class LoginController {
         return "autenticacion/login";
     }
 
-    // GET /logout → invalida sesión
+    /**
+     * Logs out the current user.
+     * @param session session data
+     * @return redirect to the login view
+     */
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
