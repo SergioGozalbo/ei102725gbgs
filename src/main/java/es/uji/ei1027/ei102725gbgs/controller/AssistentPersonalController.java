@@ -28,21 +28,32 @@ class AssistentPersonalValidator implements Validator {
                     "L'identificador és obligatori");
         }
 
-        if (asistente.getNombre() == null || asistente.getNombre().trim().isEmpty()) {
-            errors.rejectValue("nombre", "obligatori", "El nom és obligatori");
+        if (asistente.getNombre() == null ||
+		    asistente.getNombre().trim().isEmpty()) {
+            errors.rejectValue("nombre",
+			"obligatori",
+			"El nom és obligatori");
 		}
 
         if (asistente.getEmail().trim().isEmpty()) {
-            errors.rejectValue("email", "obligatori", "L'email és obligatori");
+            errors.rejectValue("email",
+			"obligatori",
+			"L'email és obligatori");
         } else if (!asistente.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            errors.rejectValue("email", "format", "El format de l'email no és vàlid");
+            errors.rejectValue("email",
+			"format",
+			"El format de l'email no és vàlid");
         }
 
         if (asistente.getTelefono() == null
             || asistente.getTelefono().trim().isEmpty()) {
-            errors.rejectValue("telefono", "obligatori", "El telèfon és obligatori");
+            errors.rejectValue("telefono",
+			"obligatori",
+			"El telèfon és obligatori");
         } else if (!asistente.getTelefono().matches("\\d{9}")) {
-            errors.rejectValue("telefono", "format", "El telèfon ha de tenir 9 dígits");
+            errors.rejectValue("telefono",
+			"format",
+			"El telèfon ha de tenir 9 dígits");
         }
         if (asistente.getFormacionAcademica().trim().isEmpty()) {
             errors.rejectValue("formacionAcademica", "obligatori",
@@ -86,12 +97,16 @@ public class AssistentPersonalController {
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
         public String processAdd(
-            @ModelAttribute("assistentPersonal") AssistentPersonal assistentPersonal,
+            @ModelAttribute("assistentPersonal")
+			AssistentPersonal assistentPersonal,
             BindingResult bindingResult) {
 
         int nextId = assistentPersonalDao.getAssistentsPersonals().stream()
-                .mapToInt(ap -> Integer.parseInt(ap.getIdAsistente().substring(1)))
-                .max().orElse(0) + 1;
+                .mapToInt(ap -> {
+					return Integer.parseInt(
+						ap.getIdAsistente().substring(1)
+					);
+				}).max().orElse(0) + 1;
 
         assistentPersonal.setIdAsistente("A" + String.format("%03d", nextId));
 
@@ -114,7 +129,8 @@ public class AssistentPersonalController {
 
     @RequestMapping(value = "/update", method = RequestMethod.POST)
         public String processUpdate(
-            @ModelAttribute("assistentPersonal") AssistentPersonal assistentPersonal,
+            @ModelAttribute("assistentPersonal")
+			AssistentPersonal assistentPersonal,
             BindingResult bindingResult) {
         assistentPersonalValidator.validate(assistentPersonal, bindingResult);
         if (bindingResult.hasErrors()) {
