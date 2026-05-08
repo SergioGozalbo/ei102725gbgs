@@ -79,13 +79,13 @@
 
     <build>
         <plugins>
-            <!-- TESTING -->
+            <!-- SpotBugs -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- TESTING -->
+            <!-- SpotBugs -->
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
