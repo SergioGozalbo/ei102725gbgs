@@ -23,7 +23,7 @@
     </properties>
 
     <dependencies>
-        <!-- Web MVC -->
+        <!-- JDBC Support -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
@@ -46,13 +46,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-
-        <!-- JDBC Support -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
 
         <!-- PostgreSQL Driver -->
         <dependency>
