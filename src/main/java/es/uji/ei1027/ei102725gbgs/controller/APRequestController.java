@@ -66,18 +66,18 @@ public class APRequestController {
 
     private List<String> getListaProvincias() {
         return Arrays.asList(
-			"Alicante", "Castellón", "Valencia",
-		"Madrid", "Barcelona", "Murcia",
-		"");
+            "Alicante", "Castellón", "Valencia",
+        "Madrid", "Barcelona", "Murcia",
+        "");
     }
 
-    @RequestMapping(value="/list", method=RequestMethod.GET)
+    @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listAPRequest(Model model) {
         model.addAttribute("requests", apRequestDao.getAPRequests());
         return "APRequest/list";
     }
 
-    @RequestMapping(value="/add", method=RequestMethod.GET)
+    @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String addAPRequest(Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
         if (usuari == null) return "redirect:/login";
@@ -90,7 +90,7 @@ public class APRequestController {
         return "APRequest/add";
     }
 
-    @RequestMapping(value="/mylist", method=RequestMethod.GET)
+    @RequestMapping(value = "/mylist", method = RequestMethod.GET)
     public String listMyRequests(Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
         if (usuari == null) return "redirect:/login";
@@ -101,7 +101,7 @@ public class APRequestController {
         return "APRequest/mylist";
     }
 
-    @RequestMapping(value="/add", method=RequestMethod.POST)
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
         public String processAddSubmit(
             @ModelAttribute("apRequest") APRequest apRequest,
             BindingResult bindingResult,
@@ -119,7 +119,7 @@ public class APRequestController {
         return "redirect:/APRequest/list";
     }
 
-    @RequestMapping(value="/update/{idSolicitud}", method=RequestMethod.GET)
+    @RequestMapping(value = "/update/{idSolicitud}", method = RequestMethod.GET)
     public String editAPRequest(Model model, @PathVariable int idSolicitud) {
         model.addAttribute("apRequest", apRequestDao.getAPRequest(idSolicitud));
         model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
@@ -127,7 +127,7 @@ public class APRequestController {
         return "APRequest/update";
     }
 
-    @RequestMapping(value="/update", method=RequestMethod.POST)
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
         public String processUpdateSubmit(
             @ModelAttribute("apRequest") APRequest apRequest,
             BindingResult bindingResult,
@@ -142,13 +142,13 @@ public class APRequestController {
         return "redirect:/APRequest/list";
     }
 
-    @RequestMapping(value="/delete/{idSolicitud}", method=RequestMethod.GET)
+    @RequestMapping(value = "/delete/{idSolicitud}", method = RequestMethod.GET)
     public String processDelete(@PathVariable int idSolicitud) {
         apRequestDao.deleteAPRequestPorId(idSolicitud);
         return "redirect:/APRequest/list";
     }
 
-    @RequestMapping(value="/aprobar/{id}", method=RequestMethod.GET)
+    @RequestMapping(value = "/aprobar/{id}", method = RequestMethod.GET)
     public String mostrarAprobar(Model model, @PathVariable int id) {
         APRequest solicitud = apRequestDao.getAPRequest(id);
         List<AssistentPersonal> candidatos =
@@ -159,7 +159,7 @@ public class APRequestController {
     }
 
 
-    @RequestMapping(value="/aprobar", method=RequestMethod.POST)
+    @RequestMapping(value = "/aprobar", method = RequestMethod.POST)
     public String processAprobar(@RequestParam int idSolicitud) {
         apRequestDao.updateEstado(idSolicitud, "Aprobada");
         return "redirect:/APRequest/list";
