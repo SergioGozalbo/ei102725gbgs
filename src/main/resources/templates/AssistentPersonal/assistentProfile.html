@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - El meu perfil</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="card" style="max-width: 560px;">
+    <div class="header">
+        <div class="logo">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="4" fill="#ffffff"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#ffffff"
+                      stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <h1>El meu perfil</h1>
+        <p class="subtitle"
+           th:text="${assistent.nombre} + ' ' + ${assistent.apellidos}"></p>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Identificador</span>
+        <div class="field-readonly" th:text="${assistent.idAsistente}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Nom</span>
+        <div class="field-readonly" th:text="${assistent.nombre}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Cognoms</span>
+        <div class="field-readonly" th:text="${assistent.apellidos}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Email</span>
+        <div class="field-readonly" th:text="${assistent.email}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Telèfon</span>
+        <div class="field-readonly" th:text="${assistent.telefono}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Formació acadèmica</span>
+        <div class="field-readonly" style="white-space: pre-wrap;"
+             th:text="${assistent.formacionAcademica}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Experiència professional</span>
+        <div class="field-readonly" style="white-space: pre-wrap;"
+             th:text="${assistent.experiencia}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Estat</span>
+        <div>
+            <span class="badge-estat"
+                  th:classappend="${assistent.estadoAceptado == 'Aceptado'} ? 'badge-acceptat' :
+                                  (${assistent.estadoAceptado == 'Rechazado'} ? 'badge-rebutjat' :
+                                  'badge-pendent')"
+                  th:text="${assistent.estadoAceptado}">
+            </span>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <a th:href="@{/AssistentPersonal/profileEdit}" class="btn btn-primary">
+        Editar perfil
+    </a>
+    <a th:href="@{/dashboard/assistentPersonal}" class="btn btn-outline">
+        Tornar al dashboard
+    </a>
+</div>
+</body>
+</html>

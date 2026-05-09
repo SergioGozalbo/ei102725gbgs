@@ -178,3 +178,58 @@ input:focus, textarea:focus { border-color: #1a56db; }
 }
 
 .footer-text a:hover { text-decoration: underline; }
+
+
+.field-readonly {
+    background: #f8fafc;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+    color: #0f1f3d;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+.field-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 0.3rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.field-group {
+    margin-bottom: 1.2rem;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 1.2rem;
+}
+
+.field-group:last-of-type {
+    border-bottom: none;
+}
+
+.badge-estat {
+    display: inline-block;
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-pendent {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-acceptat {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-rebutjat {
+    background: #fee2e2;
+    color: #991b1b;
+}

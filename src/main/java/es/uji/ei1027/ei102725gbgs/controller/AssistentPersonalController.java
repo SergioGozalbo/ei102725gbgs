@@ -2,6 +2,7 @@ package es.uji.ei1027.ei102725gbgs.controller;
 
 import es.uji.ei1027.ei102725gbgs.dao.AssistentPersonalDaoImpl;
 import es.uji.ei1027.ei102725gbgs.model.AssistentPersonal;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -205,5 +206,69 @@ public class AssistentPersonalController {
     public String processDelete(@PathVariable String idAsistente) {
         assistentPersonalDao.deleteAssistentPersonalPorId(idAsistente);
         return "redirect:../list";
+    }
+
+    /**
+     * Shows the profile of the logged-in assistant.
+     * @param session session data
+     * @param model model for the view
+     * @return the profile view or redirect to login
+     */
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public String profile(HttpSession session, Model model) {
+        AssistentPersonal assistent =
+                (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (assistent == null)
+            return "redirect:/login";
+
+        // Recargar desde BD para tener datos actualizados
+        AssistentPersonal actualitzat =
+                assistentPersonalDao.getAssistentPersonal(assistent.getIdAsistente());
+        model.addAttribute("assistent", actualitzat);
+        return "AssistentPersonal/assistentProfile";
+    }
+
+    /**
+     * Shows the profile edit form for the logged-in assistant.
+     * @param session session data
+     * @param model model for the view
+     * @return the profile edit view or redirect to login
+     */
+    @RequestMapping(value = "/profileEdit", method = RequestMethod.GET)
+    public String profileEdit(HttpSession session, Model model) {
+        AssistentPersonal assistent =
+                (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (assistent == null)
+            return "redirect:/login";
+
+        AssistentPersonal actualitzat =
+                assistentPersonalDao.getAssistentPersonal(assistent.getIdAsistente());
+        model.addAttribute("assistentPersonal", actualitzat);
+        return "AssistentPersonal/assistentProfileEdit";
+    }
+
+    /**
+     * Processes the profile edit form.
+     * @param assistentPersonal updated assistant data
+     * @param bindingResult validation errors
+     * @param session session data
+     * @return redirect to profile or edit view on error
+     */
+    @RequestMapping(value = "/profileEdit", method = RequestMethod.POST)
+    public String processProfileEdit(
+            @ModelAttribute("assistentPersonal") AssistentPersonal assistentPersonal,
+            BindingResult bindingResult,
+            HttpSession session) {
+
+        assistentPersonalValidator.validate(assistentPersonal, bindingResult);
+        if (bindingResult.hasErrors())
+            return "AssistentPersonal/assistentProfileEdit";
+
+        assistentPersonalDao.updateAssistentPersonal(assistentPersonal);
+
+        // Actualizar también la sesión con los nuevos datos
+        session.setAttribute("assistentPersonal", assistentPersonal);
+
+        return "redirect:profile";
     }
 }
