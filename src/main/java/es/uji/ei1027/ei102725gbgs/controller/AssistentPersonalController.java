@@ -218,8 +218,9 @@ public class AssistentPersonalController {
     public String profile(HttpSession session, Model model) {
         AssistentPersonal assistent =
                 (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (assistent == null)
+        if (assistent == null) {
             return "redirect:/login";
+        }
 
         // Recargar desde BD para tener datos actualizados
         AssistentPersonal actualitzat =
@@ -238,8 +239,9 @@ public class AssistentPersonalController {
     public String profileEdit(HttpSession session, Model model) {
         AssistentPersonal assistent =
                 (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (assistent == null)
+        if (assistent == null) {
             return "redirect:/login";
+        }
 
         AssistentPersonal actualitzat =
                 assistentPersonalDao.getAssistentPersonal(assistent.getIdAsistente());
@@ -261,8 +263,9 @@ public class AssistentPersonalController {
             HttpSession session) {
 
         assistentPersonalValidator.validate(assistentPersonal, bindingResult);
-        if (bindingResult.hasErrors())
+        if (bindingResult.hasErrors()) {
             return "AssistentPersonal/assistentProfileEdit";
+        }
 
         assistentPersonalDao.updateAssistentPersonal(assistentPersonal);
 

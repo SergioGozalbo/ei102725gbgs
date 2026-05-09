@@ -221,8 +221,9 @@ public class UsuariOVIController {
     @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String profile(HttpSession session, Model model) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null)
+        if (usuari == null) {
             return "redirect:/login";
+        }
 
         UsuariOVI actualitzat = usuariOVIDao.getUsuariOVI(usuari.getIdUsuario());
         model.addAttribute("usuari", actualitzat);
@@ -238,8 +239,9 @@ public class UsuariOVIController {
     @RequestMapping(value = "/profileEdit", method = RequestMethod.GET)
     public String profileEdit(HttpSession session, Model model) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null)
+        if (usuari == null) {
             return "redirect:/login";
+        }
 
         UsuariOVI actualitzat = usuariOVIDao.getUsuariOVI(usuari.getIdUsuario());
         model.addAttribute("usuariOVI", actualitzat);
@@ -260,8 +262,9 @@ public class UsuariOVIController {
             HttpSession session) {
 
         usuariOVIValidator.validate(usuariOVI, bindingResult);
-        if (bindingResult.hasErrors())
+        if (bindingResult.hasErrors()) {
             return "UsuariOVI/userOVIProfileEdit";
+        }
 
         usuariOVIDao.updateUsuariOVI(usuariOVI);
         session.setAttribute("usuariOVI", usuariOVI);
@@ -269,4 +272,3 @@ public class UsuariOVIController {
     }
 
 }
-

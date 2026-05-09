@@ -4,11 +4,22 @@ import es.uji.ei1027.ei102725gbgs.model.AssistentPersonal;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+/**
+ * Validator for AssistentPersonal objects.
+ */
 public class AssistentPersonalValidator implements Validator {
+
+    /**
+     * Checks if the given class is supported by this validator.
+     */
     @Override
     public boolean supports(Class<?> cls) {
         return AssistentPersonal.class.equals(cls);
     }
+
+    /**
+     * Validates the given AssistentPersonal object and populates the Errors object with any validation errors.
+     */
     @Override
     public void validate(Object obj, Errors errors) {
         AssistentPersonal assistentPersonal = (AssistentPersonal) obj;
@@ -18,7 +29,7 @@ public class AssistentPersonalValidator implements Validator {
             );
         }
 
-        if (assistentPersonal.getTelefono()== null || assistentPersonal.getTelefono().trim().isEmpty()) {
+        if (assistentPersonal.getTelefono() == null || assistentPersonal.getTelefono().trim().isEmpty()) {
             errors.rejectValue("telefono", "required", "El telefono es obligatorio");
         } else if (!assistentPersonal.getTelefono().matches("\\d{9}")) {
             errors.rejectValue(
@@ -28,17 +39,21 @@ public class AssistentPersonalValidator implements Validator {
             );
         }
 
-        if (assistentPersonal.getEmail()== null || assistentPersonal.getEmail().trim().isEmpty()) {
-            errors.rejectValue("email", "required", "El correo es obligatorio");
-        } else if (!assistentPersonal.getEmail()
-                .matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (assistentPersonal.getEmail() == null || assistentPersonal.getEmail().trim().isEmpty()) {
+            errors.rejectValue("email",
+            "required",
+            "El correo es obligatorio");
+        } else if (!assistentPersonal.getEmail().matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            errors.rejectValue("email",
+            "format",
+            "El correo no es válido");
         }
 
-        if (assistentPersonal.getFormacionAcademica()== null || assistentPersonal.getFormacionAcademica().trim().isEmpty()) {
+        if (assistentPersonal.getFormacionAcademica() == null || assistentPersonal.getFormacionAcademica().trim().isEmpty()) {
             errors.rejectValue("formacionAcademica", "required", "La formacion es obligatoria");
         }
 
-        if (assistentPersonal.getExperiencia()== null || assistentPersonal.getExperiencia().trim().isEmpty()) {
+        if (assistentPersonal.getExperiencia() == null || assistentPersonal.getExperiencia().trim().isEmpty()) {
             errors.rejectValue("experiencia", "required", "La experiencia es obligatoria");
         }
     }
