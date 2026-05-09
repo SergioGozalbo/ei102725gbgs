@@ -194,7 +194,7 @@ public class AssistentPersonalController {
         }
 
         assistentPersonalDao.updateAssistentPersonal(assistentPersonal);
-        return "redirect:/dashboard/assistentPersonal";
+        return "redirect:list";
     }
 
     /**

@@ -7,7 +7,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body class="dashboard">
-<nav>
+<nav aria-label="Navegación principal">
     <span class="nav-brand">SgOVI</span>
     <div class="nav-right">
         <span class="nav-user" th:text="'Bienvenido, ' + ${assistent.nombre}">Bienvenido</span>
@@ -30,7 +30,7 @@
             <div class="card-icon" aria-hidden="true">📋</div>
             <h2 class="card-title">Solicitudes recibidas</h2>
             <p class="card-desc">Consulta las solicitudes de asistencia.</p>
-            <a th:href="@{/APRequest/list}" class="btn-card">Ver solicitudes</a>
+            <a th:href="@{/ApRequest/list}" class="btn-card">Ver solicitudes</a>
         </div>
     </div>
 </main>
