@@ -311,7 +311,7 @@ body.table-page {
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(15,31,61,0.08);
     border: 1px solid rgba(15,31,61,0.06);
-    overflow: hidden;
+    overflow-x: auto;
 }
 
 table {
@@ -321,17 +321,19 @@ table {
 }
 
 thead {
-    background: #0f1f3d;
+    background: #1a3a6b;
     color: #ffffff;
 }
 
 thead th {
     padding: 1rem 1.2rem;
     text-align: left;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.82rem;
     letter-spacing: 0.04em;
     text-transform: uppercase;
+    color: #ffffff;
+    background: #0f1f3d;
 }
 
 tbody tr {
@@ -371,17 +373,17 @@ tbody td {
 .btn-delete {
     display: inline-block;
     padding: 0.35rem 0.9rem;
-    background: #fef2f2;
-    color: #dc2626;
+    background: #0f1f3d;
+    color: #ffffff;
     border-radius: 6px;
     font-size: 0.8rem;
     font-weight: 600;
     text-decoration: none;
-    border: 1px solid #fecaca;
+    border: none;
     transition: background 0.2s;
 }
 
-.btn-delete:hover { background: #dc2626; color: #ffffff; }
+.btn-delete:hover { background: #dc2626; }
 
 .page-actions {
     display: flex;
@@ -488,16 +490,27 @@ input[type="text"][readonly] {
 }
 
 .badge-acceptat {
-    background: #dcfce7;
-    color: #16a34a;
+    background: #166534;
+    color: #ffffff;
 }
 
 .badge-rebutjat {
-    background: #fef2f2;
-    color: #dc2626;
+    background: #991b1b;
+    color: #ffffff;
 }
 
 .badge-pendent {
-    background: #fef9c3;
-    color: #ca8a04;
+    background: #854d0e;
+    color: #ffffff;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
 }
