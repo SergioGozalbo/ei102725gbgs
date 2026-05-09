@@ -4,136 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <title>SgOVI - Registro Asistente Personal</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-        font-family: 'Segoe UI', Arial, sans-serif;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #0f1f3d 0%, #1a56db 100%);
-        padding: 2rem 0;
-    }
-
-    .card {
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 3rem 2.5rem;
-        width: 100%;
-        max-width: 480px;
-        margin: 1.5rem;
-        box-shadow: 0 25px 60px rgba(0,0,0,0.3);
-    }
-
-    .header {
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-
-    .logo {
-        width: 70px;
-        height: 70px;
-        background: #0f1f3d;
-        border-radius: 18px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1.5rem;
-        box-shadow: 0 8px 20px rgba(15,31,61,0.3);
-    }
-
-    h1 {
-        font-size: 1.6rem;
-        font-weight: 700;
-        color: #0f1f3d;
-        margin-bottom: 0.3rem;
-        letter-spacing: -0.5px;
-    }
-
-    .subtitle {
-        font-size: 0.85rem;
-        color: #6b7280;
-    }
-
-    .form-group {
-        margin-bottom: 1.2rem;
-    }
-
-    label {
-        display: block;
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #0f1f3d;
-        margin-bottom: 0.4rem;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="password"],
-    input[type="tel"],
-    textarea {
-        width: 100%;
-        padding: 0.8rem 1rem;
-        border: 2px solid #e5e7eb;
-        border-radius: 10px;
-        font-size: 0.95rem;
-        font-family: 'Segoe UI', Arial, sans-serif;
-        color: #0f1f3d;
-        transition: border-color 0.2s;
-        outline: none;
-        resize: vertical;
-    }
-
-    input:focus, textarea:focus { border-color: #1a56db; }
-
-    .error {
-        font-size: 0.78rem;
-        color: #dc2626;
-        margin-top: 0.3rem;
-    }
-
-    .btn-primary {
-        display: block;
-        width: 100%;
-        padding: 0.9rem;
-        background: #0f1f3d;
-        color: #ffffff;
-        border: none;
-        border-radius: 10px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        margin-top: 0.5rem;
-        transition: background 0.2s, transform 0.15s;
-    }
-
-    .btn-primary:hover {
-        background: #1a56db;
-        transform: translateY(-2px);
-    }
-
-    .divider {
-        height: 1px;
-        background: #e5e7eb;
-        margin: 1.75rem 0 1.5rem;
-    }
-
-    .footer-text {
-        font-size: 0.82rem;
-        color: #6b7280;
-        text-align: center;
-    }
-
-    .footer-text a {
-        color: #1a56db;
-        text-decoration: none;
-        font-weight: 600;
-    }
-
-    .footer-text a:hover { text-decoration: underline; }
-  </style>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <div class="card">
@@ -195,7 +66,7 @@
       <div th:if="${#fields.hasErrors('experiencia')}" th:errors="*{experiencia}" class="error"></div>
     </div>
 
-    <button type="submit" class="btn-primary">Registrarme</button>
+    <button type="submit" class="btn btn-primary">Registrarme</button>
   </form>
 
   <div class="divider"></div>
