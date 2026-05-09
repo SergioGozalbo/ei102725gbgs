@@ -298,3 +298,208 @@ main {
 }
 
 .btn-card:hover { background: #1a56db; }
+
+📄 src/main/resources/static/css/style.css — добавь в конец:
+css/* ── Tablas ── */
+body.table-page {
+    display: block;
+    background: #f3f6fc;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.table-container {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(15,31,61,0.08);
+    border: 1px solid rgba(15,31,61,0.06);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+}
+
+thead {
+    background: #0f1f3d;
+    color: #ffffff;
+}
+
+thead th {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+tbody tr {
+    border-bottom: 1px solid #f0f0f0;
+    transition: background 0.15s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+
+tbody tr:hover { background: #f8faff; }
+
+tbody td {
+    padding: 0.9rem 1.2rem;
+    color: #374151;
+    vertical-align: middle;
+}
+
+.table-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-edit {
+    display: inline-block;
+    padding: 0.35rem 0.9rem;
+    background: #0f1f3d;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-edit:hover { background: #1a56db; }
+
+.btn-delete {
+    display: inline-block;
+    padding: 0.35rem 0.9rem;
+    background: #fef2f2;
+    color: #dc2626;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid #fecaca;
+    transition: background 0.2s;
+}
+
+.btn-delete:hover { background: #dc2626; color: #ffffff; }
+
+.page-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.btn-new {
+    display: inline-block;
+    padding: 0.6rem 1.3rem;
+    background: #0f1f3d;
+    color: #ffffff;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s;
+}
+
+.btn-new:hover { background: #1a56db; }
+
+.btn-back {
+    display: inline-block;
+    padding: 0.6rem 1.3rem;
+    background: transparent;
+    color: #0f1f3d;
+    border: 1.5px solid #0f1f3d;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-back:hover { background: #0f1f3d; color: #ffffff; }
+
+body.form-page {
+    display: block;
+    background: #f3f6fc;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.form-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2rem 2.5rem;
+    max-width: 600px;
+    box-shadow: 0 4px 20px rgba(15,31,61,0.08);
+    border: 1px solid rgba(15,31,61,0.06);
+}
+
+select {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    color: #0f1f3d;
+    background: #ffffff;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+select:focus { border-color: #1a56db; }
+
+input[type="text"][readonly] {
+    background: #f3f6fc;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.field-group {
+    margin-bottom: 1.1rem;
+}
+
+.field-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+}
+
+.field-readonly {
+    padding: 0.75rem 1rem;
+    background: #f3f6fc;
+    border-radius: 10px;
+    font-size: 0.92rem;
+    color: #0f1f3d;
+    border: 1px solid #e5e7eb;
+}
+
+.badge-estat {
+    display: inline-block;
+    padding: 0.3rem 0.9rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.badge-acceptat {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.badge-rebutjat {
+    background: #fef2f2;
+    color: #dc2626;
+}
+
+.badge-pendent {
+    background: #fef9c3;
+    color: #ca8a04;
+}

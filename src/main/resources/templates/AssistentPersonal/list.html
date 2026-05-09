@@ -1,43 +1,64 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Llista d'Assistents</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Asistentes Personales</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
-<body>
+<body class="table-page">
+<nav>
+    <span class="nav-brand">SgOVI</span>
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
 <main>
-    <h1>Assistents Personals Registrats</h1>
-    <table border="1">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Telèfon</th>
-            <th>Formació</th>
-            <th>Experiència</th>
-            <th>Estat</th>
-            <th>Accions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="asistente : ${asistentes}">
-            <td th:text="${asistente.idAsistente}"></td>
-            <td th:text="${asistente.nombre} + ' ' + ${asistente.apellidos}"></td>
-            <td th:text="${asistente.email}"></td>
-            <td th:text="${asistente.telefono}"></td>
-            <td th:text="${asistente.formacionAcademica}"></td>
-            <td th:text="${asistente.experiencia}"></td>
-            <td th:text="${asistente.estadoAceptado}"></td>
-            <td>
-                <a th:href="@{/AssistentPersonal/update/{id}(id=${asistente.idAsistente})}">Editar</a>
-                <a th:href="@{/AssistentPersonal/delete/{id}(id=${asistente.idAsistente})}">Esborrar</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
-    <a th:href="@{/AssistentPersonal/add}">Registrar Nou Assistent</a> | <a th:href="@{/}">Tornar al menú</a>
+    <div class="page-actions">
+        <div>
+            <h1 class="page-title">Asistentes Personales</h1>
+            <p class="page-subtitle">Lista de todos los asistentes registrados.</p>
+        </div>
+        <div style="display:flex; gap:0.75rem;">
+            <a th:href="@{/AssistentPersonal/add}" class="btn-new">+ Nuevo asistente</a>
+            <a th:href="@{/}" class="btn-back">Volver al menú</a>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Email</th>
+                <th scope="col">Teléfono</th>
+                <th scope="col">Formación</th>
+                <th scope="col">Experiencia</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="asistente : ${asistentes}">
+                <td th:text="${asistente.idAsistente}"></td>
+                <td th:text="${asistente.nombre} + ' ' + ${asistente.apellidos}"></td>
+                <td th:text="${asistente.email}"></td>
+                <td th:text="${asistente.telefono}"></td>
+                <td th:text="${asistente.formacionAcademica}"></td>
+                <td th:text="${asistente.experiencia}"></td>
+                <td th:text="${asistente.estadoAceptado}"></td>
+                <td>
+                    <div class="table-actions">
+                        <a th:href="@{/AssistentPersonal/update/{id}(id=${asistente.idAsistente})}" class="btn-edit">Editar</a>
+                        <a th:href="@{/AssistentPersonal/delete/{id}(id=${asistente.idAsistente})}" class="btn-delete">Eliminar</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </main>
 </body>
 </html>
