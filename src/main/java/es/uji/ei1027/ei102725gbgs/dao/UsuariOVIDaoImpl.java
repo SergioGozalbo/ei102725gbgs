@@ -100,4 +100,11 @@ public class UsuariOVIDaoImpl {
             return null;
         }
     }
+
+    public boolean existeEmail(String email) {
+        Integer count = jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) FROM USUARIO_OVI WHERE email = ?",
+                Integer.class, email);
+        return count != null && count > 0;
+    }
 }
