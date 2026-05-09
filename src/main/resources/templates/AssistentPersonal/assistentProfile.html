@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>SgOVI - El meu perfil</title>
+    <title>SgOVI - Mi perfil</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
 <div class="card" style="max-width: 560px;">
     <div class="header">
         <div class="logo">
-            <svg width="32" height="32" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4" fill="#ffffff"/>
-                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#ffffff"
-                      stroke-width="2" stroke-linecap="round"/>
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none">
+                <circle cx="12" cy="9" r="4" fill="white"/>
+                <circle cx="22" cy="9" r="3" fill="white" opacity="0.5"/>
+                <path d="M4 24c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M22 18c2.761 0 5 2.239 5 5" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
             </svg>
         </div>
-        <h1>El meu perfil</h1>
-        <p class="subtitle"
-           th:text="${assistent.nombre} + ' ' + ${assistent.apellidos}"></p>
+        <h1>Mi perfil</h1>
+        <p class="subtitle" th:text="${assistent.nombre} + ' ' + ${assistent.apellidos}"></p>
     </div>
 
     <div class="field-group">
@@ -27,12 +27,12 @@
     </div>
 
     <div class="field-group">
-        <span class="field-label">Nom</span>
+        <span class="field-label">Nombre</span>
         <div class="field-readonly" th:text="${assistent.nombre}"></div>
     </div>
 
     <div class="field-group">
-        <span class="field-label">Cognoms</span>
+        <span class="field-label">Apellidos</span>
         <div class="field-readonly" th:text="${assistent.apellidos}"></div>
     </div>
 
@@ -42,42 +42,38 @@
     </div>
 
     <div class="field-group">
-        <span class="field-label">Telèfon</span>
+        <span class="field-label">Teléfono</span>
         <div class="field-readonly" th:text="${assistent.telefono}"></div>
     </div>
 
     <div class="field-group">
-        <span class="field-label">Formació acadèmica</span>
+        <span class="field-label">Formación académica</span>
         <div class="field-readonly" style="white-space: pre-wrap;"
              th:text="${assistent.formacionAcademica}"></div>
     </div>
 
     <div class="field-group">
-        <span class="field-label">Experiència professional</span>
+        <span class="field-label">Experiencia profesional</span>
         <div class="field-readonly" style="white-space: pre-wrap;"
              th:text="${assistent.experiencia}"></div>
     </div>
 
     <div class="field-group">
-        <span class="field-label">Estat</span>
+        <span class="field-label">Estado</span>
         <div>
-            <span class="badge-estat"
-                  th:classappend="${assistent.estadoAceptado == 'Aceptado'} ? 'badge-acceptat' :
-                                  (${assistent.estadoAceptado == 'Rechazado'} ? 'badge-rebutjat' :
-                                  'badge-pendent')"
-                  th:text="${assistent.estadoAceptado}">
-            </span>
+                <span class="badge-estat"
+                      th:classappend="${assistent.estadoAceptado == 'Aceptado'} ? 'badge-acceptat' :
+                                      (${assistent.estadoAceptado == 'Rechazado'} ? 'badge-rebutjat' :
+                                      'badge-pendent')"
+                      th:text="${assistent.estadoAceptado}">
+                </span>
         </div>
     </div>
 
     <div class="divider"></div>
 
-    <a th:href="@{/AssistentPersonal/profileEdit}" class="btn btn-primary">
-        Editar perfil
-    </a>
-    <a th:href="@{/dashboard/assistentPersonal}" class="btn btn-outline">
-        Tornar al dashboard
-    </a>
+    <a th:href="@{/AssistentPersonal/profileEdit}" class="btn btn-primary">Editar perfil</a>
+    <a th:href="@{/dashboard/assistentPersonal}" class="btn btn-outline">Volver al dashboard</a>
 </div>
 </body>
 </html>

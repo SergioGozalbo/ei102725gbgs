@@ -205,7 +205,7 @@ public class AssistentPersonalController {
     @RequestMapping(value = "/delete/{idAsistente}")
     public String processDelete(@PathVariable String idAsistente) {
         assistentPersonalDao.deleteAssistentPersonalPorId(idAsistente);
-        return "redirect:../list";
+        return "redirect:/dashboard/assistentPersonal";
     }
 
     /**
