@@ -1,50 +1,52 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>SgOVI - Panel Admin</title>
+    <title>SgOVI - Panel de administración</title>
     <link rel="stylesheet"
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
 </head>
 <body class="bg-light">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <span class="navbar-brand">SgOVI - Administració</span>
+        <span class="navbar-brand fw-bold">SgOVI</span>
         <div class="ms-auto">
-            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Tancar sessió</a>
+            <span class="text-light me-3 small">Administrador</span>
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
         </div>
     </div>
 </nav>
 
 <main class="container py-5">
-    <h2 class="mb-4">Panel d'administració</h2>
+    <h2 class="mb-1">Panel de administración</h2>
+    <p class="text-muted mb-4">Gestiona los usuarios, asistentes y solicitudes del sistema.</p>
 
     <div class="row g-4">
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm">
+            <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
-                    <h5 class="card-title">Usuaris OVI</h5>
-                    <p class="card-text text-muted">Gestiona els usuaris registrats a l'OVI.</p>
-                    <a th:href="@{/UsuariOVI/list}" class="btn btn-primary">Veure llista</a>
+                    <h5 class="card-title">👤 Usuarios OVI</h5>
+                    <p class="card-text text-muted">Consulta y gestiona los usuarios registrados en el OVI.</p>
+                    <a th:href="@{/UsuariOVI/list}" class="btn btn-primary">Ver lista</a>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm">
+            <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
-                    <h5 class="card-title">Assistents Personals</h5>
-                    <p class="card-text text-muted">Gestiona els assistents i les seues sol·licituds.</p>
-                    <a th:href="@{/AssistentPersonal/list}" class="btn btn-primary">Veure llista</a>
+                    <h5 class="card-title">🤝 Asistentes Personales</h5>
+                    <p class="card-text text-muted">Gestiona los asistentes personales registrados.</p>
+                    <a th:href="@{/AssistentPersonal/list}" class="btn btn-primary">Ver lista</a>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card h-100 shadow-sm">
+            <div class="card h-100 shadow-sm border-0">
                 <div class="card-body">
-                    <h5 class="card-title">Sol·licituds AP</h5>
-                    <p class="card-text text-muted">Revisa i gestiona les sol·licituds d'assistència.</p>
-                    <a th:href="@{/APRequest/list}" class="btn btn-primary">Veure llista</a>
+                    <h5 class="card-title">📋 Solicitudes de asistencia</h5>
+                    <p class="card-text text-muted">Revisa y aprueba las solicitudes de asistencia personal.</p>
+                    <a th:href="@{/APRequest/list}" class="btn btn-primary">Ver lista</a>
                 </div>
             </div>
         </div>
