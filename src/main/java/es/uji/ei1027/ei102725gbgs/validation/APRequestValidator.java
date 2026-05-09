@@ -1,8 +1,6 @@
 package es.uji.ei1027.ei102725gbgs.validation;
 
-import es.uji.ei1027.ei102725gbgs.dao.UsuariOVIDaoImpl;
 import es.uji.ei1027.ei102725gbgs.model.APRequest;
-import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
