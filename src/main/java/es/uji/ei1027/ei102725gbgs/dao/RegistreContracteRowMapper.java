@@ -8,9 +8,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public final class RegistreContracteRowMapper implements RowMapper<RegistreContracte> {
+/**
+ * A row mapper for converting database rows to {@link RegistreContracte} entities.
+ */
+public final class RegistreContracteRowMapper
+        implements RowMapper<RegistreContracte> {
+    /**
+     * Maps a row from the database result set to a {@link RegistreContracte} entity.
+     *
+     * @param rs the result set containing the row data
+     * @param rowNum the row number
+     * @return the mapped {@link RegistreContracte} entity
+     * @throws SQLException if an error occurs while reading the result set
+     */
     @Override
-    public RegistreContracte mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+    public RegistreContracte mapRow(@NonNull ResultSet rs,
+            int rowNum) throws SQLException {
         RegistreContracte contracte = new RegistreContracte();
         contracte.setIdContrato(rs.getInt("id_contrato"));
         contracte.setIdSeleccion(rs.getInt("id_seleccion"));

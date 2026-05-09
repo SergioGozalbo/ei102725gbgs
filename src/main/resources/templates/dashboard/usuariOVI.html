@@ -10,7 +10,7 @@
 <body class="bg-light">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <span class="navbar-brand">SgOVI</span>
+        <h1 class="navbar-brand">SgOVI</h1>
         <div class="ms-auto">
             <span class="text-light me-3 small"
                   th:text="'Benvingut, ' + ${usuari.nombre}"></span>
@@ -26,7 +26,7 @@
         <div class="col-md-6">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">El meu perfil</h5>
+                    <h3 class="card-title">El meu perfil</h3>
                     <p class="card-text text-muted">Consulta i modifica les teues dades.</p>
                     <a th:href="@{/UsuariOVI/update/{id}(id=${usuari.idUsuario})}"
                        class="btn btn-primary">Veure perfil</a>
@@ -36,7 +36,7 @@
         <div class="col-md-6">
             <div class="card h-100 shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title">Les meues sol·licituds</h5>
+                    <h3 class="card-title">Les meues sol·licituds</h3>
                     <p class="card-text text-muted">Consulta l'estat de les teues sol·licituds d'assistència.</p>
                     <a th:href="@{/APRequest/mylist}" class="btn btn-primary">Veure sol·licituds</a>
                 </div>

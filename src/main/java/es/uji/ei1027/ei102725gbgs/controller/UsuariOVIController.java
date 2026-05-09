@@ -6,7 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.stereotype.Component;
@@ -15,133 +18,198 @@ import org.springframework.stereotype.Component;
 @Component
 class UsuariOVIValidator implements Validator {
 
-	@Override
-	public boolean supports(Class<?> clazz) {
-		return UsuariOVI.class.equals(clazz);
-	}
+    /**
+     * Checks whether this validator supports UsuariOVI.
+     * @param clazz class to check
+     * @return true if supported
+     */
+    @Override
+    public boolean supports(Class<?> clazz) {
+        return UsuariOVI.class.equals(clazz);
+    }
 
-	@Override
-	public void validate(Object obj, Errors errors) {
-		UsuariOVI usuario = (UsuariOVI) obj;
+    /**
+     * Validates a UsuariOVI.
+     * @param obj object to validate
+     * @param errors validation errors
+     */
+    @Override
+    public void validate(Object obj, Errors errors) {
+        UsuariOVI usuario = (UsuariOVI) obj;
 
-		// 1. Validar Email (formato básico)
-		if (usuario.getEmail().trim().isEmpty()) {
-			errors.rejectValue("email", "obligatori", "L'email és obligatori");
-		} else if (!usuario.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-			errors.rejectValue("email", "format", "El format de l'email no és vàlid");
-		}
+        // 1. Validar Email (formato básico)
+        if (usuario.getEmail().trim().isEmpty()) {
+            errors.rejectValue("email",
+            "obligatori", "L'email és obligatori");
+        } else if (!usuario.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            errors.rejectValue("email",
+            "format", "El format de l'email no és vàlid");
+        }
 
-		// 2. Validar Teléfono (exactamente 9 dígitos)
-		if (!usuario.getTelefono().matches("\\d{9}")) {
-			errors.rejectValue("telefono", "format", "El telèfon ha de tenir exactament 9 dígits numèrics");
-		}
+        // 2. Validar Teléfono (exactamente 9 dígitos)
+        if (!usuario.getTelefono().matches("\\d{9}")) {
+                errors.rejectValue("telefono", "format",
+                    "El telèfon ha de tenir exactament 9 dígits numèrics");
+        }
 
-		// 3. Validar Consentimiento RGPD (debe estar marcado)
-		if (!usuario.isConsentimientoRgpd()) {
-			errors.rejectValue("consentimientoRgpd", "obligatori", "Has d'acceptar el tractament de dades per a continuar");
-		}
+        // 3. Validar Consentimiento RGPD (debe estar marcado)
+        if (!usuario.isConsentimientoRgpd()) {
+                errors.rejectValue("consentimientoRgpd",
+                "obligatori",
+                "Has d'acceptar el tractament de dades per a continuar");
+        }
 
-		// 4. Validar Nombre (sin números)
-		if (usuario.getNombre().matches(".*\\d.*")) {
-			errors.rejectValue("nombre", "format", "El nom no pot contenir números");
-		}
-		if (usuario.getNombre().trim().isEmpty()) {
-			errors.rejectValue("nombre", "obligatori", "El nom és obligatori");
-		}
+        // 4. Validar Nombre (sin números)
+        if (usuario.getNombre().matches(".*\\d.*")) {
+            errors.rejectValue("nombre",
+            "format",
+            "El nom no pot contenir números");
+        }
+        if (usuario.getNombre().trim().isEmpty()) {
+            errors.rejectValue("nombre",
+            "obligatori",
+            "El nom és obligatori");
+        }
 
-		// 5. Validar Apellidos (sin números)
-		if (usuario.getApellidos().matches(".*\\d.*")) {
-			errors.rejectValue("apellidos", "format", "Els cognoms no poden contenir números");
-		}
-		if (usuario.getApellidos().trim().isEmpty()) {
-			errors.rejectValue("apellidos", "obligatori", "Els cognoms són obligatoris");
-		}
+        // 5. Validar Apellidos (sin números)
+        if (usuario.getApellidos().matches(".*\\d.*")) {
+                errors.rejectValue("apellidos", "format",
+                    "Els cognoms no poden contenir números");
+        }
+        if (usuario.getApellidos().trim().isEmpty()) {
+            errors.rejectValue("apellidos",
+            "obligatori",
+            "Els cognoms són obligatoris");
+        }
 
-		// 6. Validar ID (obligatorio)
-		if (usuario.getIdUsuario().trim().isEmpty()) {
-			errors.rejectValue("idUsuario", "obligatori", "L'identificador d'usuari és obligatori");
-		}
-	}
+        // 6. Validar ID (obligatorio)
+        if (usuario.getIdUsuario().trim().isEmpty()) {
+                errors.rejectValue("idUsuario",
+            "obligatori",
+            "L'identificador d'usuari és obligatori");
+        }
+    }
 }
 
 @Controller
 @RequestMapping("/UsuariOVI")
 public class UsuariOVIController {
+    /**
+     * DAO for accessing UsuariOVI data, used to manage user information in the application.
+     */
+    private final UsuariOVIDaoImpl usuariOVIDao;
 
-	private final UsuariOVIDaoImpl usuariOVIDao;
-	private final UsuariOVIValidator usuariOVIValidator;
+    /**
+     * Validator for validating UsuariOVI data.
+     */
+    private final UsuariOVIValidator usuariOVIValidator;
 
-	@Autowired
-	public UsuariOVIController(UsuariOVIDaoImpl usuariOVIDao, UsuariOVIValidator usuariOVIValidator) {
-		this.usuariOVIDao = usuariOVIDao;
-		this.usuariOVIValidator = usuariOVIValidator;
-	}
+    /**
+     * Creates a new controller.
+     * @param usuariOVIDao user DAO
+     * @param usuariOVIValidator user validator
+     */
+    @Autowired
+        public UsuariOVIController(
+            UsuariOVIDaoImpl usuariOVIDao,
+            UsuariOVIValidator usuariOVIValidator) {
+        this.usuariOVIDao = usuariOVIDao;
+        this.usuariOVIValidator = usuariOVIValidator;
+    }
 
-	// Listar
-	@RequestMapping("/list")
-	public String listUsuariOVI(Model model) {
-		model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI());
-		return "UsuariOVI/list";
-	}
+    /**
+     * Shows the user list.
+     * @param model model for the view
+     * @return the list view
+     */
+    @RequestMapping("/list")
+    public String listUsuariOVI(Model model) {
+        model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI());
+        return "UsuariOVI/list";
+    }
 
-	// Añadir: Mostrar formulario
-	@RequestMapping(value="/add")
-	public String addUsuariOVI(Model model) {
-		model.addAttribute("usuariOVI", new UsuariOVI());
-		return "UsuariOVI/add";
-	}
+    /**
+     * Shows the add form.
+     * @param model model for the view
+     * @return the add view
+     */
+    @RequestMapping(value = "/add")
+    public String addUsuariOVI(Model model) {
+        model.addAttribute("usuariOVI", new UsuariOVI());
+        return "UsuariOVI/add";
+    }
 
+    /**
+     * Processes a new user.
+     * @param usuariOVI user data
+     * @param bindingResult validation errors
+     * @return redirect or add view on error
+     */
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
+        public String processAddSubmit(
+            @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
+            BindingResult bindingResult) {
 
-	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public String processAddSubmit(@ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
-								   BindingResult bindingResult) {
+        // ASIGNACIÓN AUTOMÁTICA DEL ID (Máximo + 1)
+        int nextId = usuariOVIDao.getUsuariosOVI().stream()
+                .mapToInt(u -> Integer.parseInt(u.getIdUsuario().substring(1)))
+                .max().orElse(0) + 1;
 
-		// ASIGNACIÓN AUTOMÁTICA DEL ID (Máximo + 1)
-		int nextId = usuariOVIDao.getUsuariosOVI().stream()
-				.mapToInt(u -> Integer.parseInt(u.getIdUsuario().substring(1)))
-				.max().orElse(0) + 1;
+        usuariOVI.setIdUsuario("U" + String.format("%03d", nextId));
 
-		usuariOVI.setIdUsuario("U" + String.format("%03d", nextId));
+        usuariOVIValidator.validate(usuariOVI, bindingResult);
 
-		usuariOVIValidator.validate(usuariOVI, bindingResult);
+        if (bindingResult.hasErrors()) {
+            return "UsuariOVI/add";
+        }
 
-		if (bindingResult.hasErrors()) {
-			return "UsuariOVI/add";
-		}
+        usuariOVIDao.addUsuariOVI(usuariOVI);
+        return "redirect:list";
+    }
 
-		usuariOVIDao.addUsuariOVI(usuariOVI);
-		return "redirect:list";
-	}
+    /**
+     * Shows the update form.
+     * @param model model for the view
+     * @param idUsuario user identifier
+     * @return the update view
+     */
+    @RequestMapping(value = "/update/{idUsuario}", method = RequestMethod.GET)
+    public String editUsuariOVI(Model model, @PathVariable String idUsuario) {
+        model.addAttribute("usuariOVI", usuariOVIDao.getUsuariOVI(idUsuario));
+        return "UsuariOVI/update";
+    }
 
-	// Modificar: Mostrar formulario
-	@RequestMapping(value="/update/{idUsuario}", method=RequestMethod.GET)
-	public String editUsuariOVI(Model model, @PathVariable String idUsuario) {
-		model.addAttribute("usuariOVI", usuariOVIDao.getUsuariOVI(idUsuario));
-		return "UsuariOVI/update";
-	}
+    /**
+     * Processes an updated user.
+     * @param usuariOVI user data
+     * @param bindingResult validation errors
+     * @return redirect or update view on error
+     */
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+        public String processUpdateSubmit(
+            @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
+            BindingResult bindingResult) {
 
+        usuariOVIValidator.validate(usuariOVI, bindingResult);
 
+        if (bindingResult.hasErrors()) {
+            return "UsuariOVI/update";
+        }
 
-	@RequestMapping(value="/update", method=RequestMethod.POST)
-	public String processUpdateSubmit(@ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
-									  BindingResult bindingResult) {
+        usuariOVIDao.updateUsuariOVI(usuariOVI);
+        return "redirect:list";
+    }
 
-		usuariOVIValidator.validate(usuariOVI, bindingResult);
-
-		if (bindingResult.hasErrors()) {
-			return "UsuariOVI/update";
-		}
-
-		usuariOVIDao.updateUsuariOVI(usuariOVI);
-		return "redirect:list";
-	}
-
-	// Borrar
-	@RequestMapping(value="/delete/{idUsuario}")
-	public String processDelete(@PathVariable String idUsuario) {
-		usuariOVIDao.deleteUsuariOVIPorId(idUsuario);
-		return "redirect:../list";
-	}
+    /**
+     * Deletes a user.
+     * @param idUsuario user identifier
+     * @return redirect to the list view
+     */
+    @RequestMapping(value = "/delete/{idUsuario}")
+    public String processDelete(@PathVariable String idUsuario) {
+        usuariOVIDao.deleteUsuariOVIPorId(idUsuario);
+        return "redirect:../list";
+    }
 
 }
 

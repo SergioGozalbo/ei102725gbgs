@@ -11,12 +11,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/dashboard")
 public class DashboardAPController {
 
+    /**
+     * Shows the assistant dashboard.
+     * @param session session data
+     * @param model model for the view
+     * @return the dashboard view or a redirect to login
+     */
     @GetMapping("/assistentPersonal")
     public String dashboardAP(HttpSession session, Model model) {
         AssistentPersonal assistent =
                 (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (assistent == null)
+        if (assistent == null) {
             return "redirect:/login";
+        }
 
         model.addAttribute("assistent", assistent);
         return "dashboard/assistentPersonal";
