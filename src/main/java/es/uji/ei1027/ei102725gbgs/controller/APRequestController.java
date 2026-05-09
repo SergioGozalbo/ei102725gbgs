@@ -188,7 +188,7 @@ public class APRequestController {
             return "APRequest/add";
         }
         apRequestDao.addAPRequest(apRequest);
-        return "redirect:/APRequest/list";
+        return "redirect:/APRequest/mylist";
     }
 
     /**
@@ -224,7 +224,7 @@ public class APRequestController {
             return "APRequest/update";
         }
         apRequestDao.updateAPRequest(apRequest);
-        return "redirect:/APRequest/list";
+        return "redirect:/APRequest/mylist";
     }
 
     /**
