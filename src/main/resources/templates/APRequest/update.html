@@ -1,67 +1,51 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Actualizar solicitud</title>
+    <title>SgOVI - Actualitzar Sol·licitud</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<main>
-    <h1>Actualizar solicitud</h1>
+<div class="card">
+    <div class="header">
+        <div class="logo">
+            <span style="color: white; font-weight: bold; font-size: 1.5rem;">✎</span>
+        </div>
+        <h1>Actualitzar Sol·licitud</h1>
+        <p class="subtitle">Modifica els detalls de la teua petició</p>
+    </div>
+
     <form th:action="@{/APRequest/update}" th:object="${apRequest}" method="post">
-        <br>
         <input type="hidden" th:field="*{idSolicitud}"/>
         <input type="hidden" th:field="*{idUsuarioOvi}"/>
-        <br>
-
-        <div>
-            <label for="tipoAsistencia">Tipo Asistencia:</label>
-            <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
-                <option value="">-- Selecciona --</option>
-                <option value="PAP">PAP</option>
-                <option value="PATI">PATI</option>
-            </select>
-
-            <div th:if="${#fields.hasErrors('tipoAsistencia')}"
-                 th:errors="*{tipoAsistencia}"
-                 style="color:red"></div>
-        </div>
-        <br>
-
-        <div>
-            <label for="proximidad">Provincia:</label>
-            <select id="proximidad" th:field="*{proximidad}">
-                <option value="">-- Selecciona --</option>
-
-                <option th:each="prov : ${provincias}"
-                        th:value="${prov}"
-                        th:text="${prov}">
-
-                </option>
-            </select>
-
-            <div th:if="${#fields.hasErrors('proximidad')}"
-                 th:errors="*{proximidad}"
-                 style="color:red"></div>
-        </div>
-        <br>
-
         <input type="hidden" th:field="*{estado}"/>
-        <br>
 
-        <div>
-            <label for="preferencias">Preferencias:</label><br>
-            <textarea id="preferencias" th:field="*{preferencias}" rows="4" cols="50"></textarea>
-
-            <div th:if="${#fields.hasErrors('preferencias')}"
-                 th:errors="*{preferencias}"
-                 style="color:red"></div>
+        <div class="form-group">
+            <label class="field-label">Tipus d'Assistència</label>
+            <select th:field="*{tipoAsistencia}" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 2px solid #e5e7eb;">
+                <option value="PAP">PAP (Personal)</option>
+                <option value="PATI">PATI (Tècnica)</option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('tipoAsistencia')}" th:errors="*{tipoAsistencia}"></div>
         </div>
-        <br>
 
-        <button type="submit">Actualizar</button>
+        <div class="form-group">
+            <label class="field-label">Província</label>
+            <select th:field="*{proximidad}" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 2px solid #e5e7eb;">
+                <option th:each="prov : ${provincias}" th:value="${prov}" th:text="${prov}"></option>
+            </select>
+            <div class="error" th:if="${#fields.hasErrors('proximidad')}" th:errors="*{proximidad}"></div>
+        </div>
+
+        <div class="form-group">
+            <label class="field-label">Preferències</label>
+            <textarea th:field="*{preferencias}" rows="4"></textarea>
+            <div class="error" th:if="${#fields.hasErrors('preferencias')}" th:errors="*{preferencias}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Canvis</button>
+        <a th:href="@{/APRequest/mylist}" class="btn btn-outline">Tornar a la meua llista</a>
     </form>
-    <br>
-    <a th:href="@{/APRequest/list}">Volver a la lista</a>
-</main>
+</div>
 </body>
 </html>

@@ -299,8 +299,6 @@ main {
 
 .btn-card:hover { background: #1a56db; }
 
-📄 src/main/resources/static/css/style.css — добавь в конец:
-css/* ── Tablas ── */
 body.table-page {
     display: block;
     background: #f3f6fc;

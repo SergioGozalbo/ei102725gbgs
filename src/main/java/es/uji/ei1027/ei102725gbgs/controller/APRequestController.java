@@ -235,7 +235,7 @@ public class APRequestController {
     @RequestMapping(value = "/delete/{idSolicitud}", method = RequestMethod.GET)
     public String processDelete(@PathVariable int idSolicitud) {
         apRequestDao.deleteAPRequestPorId(idSolicitud);
-        return "redirect:/APRequest/list";
+        return "redirect:/APRequest/mylist";
     }
 
     /**
