@@ -25,6 +25,11 @@
         <div>
             <label for="apellidos">Apellidos:</label>
             <input type="text" id="apellidos" th:field="*{apellidos}">
+
+            <div th:if="${#fields.hasErrors('apellidos')}"
+            th:errors="*{apellidos}"
+                 style="color:red">
+            </div>
         </div>
         <br>
 
@@ -45,12 +50,20 @@
         <div>
             <label for="formacionAcademica">Formación Académica:</label><br>
             <textarea id="formacionAcademica" th:field="*{formacionAcademica}" rows="4" cols="50"></textarea>
+            <div th:if="${#fields.hasErrors('formacionAcademica')}"
+                 th:errors="*{formacionAcademica}"
+                 style="color:red">
+            </div>
         </div>
         <br>
 
         <div>
             <label for="experiencia">Experiencia:</label><br>
             <textarea id="experiencia" th:field="*{experiencia}" rows="4" cols="50"></textarea>
+            <div th:if="${#fields.hasErrors('experiencia')}"
+                 th:errors="*{experiencia}"
+                 style="color:red">
+            </div>
         </div>
         <br>
 

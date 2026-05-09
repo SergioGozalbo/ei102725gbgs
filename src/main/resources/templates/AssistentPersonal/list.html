@@ -23,7 +23,7 @@
         <tbody>
         <tr th:each="asistente : ${asistentes}">
             <td th:text="${asistente.idAsistente}"></td>
-            <td th:text="${asistente.nombre} + ' ' + ${asistente.apellidos}"></td>
+            <td th:text="${asistente.nombre + ' ' + asistente.apellidos}"></td>
             <td th:text="${asistente.email}"></td>
             <td th:text="${asistente.telefono}"></td>
             <td th:text="${asistente.formacionAcademica}"></td>
