@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - El meu perfil</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<div class="card" style="max-width: 560px;">
+    <div class="header">
+        <div class="logo">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="4" fill="#ffffff"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#ffffff"
+                      stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </div>
+        <h1>El meu perfil</h1>
+        <p class="subtitle"
+           th:text="${usuari.nombre} + ' ' + ${usuari.apellidos}"></p>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Identificador</span>
+        <div class="field-readonly" th:text="${usuari.idUsuario}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Nom</span>
+        <div class="field-readonly" th:text="${usuari.nombre}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Cognoms</span>
+        <div class="field-readonly" th:text="${usuari.apellidos}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Email</span>
+        <div class="field-readonly" th:text="${usuari.email}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Telèfon</span>
+        <div class="field-readonly" th:text="${usuari.telefono}"></div>
+    </div>
+
+    <div class="field-group">
+        <span class="field-label">Consentiment RGPD</span>
+        <div>
+            <span class="badge-estat"
+                  th:classappend="${usuari.consentimientoRgpd} ?
+                                  'badge-acceptat' : 'badge-rebutjat'"
+                  th:text="${usuari.consentimientoRgpd} ? 'Acceptat' : 'No acceptat'">
+            </span>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <a th:href="@{/UsuariOVI/profileEdit}" class="btn btn-primary">
+        Editar perfil
+    </a>
+    <a th:href="@{/dashboard/usuariOVI}" class="btn btn-outline">
+        Tornar al dashboard
+    </a>
+</div>
+</body>
+</html>
