@@ -14,25 +14,39 @@
         <div>
             <label for="tipoAsistencia">Tipo Asistencia:</label>
             <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
+                <option value="">-- Selecciona --</option>
                 <option value="PAP">PAP</option>
                 <option value="PATI">PATI</option>
             </select>
+
+            <div th:if="${#fields.hasErrors('tipoAsistencia')}"
+                 th:errors="*{tipoAsistencia}"
+                 style="color:red"></div>
         </div>
         <br>
 
         <div>
             <label for="proximidad">Provincia (Proximidad):</label>
             <select id="proximidad" th:field="*{proximidad}">
+                <option value="">-- Selecciona --</option>
+
                 <option th:each="prov : ${provincias}"
                         th:value="${prov}"
                         th:text="${prov}"></option>
             </select>
+
+            <div th:if="${#fields.hasErrors('proximidad')}"
+                 th:errors="*{proximidad}"
+                 style="color:red"></div>
         </div>
         <br>
 
         <div>
             <label for="preferencias">Preferencias:</label><br>
             <textarea id="preferencias" th:field="*{preferencias}" rows="3" cols="40"></textarea>
+            <div th:if="${#fields.hasErrors('preferencias')}"
+                 th:errors="*{preferencias}"
+                 style="color:red"></div>
         </div>
 
         <!-- El estado y el ID se gestionan internamente -->

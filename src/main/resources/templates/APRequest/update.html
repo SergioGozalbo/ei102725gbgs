@@ -10,46 +10,51 @@
     <form th:action="@{/APRequest/update}" th:object="${apRequest}" method="post">
         <br>
         <input type="hidden" th:field="*{idSolicitud}"/>
-        <div>
-            <label for="idUsuarioOvi">Usuario OVI:</label>
-            <select id="idUsuarioOvi" th:field="*{idUsuarioOvi}">
-                <option th:each="user : ${usuariosOvi}"
-                        th:value="${user.idUsuario}"
-                        th:text="${user.idUsuario} + ' - ' + ${user.nombre}"></option>
-            </select>
-        </div>
+        <input type="hidden" th:field="*{idUsuarioOvi}"/>
         <br>
 
         <div>
             <label for="tipoAsistencia">Tipo Asistencia:</label>
             <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
+                <option value="">-- Selecciona --</option>
                 <option value="PAP">PAP</option>
                 <option value="PATI">PATI</option>
             </select>
+
+            <div th:if="${#fields.hasErrors('tipoAsistencia')}"
+                 th:errors="*{tipoAsistencia}"
+                 style="color:red"></div>
         </div>
         <br>
 
         <div>
             <label for="proximidad">Provincia:</label>
             <select id="proximidad" th:field="*{proximidad}">
-                <option th:each="prov : ${provincias}" th:value="${prov}" th:text="${prov}"></option>
+                <option value="">-- Selecciona --</option>
+
+                <option th:each="prov : ${provincias}"
+                        th:value="${prov}"
+                        th:text="${prov}">
+
+                </option>
             </select>
+
+            <div th:if="${#fields.hasErrors('proximidad')}"
+                 th:errors="*{proximidad}"
+                 style="color:red"></div>
         </div>
         <br>
 
-        <div>
-            <label for="estado">Estado:</label>
-            <select id="estado" th:field="*{estado}">
-                <option value="En revisión">En revisión</option>
-                <option value="Aprobada">Aprobada</option>
-                <option value="Rechazada">Rechazada</option>
-            </select>
-        </div>
+        <input type="hidden" th:field="*{estado}"/>
         <br>
 
         <div>
             <label for="preferencias">Preferencias:</label><br>
             <textarea id="preferencias" th:field="*{preferencias}" rows="4" cols="50"></textarea>
+
+            <div th:if="${#fields.hasErrors('preferencias')}"
+                 th:errors="*{preferencias}"
+                 style="color:red"></div>
         </div>
         <br>
 
