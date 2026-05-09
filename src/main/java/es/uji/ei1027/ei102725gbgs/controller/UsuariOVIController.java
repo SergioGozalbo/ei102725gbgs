@@ -2,6 +2,7 @@ package es.uji.ei1027.ei102725gbgs.controller;
 
 import es.uji.ei1027.ei102725gbgs.dao.UsuariOVIDaoImpl;
 import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -209,6 +210,62 @@ public class UsuariOVIController {
     public String processDelete(@PathVariable String idUsuario) {
         usuariOVIDao.deleteUsuariOVIPorId(idUsuario);
         return "redirect:../list";
+    }
+
+    /**
+     * Shows the profile of the logged-in OVI user.
+     * @param session session data
+     * @param model model for the view
+     * @return the profile view or redirect to login
+     */
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
+    public String profile(HttpSession session, Model model) {
+        UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
+        if (usuari == null)
+            return "redirect:/login";
+
+        UsuariOVI actualitzat = usuariOVIDao.getUsuariOVI(usuari.getIdUsuario());
+        model.addAttribute("usuari", actualitzat);
+        return "UsuariOVI/userOVIProfile";
+    }
+
+    /**
+     * Shows the profile edit form for the logged-in OVI user.
+     * @param session session data
+     * @param model model for the view
+     * @return the profile edit view or redirect to login
+     */
+    @RequestMapping(value = "/profileEdit", method = RequestMethod.GET)
+    public String profileEdit(HttpSession session, Model model) {
+        UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
+        if (usuari == null)
+            return "redirect:/login";
+
+        UsuariOVI actualitzat = usuariOVIDao.getUsuariOVI(usuari.getIdUsuario());
+        model.addAttribute("usuariOVI", actualitzat);
+        return "UsuariOVI/userOVIProfileEdit";
+    }
+
+    /**
+     * Processes the profile edit form for the logged-in OVI user.
+     * @param usuariOVI updated user data
+     * @param bindingResult validation errors
+     * @param session session data
+     * @return redirect to profile or edit view on error
+     */
+    @RequestMapping(value = "/profileEdit", method = RequestMethod.POST)
+    public String processProfileEdit(
+            @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
+            BindingResult bindingResult,
+            HttpSession session) {
+
+        usuariOVIValidator.validate(usuariOVI, bindingResult);
+        if (bindingResult.hasErrors())
+            return "UsuariOVI/userOVIProfileEdit";
+
+        usuariOVIDao.updateUsuariOVI(usuariOVI);
+        session.setAttribute("usuariOVI", usuariOVI);
+        return "redirect:profile";
     }
 
 }

@@ -1,85 +1,79 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>SgOVI - Registre Assistent Personal</title>
-  <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+  <title>SgOVI - Registro Asistente Personal</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
-<body class="bg-light">
-<main class="container py-5">
-  <div class="card shadow p-4 mx-auto" style="max-width: 560px;">
-    <h1 class="h4 mb-4 text-center">Registre com a Assistent Personal</h1>
-
-    <form th:action="@{/registro/assistentPersonal}" th:object="${assistentPersonal}" method="post">
-
-      <div class="mb-3">
-        <label for="nombre" class="form-label">Nom</label>
-        <input id="nombre" type="text" class="form-control"
-               th:field="*{nombre}" placeholder="El teu nom"/>
-        <div th:if="${#fields.hasErrors('nombre')}"
-             th:errors="*{nombre}" class="text-danger small mt-1"></div>
-      </div>
-
-      <div class="mb-3">
-        <label for="apellidos" class="form-label">Cognoms</label>
-        <input id="apellidos" type="text" class="form-control"
-               th:field="*{apellidos}" placeholder="Els teus cognoms"/>
-        <div th:if="${#fields.hasErrors('apellidos')}"
-             th:errors="*{apellidos}" class="text-danger small mt-1"></div>
-      </div>
-
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input id="email" type="email" class="form-control"
-               th:field="*{email}" placeholder="correu@exemple.com"/>
-        <div th:if="${#fields.hasErrors('email')}"
-             th:errors="*{email}" class="text-danger small mt-1"></div>
-      </div>
-
-      <div class="mb-3">
-        <label for="password" class="form-label">Contrasenya</label>
-        <input id="password" type="password" class="form-control"
-               th:field="*{password}" placeholder="••••••••"/>
-        <div th:if="${#fields.hasErrors('password')}"
-             th:errors="*{password}" class="text-danger small mt-1"></div>
-      </div>
-
-      <div class="mb-3">
-        <label for="telefono" class="form-label">Telèfon</label>
-        <input id="telefono" type="tel" class="form-control"
-               th:field="*{telefono}" placeholder="6XXXXXXXX"/>
-        <div th:if="${#fields.hasErrors('telefono')}"
-             th:errors="*{telefono}" class="text-danger small mt-1"></div>
-      </div>
-
-      <div class="mb-3">
-        <label for="formacionAcademica" class="form-label">Formació acadèmica</label>
-        <textarea id="formacionAcademica" class="form-control" rows="3"
-                  th:field="*{formacionAcademica}"
-                  placeholder="Descriu la teua formació acadèmica"></textarea>
-        <div th:if="${#fields.hasErrors('formacionAcademica')}"
-             th:errors="*{formacionAcademica}" class="text-danger small mt-1"></div>
-      </div>
-
-      <div class="mb-3">
-        <label for="experiencia" class="form-label">Experiència professional</label>
-        <textarea id="experiencia" class="form-control" rows="3"
-                  th:field="*{experiencia}"
-                  placeholder="Descriu la teua experiència prèvia"></textarea>
-        <div th:if="${#fields.hasErrors('experiencia')}"
-             th:errors="*{experiencia}" class="text-danger small mt-1"></div>
-      </div>
-
-      <button type="submit" class="btn btn-primary w-100">Registrar-me</button>
-    </form>
-
-    <hr/>
-    <p class="text-center small mb-0">
-      Ja tens compte? <a th:href="@{/login}">Inicia sessió</a>
-    </p>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="logo">
+      <svg width="34" height="34" viewBox="0 0 32 32" fill="none">
+        <circle cx="12" cy="9" r="4" fill="white"/>
+        <circle cx="22" cy="9" r="3" fill="white" opacity="0.5"/>
+        <path d="M4 24c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M22 18c2.761 0 5 2.239 5 5" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+      </svg>
+    </div>
+    <h1>Registro Asistente Personal</h1>
+    <p class="subtitle">Crea tu cuenta para ofrecer asistencia</p>
   </div>
-</main>
+
+  <form th:action="@{/registro/assistentPersonal}" th:object="${assistentPersonal}" method="post">
+    <div class="form-group">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" th:field="*{nombre}" placeholder="Tu nombre"/>
+      <div th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="error"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="apellidos">Apellidos</label>
+      <input id="apellidos" type="text" th:field="*{apellidos}" placeholder="Tus apellidos"/>
+      <div th:if="${#fields.hasErrors('apellidos')}" th:errors="*{apellidos}" class="error"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" type="email" th:field="*{email}" placeholder="correo@ejemplo.com"/>
+      <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Contraseña</label>
+      <input id="password" type="password" th:field="*{password}" placeholder="••••••••"/>
+      <div th:if="${#fields.hasErrors('password')}" th:errors="*{password}" class="error"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="telefono">Teléfono</label>
+      <input id="telefono" type="tel" th:field="*{telefono}" placeholder="6XXXXXXXX"/>
+      <div th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="error"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="formacionAcademica">Formación académica</label>
+      <textarea id="formacionAcademica" th:field="*{formacionAcademica}" rows="3"
+                placeholder="Describe tu formación académica"></textarea>
+      <div th:if="${#fields.hasErrors('formacionAcademica')}" th:errors="*{formacionAcademica}" class="error"></div>
+    </div>
+
+    <div class="form-group">
+      <label for="experiencia">Experiencia profesional</label>
+      <textarea id="experiencia" th:field="*{experiencia}" rows="3"
+                placeholder="Describe tu experiencia previa"></textarea>
+      <div th:if="${#fields.hasErrors('experiencia')}" th:errors="*{experiencia}" class="error"></div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Registrarme</button>
+  </form>
+
+  <div class="divider"></div>
+
+  <p class="footer-text">
+    ¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a>
+  </p>
+</div>
 </body>
 </html>
