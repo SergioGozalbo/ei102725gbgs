@@ -1,48 +1,55 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Añadir solicitud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Nueva solicitud</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
 </head>
-<body>
-<main>
-    <h1>Añadir solicitud</h1>
-    <form th:action="@{/APRequest/add}" th:object="${apRequest}" method="post">
-
-        <input type="hidden" th:field="*{idUsuarioOvi}"/>
-
-        <div>
-            <label for="tipoAsistencia">Tipo Asistencia:</label>
-            <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
-                <option value="PAP">PAP</option>
-                <option value="PATI">PATI</option>
-            </select>
+<body class="bg-light">
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <span class="navbar-brand">SgOVI</span>
+        <div class="ms-auto">
+            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Cerrar sesión</a>
         </div>
-        <br>
+    </div>
+</nav>
+<main class="container py-4">
+    <div class="card shadow p-4 mx-auto" style="max-width: 560px;">
+        <h1 class="h4 mb-4">Nueva solicitud de asistencia</h1>
 
-        <div>
-            <label for="proximidad">Provincia (Proximidad):</label>
-            <select id="proximidad" th:field="*{proximidad}">
-                <option th:each="prov : ${provincias}"
-                        th:value="${prov}"
-                        th:text="${prov}"></option>
-            </select>
-        </div>
-        <br>
+        <form th:action="@{/APRequest/add}" th:object="${apRequest}" method="post">
+            <input type="hidden" th:field="*{idUsuarioOvi}"/>
+            <input type="hidden" th:field="*{estado}"/>
 
-        <div>
-            <label for="preferencias">Preferencias:</label><br>
-            <textarea id="preferencias" th:field="*{preferencias}" rows="3" cols="40"></textarea>
-        </div>
+            <div class="mb-3">
+                <label for="tipoAsistencia" class="form-label">Tipo de asistencia:</label>
+                <select id="tipoAsistencia" th:field="*{tipoAsistencia}" class="form-select">
+                    <option value="PAP">PAP</option>
+                    <option value="PATI">PATI</option>
+                </select>
+            </div>
 
-        <!-- El estado y el ID se gestionan internamente -->
-        <input type="hidden" th:field="*{estado}">
+            <div class="mb-3">
+                <label for="proximidad" class="form-label">Provincia (proximidad)</label>
+                <select id="proximidad" th:field="*{proximidad}" class="form-select">
+                    <option th:each="prov : ${provincias}"
+                            th:value="${prov}"
+                            th:text="${prov}"></option>
+                </select>
+            </div>
 
-        <br>
-        <button type="submit">Guardar</button>
+            <div class="mb-3">
+                <label for="preferencias" class="form-label">Preferencias</label>
+                <textarea id="preferencias" th:field="*{preferencias}"
+                          class="form-control" rows="3" placeholder="Describe tus preferencias..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-success w-100">Guardar solicitud</button>
     </form>
-    <br>
-    <a th:href="@{/APRequest/list}">Volver a la lista</a>
+    <a th:href="@{/APRequest/mylist}" class="btn btn-secondary w-100 mt-2">Volver a mis solicitudes</a>
+    </div>
 </main>
 </body>
 </html>
