@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>SgOVI - Detalls de la Sol·licitud</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard">
+<nav>
+    <span class="nav-brand">SgOVI - Assistents</span>
+    <div class="nav-right">
+        <a th:href="@{/AssistentPersonal/requests}" class="btn-logout">Tornar</a>
+    </div>
+</nav>
+<main>
+    <h1 class="page-title">Detalls de la Sol·licitud</h1>
+    <p class="page-subtitle">Revisa la informació abans de postular-te</p>
+
+    <div th:if="${yaAceptada}" class="alert-error">
+        ⚠️ Ja t'has postulat per a aquesta sol·licitud.
+    </div>
+
+    <div class="dashboard-card" style="margin-bottom: 1.5rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h2 class="card-title" style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e5e7eb;">
+                    Contacte de l'Usuari
+                </h2>
+                <div class="field-group">
+                    <span class="field-label">Nom complet</span>
+                    <div class="field-readonly"
+                         th:text="${usuario.nombre} + ' ' + ${usuario.apellidos}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Email</span>
+                    <div class="field-readonly" th:text="${usuario.email}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Telèfon</span>
+                    <div class="field-readonly" th:text="${usuario.telefono}"></div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="card-title" style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e5e7eb;">
+                    Dades del Servei
+                </h2>
+                <div class="field-group">
+                    <span class="field-label">Província</span>
+                    <div class="field-readonly" th:text="${request.proximidad}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Tipus d'assistència</span>
+                    <div class="field-readonly" th:text="${request.tipoAsistencia}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Estat</span>
+                    <span class="badge-estat badge-acceptat" th:text="${request.estado}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-group" style="margin-top: 1rem;">
+            <span class="field-label">Preferències i detalls addicionals</span>
+            <div class="field-readonly" style="white-space: pre-wrap; min-height: 60px;">
+                <span th:if="${request.preferencias != null and !request.preferencias.isEmpty()}"
+                      th:text="${request.preferencias}"></span>
+                <span th:unless="${request.preferencias != null and !request.preferencias.isEmpty()}"
+                      class="text-waiting">No s'han especificat preferències addicionals.</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-actions">
+        <a th:unless="${yaAceptada}"
+           th:href="@{/AssistentPersonal/acceptRequest/{id}(id=${request.idSolicitud})}"
+           class="btn-new">
+            Postular-me per a aquesta sol·licitud
+        </a>
+        <span th:if="${yaAceptada}" class="btn-back"
+              style="cursor: default; opacity: 0.6;">
+            Ja acceptada
+        </span>
+        <a th:href="@{/AssistentPersonal/requests}" class="btn-back">
+            Tornar
+        </a>
+    </div>
+</main>
+</body>
+</html>

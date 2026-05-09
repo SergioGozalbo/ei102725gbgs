@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>SgOVI - Sol·licituds Disponibles</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="dashboard">
+<nav>
+  <span class="nav-brand">SgOVI - Assistents</span>
+  <div class="nav-right">
+    <a th:href="@{/dashboard/assistentPersonal}" class="btn-logout">Tornar al panel</a>
+  </div>
+</nav>
+<main>
+  <div class="page-actions">
+    <div>
+      <h1 class="page-title">Sol·licituds Disponibles</h1>
+      <p class="page-subtitle">Sol·licituds aprovades en les quals et pots postular</p>
+    </div>
+    <a th:href="@{/AssistentPersonal/myrequests}" class="btn-new">
+      Les meues peticions acceptades
+    </a>
+  </div>
+
+  <div class="table-container">
+    <div th:if="${#lists.isEmpty(requests)}"
+         style="text-align: center; padding: 2rem; color: #6b7280;">
+      No hi ha sol·licituds disponibles en aquest moment.
+    </div>
+    <table th:unless="${#lists.isEmpty(requests)}">
+      <thead>
+      <tr>
+        <th>Usuari OVI</th>
+        <th>Província</th>
+        <th>Tipus</th>
+        <th>Accions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="req : ${requests}">
+        <td>
+                    <span th:each="u : ${usuarios}"
+                          th:if="${u.idUsuario == req.idUsuarioOvi}"
+                          th:text="${u.nombre} + ' ' + ${u.apellidos}"></span>
+        </td>
+        <td th:text="${req.proximidad}"></td>
+        <td>
+                    <span class="badge-estat badge-pendent"
+                          th:text="${req.tipoAsistencia}"></span>
+        </td>
+        <td>
+          <div class="table-actions">
+            <a th:href="@{/AssistentPersonal/requestDetails/{id}(id=${req.idSolicitud})}"
+               class="btn-edit">Veure detalls</a>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

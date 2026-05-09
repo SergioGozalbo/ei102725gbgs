@@ -514,3 +514,35 @@ input[type="text"][readonly] {
     clip: rect(0,0,0,0);
     border: 0;
 }
+
+
+
+/* --- Extensiones para MyRequests --- */
+
+/* Fila cuando ya has sido seleccionado (bloqueada) */
+.fila-bloqueada {
+    background-color: #f8fafc !important;
+    border-left: 4px solid #0f1f3d;
+}
+
+.text-success {
+    color: #166534;
+    font-weight: 700;
+}
+
+.peticion-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.small-hint {
+    font-size: 0.75rem;
+    color: #6b7280;
+}
+
+/* Ajuste para el estado en espera */
+.text-waiting {
+    color: #6b7280;
+    font-style: italic;
+}

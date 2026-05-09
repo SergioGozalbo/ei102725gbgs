@@ -49,6 +49,10 @@
                     <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}"
                        style="color: #dc2626; text-decoration: none; font-weight: 600;"
                        onclick="return confirm('Estàs segur que vols esborrar esta sol·licitud?')">Esborrar</a>
+
+                    <a th:if="${request.estado == 'Aprobada'}"
+                       th:href="@{/APRequest/candidatos/{id}(id=${request.idSolicitud})}"
+                       class="btn-card" style="background: #059669;">Ver Candidatos</a>
                 </td>
             </tr>
             </tbody>
