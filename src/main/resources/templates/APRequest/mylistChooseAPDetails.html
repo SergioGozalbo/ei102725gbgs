@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>SgOVI - Detalls del Candidat</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body class="dashboard">
+<nav>
+    <span class="nav-brand">SgOVI</span>
+    <div class="nav-right">
+        <a th:href="@{/APRequest/mylistChooseAP/{id}(id=${idSolicitud})}"
+           class="btn-logout">Tornar als candidats</a>
+    </div>
+</nav>
+<main>
+    <h1 class="page-title">Detalls del Candidat</h1>
+    <p class="page-subtitle">Revisa la informació de l'assistent abans d'acceptar-lo.</p>
+
+    <div class="dashboard-card" style="max-width: 700px; margin-bottom: 1.5rem;">
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h2 class="card-title"
+                    style="margin-bottom: 1rem; padding-bottom: 0.5rem;
+                           border-bottom: 2px solid #e5e7eb;">
+                    Dades personals
+                </h2>
+                <div class="field-group">
+                    <span class="field-label">Nom</span>
+                    <div class="field-readonly" th:text="${assistent.nombre}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Cognoms</span>
+                    <div class="field-readonly" th:text="${assistent.apellidos}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Email</span>
+                    <div class="field-readonly" th:text="${assistent.email}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Telèfon</span>
+                    <div class="field-readonly" th:text="${assistent.telefono}"></div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="card-title"
+                    style="margin-bottom: 1rem; padding-bottom: 0.5rem;
+                           border-bottom: 2px solid #e5e7eb;">
+                    Experiència i formació
+                </h2>
+                <div class="field-group">
+                    <span class="field-label">Formació acadèmica</span>
+                    <div class="field-readonly" style="white-space: pre-wrap; min-height: 60px;"
+                         th:text="${assistent.formacionAcademica}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Experiència professional</span>
+                    <div class="field-readonly" style="white-space: pre-wrap; min-height: 60px;"
+                         th:text="${assistent.experiencia}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-actions">
+        <a th:href="@{/APRequest/acceptarAssistent/{idSolicitud}/{idAsistente}
+            (idSolicitud=${idSolicitud}, idAsistente=${assistent.idAsistente})}"
+           class="btn-new"
+           style="background: #166534;"
+           onclick="return confirm('Estàs segur que vols acceptar aquest assistent? Aquesta acció és irreversible.')">
+            ✓ Acceptar aquest assistent
+        </a>
+        <a th:href="@{/APRequest/mylistChooseAP/{id}(id=${idSolicitud})}"
+           class="btn-back">
+            Tornar als candidats
+        </a>
+    </div>
+</main>
+</body>
+</html>
