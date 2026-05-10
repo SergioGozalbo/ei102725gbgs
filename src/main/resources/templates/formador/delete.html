@@ -2,29 +2,38 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
-    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Formador</title>
 </head>
-<body>
 
-<h2>Formadors</h2>
+<body class="table-page">
 
-<table class="table table-striped">
-    <tr>
-        <th>Name</th>
-        <th>Action</th>
+<main>
+
+<h1 class="page-title">
+    Formadors
+</h1>
+
+    <div class="table-container">
+       <table>
+          <thead>
+          <tr>
+              <th>Name</th>
+              <th>Action</th>
     </tr>
-
-    <tr th:each="f : ${formadors}">
-    <td th:text="${f.nombre}"></td>
-    <td>
-        <a th:href="@{/api/formador/delete/{id}(id=${f.idFormador})}">
-            Delete
-        </a>
-    </td>
-    </tr>
-</table>
-
+          </thead>
+           <tbody>
+           <tr th:each="f : ${formadors}">
+               <td th:text="${f.nombre}"></td>
+               <td>
+                   <a th:href="@{/api/formador/delete/{id}(id=${f.idFormador})}"
+                      class="btn-delete">
+                       Delete
+                   </a>
+               </td>
+           </tr>
+           </tbody>
+       </table>
+    </div>
+</main>
 </body>
-</html>
