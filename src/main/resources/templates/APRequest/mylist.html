@@ -43,16 +43,37 @@
                 <td style="padding: 1rem;" th:text="${request.proximidad}"></td>
                 <td style="padding: 1rem;" th:text="${request.preferencias}"></td>
                 <td style="padding: 1rem; text-align: center;">
-                    <a th:href="@{/APRequest/update/{id}(id=${request.idSolicitud})}"
-                       style="color: #1a56db; text-decoration: none; font-weight: 600; margin-right: 10px;">Editar</a>
+                    <!-- Solo mostrar editar/borrar si no tiene contrato -->
+                    <span th:if="${asistenteElegido[request.idSolicitud] == null}">
+        <a th:href="@{/APRequest/update/{id}(id=${request.idSolicitud})}"
+           style="color: #1a56db; text-decoration: none; font-weight: 600; margin-right: 10px;">
+            Editar
+        </a>
+        <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}"
+           style="color: #dc2626; text-decoration: none; font-weight: 600; margin-right: 10px;"
+           onclick="return confirm('Estàs segur que vols esborrar esta sol·licitud?')">
+            Esborrar
+        </a>
+    </span>
 
-                    <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}"
-                       style="color: #dc2626; text-decoration: none; font-weight: 600;"
-                       onclick="return confirm('Estàs segur que vols esborrar esta sol·licitud?')">Esborrar</a>
+                    <!-- Botón candidatos: solo si está Aprobada y sin contrato -->
+                    <a th:if="${request.estado == 'Aprobada' and asistenteElegido[request.idSolicitud] == null}"
+                       th:href="@{/APRequest/mylistChooseAP/{id}(id=${request.idSolicitud})}"
+                       class="btn-card" style="background: #059669;">
+                        Ver Candidatos
+                    </a>
 
-                    <a th:if="${request.estado == 'Aprobada'}"
-                       th:href="@{/APRequest/candidatos/{id}(id=${request.idSolicitud})}"
-                       class="btn-card" style="background: #059669;">Ver Candidatos</a>
+                    <!-- Si ya tiene contrato: mostrar quién fue elegido con enlace a detalles -->
+                    <span th:if="${asistenteElegido[request.idSolicitud] != null}"
+                          style="display: inline-flex; align-items: center; gap: 0.5rem;">
+        <span class="badge-estat badge-acceptat">✓ Candidat escollit</span>
+        <a th:href="@{/APRequest/mylistChooseAPDetails/{idSolicitud}/{idAsistente}
+            (idSolicitud=${request.idSolicitud},
+             idAsistente=${asistenteElegido[request.idSolicitud]})}"
+           style="color: #166534; font-weight: 600; text-decoration: none; font-size: 0.85rem;">
+            Veure detalls
+        </a>
+    </span>
                 </td>
             </tr>
             </tbody>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>SgOVI - Candidats disponibles</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body class="dashboard">
+<nav>
+    <span class="nav-brand">SgOVI</span>
+    <div class="nav-right">
+        <a th:href="@{/APRequest/mylist}" class="btn-logout">Tornar a les meues sol·licituds</a>
+    </div>
+</nav>
+<main>
+    <div class="page-actions">
+        <div>
+            <h1 class="page-title">Candidats disponibles</h1>
+            <p class="page-subtitle">
+                Assistents que s'han postulat per a la teua sol·licitud de tipus
+                <strong th:text="${request.tipoAsistencia}"></strong>
+                a <strong th:text="${request.proximidad}"></strong>.
+            </p>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(candidatos)}"
+         style="background: #e0f2fe; border: 1px solid #7dd3fc; color: #0369a1;
+                border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 1.5rem;">
+        Encara no hi ha cap assistent postulat per a aquesta sol·licitud.
+    </div>
+
+    <div class="table-container" th:unless="${#lists.isEmpty(candidatos)}">
+        <table>
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Cognoms</th>
+                <th>Província</th>
+                <th>Estat</th>
+                <th>Accions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="candidat : ${candidatos}">
+                <td th:text="${candidat.nombre}"></td>
+                <td th:text="${candidat.apellidos}"></td>
+                <td th:text="${candidat.estadoAceptado}"></td>
+                <td>
+                    <span class="badge-estat badge-acceptat">Postulat</span>
+                </td>
+                <td>
+                    <div class="table-actions">
+                        <a th:href="@{/APRequest/mylistChooseAPDetails/{idSolicitud}/{idAsistente}
+                            (idSolicitud=${request.idSolicitud}, idAsistente=${candidat.idAsistente})}"
+                           class="btn-edit">Veure detalls</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
