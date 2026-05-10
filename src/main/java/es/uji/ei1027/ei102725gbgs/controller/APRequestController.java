@@ -73,10 +73,29 @@ class APRequestValidator implements Validator {
 @RequestMapping("/APRequest")
 public class APRequestController {
 
+    /**
+     * DAO for APRequest entities.
+     */
     private final APRequestDaoImpl apRequestDao;
+
+    /**
+     * DAO for UsuariOVI entities.
+     */
     private final UsuariOVIDaoImpl usuariOVIDao;
+
+    /**
+     * DAO for AssistentPersonal entities.
+     */
     private final AssistentPersonalDaoImpl assistentPersonalDao;
+
+    /**
+     * Validator for APRequest entities.
+     */
     private final APRequestValidator apRequestValidator;
+
+    /**
+     * DAO for Selection entities.
+     */
     private final SelectionDaoImpl selectionDao;
 
     /**
@@ -85,13 +104,14 @@ public class APRequestController {
      * @param usuariOVIDao the UsuariOVIDaoImpl instance for accessing UsuariOVI data
      * @param assistentPersonalDao the AssistentPersonalDaoImpl instance for accessing AssistentPersonal data
      * @param apRequestValidator the APRequestValidator instance for validating APRequest entities
+     * @param selectionDao the SelectionDaoImpl instance for accessing Selection data
      */
     @Autowired
     public APRequestController(APRequestDaoImpl apRequestDao,
                                 UsuariOVIDaoImpl usuariOVIDao,
                                 AssistentPersonalDaoImpl assistentPersonalDao,
                                 APRequestValidator apRequestValidator,
-                               SelectionDaoImpl selectionDao) {
+                                SelectionDaoImpl selectionDao) {
         this.apRequestDao = apRequestDao;
         this.usuariOVIDao = usuariOVIDao;
         this.assistentPersonalDao = assistentPersonalDao;
@@ -256,6 +276,12 @@ public class APRequestController {
         return "redirect:/APRequest/list";
     }
 
+    /**
+     * Shows the list of candidates for a specific APRequest.
+     * @param id the ID of the APRequest to show candidates for
+     * @param model the Model object to pass data to the view
+     * @return the view for displaying candidates
+     */
     @RequestMapping("/candidatos/{id}")
     public String verCandidatos(@PathVariable int id, Model model) {
         List<Selection> selecciones = selectionDao.getSelectionsBySolicitud(id);

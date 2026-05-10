@@ -109,18 +109,31 @@ public class SelectionDaoImpl {
         }
     }
 
+    /**
+     * Retrieves a list of Selection entities associated with the given request ID.
+     * @param idSolicitud the request ID to filter by; must not be {@code null}
+     * @return a list of Selection entities associated with the given request ID; never {@code null}
+     */
     public List<Selection> getSelectionsBySolicitud(int idSolicitud) {
         return jdbcTemplate.query("SELECT * FROM SELECCION WHERE id_solicitud = ?",
                 new SelectionRowMapper(), idSolicitud);
     }
 
-    // Obtener todas las selecciones de un asistente específico
+    /**
+     * Retrieves a list of Selection entities associated with the given assistant ID.
+     * @param idAsistente the assistant ID to filter by; must not be {@code null}
+     * @return a list of Selection entities associated with the given assistant ID; never {@code null}
+     */
     public List<Selection> getSelectionsByAsistente(String idAsistente) {
         return jdbcTemplate.query("SELECT * FROM SELECCION WHERE id_asistente = ?",
                 new SelectionRowMapper(), idAsistente);
     }
 
-    // Borrar una selección específica (cancelar petición)
+    /**
+     * Deletes the Selection associated with the given request ID and assistant ID from the database.
+     * @param idSolicitud the request ID of the Selection to delete; must not be {@code null}
+     * @param idAsistente the assistant ID of the Selection to delete; must not be {@code null}
+     */
     public void deleteSelection(int idSolicitud, String idAsistente) {
         jdbcTemplate.update("DELETE FROM SELECCION WHERE id_solicitud = ? AND id_asistente = ?",
                 idSolicitud, idAsistente);
