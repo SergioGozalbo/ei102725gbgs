@@ -108,4 +108,21 @@ public class SelectionDaoImpl {
             return new ArrayList<Selection>();
         }
     }
+
+    public List<Selection> getSelectionsBySolicitud(int idSolicitud) {
+        return jdbcTemplate.query("SELECT * FROM SELECCION WHERE id_solicitud = ?",
+                new SelectionRowMapper(), idSolicitud);
+    }
+
+    // Obtener todas las selecciones de un asistente específico
+    public List<Selection> getSelectionsByAsistente(String idAsistente) {
+        return jdbcTemplate.query("SELECT * FROM SELECCION WHERE id_asistente = ?",
+                new SelectionRowMapper(), idAsistente);
+    }
+
+    // Borrar una selección específica (cancelar petición)
+    public void deleteSelection(int idSolicitud, String idAsistente) {
+        jdbcTemplate.update("DELETE FROM SELECCION WHERE id_solicitud = ? AND id_asistente = ?",
+                idSolicitud, idAsistente);
+    }
 }

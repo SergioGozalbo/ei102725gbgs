@@ -3,8 +3,10 @@ package es.uji.ei1027.ei102725gbgs.controller;
 import es.uji.ei1027.ei102725gbgs.dao.APRequestDaoImpl;
 import es.uji.ei1027.ei102725gbgs.dao.AssistentPersonalDaoImpl;
 import es.uji.ei1027.ei102725gbgs.dao.UsuariOVIDaoImpl;
+import es.uji.ei1027.ei102725gbgs.dao.SelectionDaoImpl;
 import es.uji.ei1027.ei102725gbgs.model.APRequest;
 import es.uji.ei1027.ei102725gbgs.model.AssistentPersonal;
+import es.uji.ei1027.ei102725gbgs.model.Selection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
 import jakarta.servlet.http.HttpSession;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -70,25 +73,11 @@ class APRequestValidator implements Validator {
 @RequestMapping("/APRequest")
 public class APRequestController {
 
-    /**
-     * Data access object for APRequest entities.
-     */
     private final APRequestDaoImpl apRequestDao;
-
-    /**
-     * Data access object for UsuariOVI entities.
-     */
     private final UsuariOVIDaoImpl usuariOVIDao;
-
-    /**
-     * Data access object for AssistentPersonal entities.
-     */
     private final AssistentPersonalDaoImpl assistentPersonalDao;
-
-    /**
-     * Validator for APRequest entities to ensure that they meet the required criteria before being processed.
-     */
     private final APRequestValidator apRequestValidator;
+    private final SelectionDaoImpl selectionDao;
 
     /**
      * Constructor for APRequestController.
@@ -101,11 +90,13 @@ public class APRequestController {
     public APRequestController(APRequestDaoImpl apRequestDao,
                                 UsuariOVIDaoImpl usuariOVIDao,
                                 AssistentPersonalDaoImpl assistentPersonalDao,
-                                APRequestValidator apRequestValidator) {
+                                APRequestValidator apRequestValidator,
+                               SelectionDaoImpl selectionDao) {
         this.apRequestDao = apRequestDao;
         this.usuariOVIDao = usuariOVIDao;
         this.assistentPersonalDao = assistentPersonalDao;
         this.apRequestValidator = apRequestValidator;
+        this.selectionDao = selectionDao;
     }
 
     private List<String> getListaProvincias() {
@@ -263,5 +254,17 @@ public class APRequestController {
     public String processAprobar(@RequestParam int idSolicitud) {
         apRequestDao.updateEstado(idSolicitud, "Aprobada");
         return "redirect:/APRequest/list";
+    }
+
+    @RequestMapping("/candidatos/{id}")
+    public String verCandidatos(@PathVariable int id, Model model) {
+        List<Selection> selecciones = selectionDao.getSelectionsBySolicitud(id);
+        List<AssistentPersonal> asistentes = new ArrayList<>();
+        for (Selection s : selecciones) {
+            asistentes.add(assistentPersonalDao.getAssistentPersonal(s.getIdAsistente()));
+        }
+        model.addAttribute("candidatos", asistentes);
+        model.addAttribute("idSolicitud", id);
+        return "APRequest/verCandidatos";
     }
 }

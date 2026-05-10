@@ -1,7 +1,7 @@
 package es.uji.ei1027.ei102725gbgs.controller;
 
-import es.uji.ei1027.ei102725gbgs.dao.AssistentPersonalDaoImpl;
-import es.uji.ei1027.ei102725gbgs.model.AssistentPersonal;
+import es.uji.ei1027.ei102725gbgs.dao.*;
+import es.uji.ei1027.ei102725gbgs.model.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.validation.Validator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 class AssistentPersonalValidator implements Validator {
@@ -85,27 +88,26 @@ class AssistentPersonalValidator implements Validator {
 @RequestMapping("/AssistentPersonal")
 public class AssistentPersonalController {
 
-    /**
-     * The DAO used to access the data store to manage {@link AssistentPersonal}.
-     */
     private final AssistentPersonalDaoImpl assistentPersonalDao;
-
-    /**
-     * Validator for validating AssistentPersonal data before processing it.
-     */
     private final AssistentPersonalValidator assistentPersonalValidator;
+    private final APRequestDaoImpl apRequestDao;
+    private final SelectionDaoImpl selectionDao;
+    private final UsuariOVIDaoImpl usuariOVIDao;
+    private final RegistreContracteDaoImpl registreContracteDao;
 
-    /**
-     * Creates a new controller.
-     * @param assistentPersonalDao DAO for AssistentPersonal data
-     * @param assistentPersonalValidator validator for AssistentPersonal data
-     */
     @Autowired
-        public AssistentPersonalController(
-            AssistentPersonalDaoImpl assistentPersonalDao,
-            AssistentPersonalValidator assistentPersonalValidator) {
+    public AssistentPersonalController(AssistentPersonalDaoImpl assistentPersonalDao,
+                                       AssistentPersonalValidator assistentPersonalValidator,
+                                       APRequestDaoImpl apRequestDao,
+                                       SelectionDaoImpl selectionDao,
+                                       UsuariOVIDaoImpl usuariOVIDao,
+                                       RegistreContracteDaoImpl registreContracteDao) {
         this.assistentPersonalDao = assistentPersonalDao;
         this.assistentPersonalValidator = assistentPersonalValidator;
+        this.apRequestDao = apRequestDao;
+        this.selectionDao = selectionDao;
+        this.usuariOVIDao = usuariOVIDao;
+        this.registreContracteDao = registreContracteDao;
     }
 
     /**
@@ -274,4 +276,138 @@ public class AssistentPersonalController {
 
         return "redirect:profile";
     }
+
+    // 1. LISTA DE SOLICITUDES DISPONIBLES (Filtradas)
+    @RequestMapping("/requests")
+    public String listRequests(Model model, HttpSession session) {
+        AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (ap == null) return "redirect:/login";
+
+        // Obtener IDs de solicitudes que este asistente YA ha aceptado
+        List<Integer> acceptedIds = selectionDao.getSelectionsByAsistente(ap.getIdAsistente())
+                .stream().map(Selection::getIdSolicitud).toList();
+
+        // Filtrar: Solo "Aprobada" y que NO estén en la lista de aceptadas por él
+        List<APRequest> availableRequests = apRequestDao.getAPRequests().stream()
+                .filter(r -> "Aprobada".equalsIgnoreCase(r.getEstado()) && !acceptedIds.contains(r.getIdSolicitud()))
+                .toList();
+
+        model.addAttribute("requests", availableRequests);
+        model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI()); // Para sacar los nombres
+        return "AssistentPersonal/requestList";
+    }
+
+    // 2. DETALLES COMPLETOS (Con datos del UsuariOVI)
+    @RequestMapping("/requestDetails/{id}")
+    public String requestDetails(@PathVariable int id, Model model, HttpSession session) {
+        AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (ap == null) return "redirect:/login";
+
+        APRequest request = apRequestDao.getAPRequest(id);
+        if (request == null)
+            return "redirect:/AssistentPersonal/requests";
+
+        UsuariOVI usuario = usuariOVIDao.getUsuariOVI(request.getIdUsuarioOvi());
+        if (usuario == null) {
+            usuario = new UsuariOVI();
+            usuario.setNombre("No disponible");
+        }
+
+        // Comprobar si ya aceptó esta solicitud
+        boolean yaAceptada = selectionDao.getSelectionsByAsistente(ap.getIdAsistente())
+                .stream().anyMatch(s -> s.getIdSolicitud() == id);
+
+        model.addAttribute("request", request);
+        model.addAttribute("usuario", usuario);
+        model.addAttribute("yaAceptada", yaAceptada);
+        return "AssistentPersonal/requestDetails";
+    }
+
+    @RequestMapping("/myrequests")
+    public String myRequests(Model model, HttpSession session) {
+        AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (ap == null) return "redirect:/login";
+
+        List<Selection> mySelections = selectionDao.getSelectionsByAsistente(ap.getIdAsistente());
+        List<APRequest> myAcceptedRequests = new ArrayList<>();
+        List<Integer> solicitudesConContrato = new ArrayList<>();
+
+        List<RegistreContracte> todosLosContratos = registreContracteDao.getRegistresContractes();
+
+        for (Selection s : mySelections) {
+            APRequest req = apRequestDao.getAPRequest(s.getIdSolicitud());
+            if (req != null) {
+                myAcceptedRequests.add(req);
+
+                // Comprobar si esta selección tiene contrato
+                boolean tieneContrato = todosLosContratos.stream()
+                        .anyMatch(c -> c.getIdSeleccion() == s.getIdSeleccion());
+                if (tieneContrato) {
+                    solicitudesConContrato.add(s.getIdSolicitud());
+                }
+            }
+        }
+
+        model.addAttribute("requests", myAcceptedRequests);
+        model.addAttribute("selections", mySelections);
+        model.addAttribute("solicitudesConContrato", solicitudesConContrato);
+        model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI());
+
+        return "AssistentPersonal/myrequests";
+    }
+
+    @RequestMapping(value = "/acceptRequest/{id}")
+    public String acceptRequest(@PathVariable int id, HttpSession session) {
+        AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (ap == null) return "redirect:/login";
+
+        // Calcular siguiente ID
+        int nextId = selectionDao.getSelections().stream()
+                .mapToInt(Selection::getIdSeleccion)
+                .max().orElse(0) + 1;
+
+        Selection selection = new Selection();
+        selection.setIdSeleccion(nextId);
+        selection.setIdSolicitud(id);
+        selection.setIdAsistente(ap.getIdAsistente());
+
+        selectionDao.addSelection(selection);
+        return "redirect:/AssistentPersonal/myrequests";
+    }
+
+    @RequestMapping("/cancelRequest/{id}")
+    public String cancelRequest(@PathVariable int id, HttpSession session) {
+        AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (ap == null) return "redirect:/login";
+
+        // 1. Buscamos la selección que corresponde a esta solicitud (Bucle tradicional)
+        List<Selection> selecciones = selectionDao.getSelectionsByAsistente(ap.getIdAsistente());
+        Selection miSeleccion = null;
+        for (Selection s : selecciones) {
+            if (s.getIdSolicitud() == id) {
+                miSeleccion = s;
+                break;
+            }
+        }
+
+        if (miSeleccion != null) {
+            // 2. Comprobar si existe un contrato para esta selección específica
+            List<RegistreContracte> todosLosContratos = registreContracteDao.getRegistresContractes();
+            boolean tieneContrato = false;
+            for (RegistreContracte c : todosLosContratos) {
+                if (c.getIdSeleccion() == miSeleccion.getIdSeleccion()) {
+                    tieneContrato = true;
+                    break;
+                }
+            }
+
+            // 3. Solo borramos si no hay contrato (evita el Error 500)
+            if (!tieneContrato) {
+                selectionDao.deleteSelection(id, ap.getIdAsistente());
+            }
+        }
+
+        return "redirect:/AssistentPersonal/myrequests";
+    }
 }
+

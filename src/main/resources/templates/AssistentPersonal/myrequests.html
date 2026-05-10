@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Mis Peticiones Aceptadas</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="table-page">
+<nav aria-label="Navegación principal">
+    <span class="nav-brand">SgOVI</span>
+    <div class="nav-right">
+        <a th:href="@{/dashboard/assistentPersonal}" class="btn-logout">Volver al panel</a>
+    </div>
+</nav>
+<main>
+    <div class="page-actions">
+        <div>
+            <h1 class="page-title">Mis Peticiones Aceptadas</h1>
+            <p class="page-subtitle">Aquí ves el estado de todas las solicitudes en las que te has postulado.</p>
+        </div>
+        <a th:href="@{/AssistentPersonal/requests}" class="btn-new">Buscar más solicitudes</a>
+    </div>
+
+    <div class="table-container">
+        <div th:if="${#lists.isEmpty(requests)}"
+             style="text-align: center; padding: 2rem; color: #4b5563;">
+            Todavía no te has postulado para ninguna solicitud.
+        </div>
+        <table th:unless="${#lists.isEmpty(requests)}">
+            <caption class="visually-hidden">Lista de peticiones aceptadas</caption>
+            <thead>
+            <tr>
+                <th scope="col">Usuario</th>
+                <th scope="col">Provincia</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="req : ${requests}"
+                th:classappend="${#lists.contains(solicitudesConContrato, req.idSolicitud)} ? 'fila-bloqueada'">
+                <td>
+                        <span th:each="u : ${usuarios}"
+                              th:if="${u.idUsuario == req.idUsuarioOvi}"
+                              th:text="${u.nombre} + ' ' + ${u.apellidos}"></span>
+                </td>
+                <td th:text="${req.proximidad}"></td>
+                <td>
+                        <span th:if="${#lists.contains(solicitudesConContrato, req.idSolicitud)}"
+                              class="badge-estat badge-acceptat">✓ Elegido por el usuario</span>
+                    <span th:unless="${#lists.contains(solicitudesConContrato, req.idSolicitud)}"
+                          class="badge-estat badge-pendent">Pendiente de decisión</span>
+                </td>
+                <td>
+                    <div class="table-actions">
+                        <a th:unless="${#lists.contains(solicitudesConContrato, req.idSolicitud)}"
+                           th:href="@{/AssistentPersonal/cancelRequest/{id}(id=${req.idSolicitud})}"
+                           class="btn-delete"
+                           onclick="return confirm('¿Quieres cancelar tu candidatura?')">
+                            Cancelar
+                        </a>
+                        <span th:if="${#lists.contains(solicitudesConContrato, req.idSolicitud)}"
+                              style="color: #6b7280;">—</span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
