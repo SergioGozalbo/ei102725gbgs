@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Detalles de la Solicitud</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body class="form-page">
+<nav aria-label="Navegación principal">
+    <span class="nav-brand">SgOVI</span>
+    <div class="nav-right">
+        <a th:href="@{/AssistentPersonal/requests}" class="btn-logout">Volver</a>
+    </div>
+</nav>
+<main>
+    <div class="page-actions">
+        <div>
+            <h1 class="page-title">Detalles de la Solicitud</h1>
+            <p class="page-subtitle">Revisa la información antes de postularte.</p>
+        </div>
+        <a th:href="@{/AssistentPersonal/requests}" class="btn-back">Volver</a>
+    </div>
+
+    <div th:if="${yaAceptada}" class="alert-error">
+         Ya te has postulado para esta solicitud.
+    </div>
+
+    <div class="form-card" style="max-width: 100%;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div>
+                <h2 class="card-title" style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e5e7eb;">
+                    Contacto del Usuario
+                </h2>
+                <div class="field-group">
+                    <span class="field-label">Nombre completo</span>
+                    <div class="field-readonly"
+                         th:text="${usuario.nombre} + ' ' + ${usuario.apellidos}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Email</span>
+                    <div class="field-readonly" th:text="${usuario.email}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Teléfono</span>
+                    <div class="field-readonly" th:text="${usuario.telefono}"></div>
+                </div>
+            </div>
+
+            <div>
+                <h2 class="card-title" style="margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e5e7eb;">
+                    Datos del Servicio
+                </h2>
+                <div class="field-group">
+                    <span class="field-label">Provincia</span>
+                    <div class="field-readonly" th:text="${request.proximidad}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Tipo de asistencia</span>
+                    <div class="field-readonly" th:text="${request.tipoAsistencia}"></div>
+                </div>
+                <div class="field-group">
+                    <span class="field-label">Estado</span>
+                    <span class="badge-estat badge-acceptat" th:text="${request.estado}"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="field-group" style="margin-top: 1rem;">
+            <span class="field-label">Preferencias y detalles adicionales</span>
+            <div class="field-readonly" style="white-space: pre-wrap; min-height: 60px;">
+                <span th:if="${request.preferencias != null and !request.preferencias.isEmpty()}"
+                      th:text="${request.preferencias}"></span>
+                <span th:unless="${request.preferencias != null and !request.preferencias.isEmpty()}"
+                      style="color: #6b7280;">No se han especificado preferencias adicionales.</span>
+            </div>
+        </div>
+
+        <div class="table-actions" style="margin-top: 1.5rem;">
+            <a th:unless="${yaAceptada}"
+               th:href="@{/AssistentPersonal/acceptRequest/{id}(id=${request.idSolicitud})}"
+               class="btn-new">
+                Postularme para esta solicitud
+            </a>
+            <span th:if="${yaAceptada}" class="btn-back"
+                  style="cursor: default; opacity: 0.6;">
+                Ya aceptada
+            </span>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -7,7 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 import es.uji.ei1027.ei102725gbgs.model.Formador;
 import es.uji.ei1027.ei102725gbgs.services.FormadorServiceImpl;
@@ -16,70 +23,124 @@ import es.uji.ei1027.ei102725gbgs.services.FormadorServiceImpl;
 @RequestMapping("/api/formador")
 public class FormadorController {
 
-	private final FormadorServiceImpl service;
+    /**
+     * Service used by this controller to perform operations on Formador entities.
+     */
+    private final FormadorServiceImpl service;
 
-	@Autowired
-	public FormadorController(FormadorServiceImpl service) {
-		this.service = service;
-	}
+    /**
+     * Creates a new controller.
+     * @param service formador service
+     */
+    @Autowired
+    public FormadorController(FormadorServiceImpl service) {
+        this.service = service;
+    }
 
-	@GetMapping("/id/{id}")
-	public Formador getByID(@PathVariable int id) {
-		return service.getByID(id);
-	}
+    /**
+     * Returns one formador.
+     * @param id formador identifier
+     * @return the formador
+     */
+    @GetMapping("/id/{id}")
+    public Formador getByID(@PathVariable int id) {
+        return service.getByID(id);
+    }
 
-	@GetMapping("/add-formador")
-	public String showAddForm(Model model) {
-		model.addAttribute("formador", new Formador());
-		return "formador/add";
-	}
-	@PostMapping("/add")
-	public String addFormador(@ModelAttribute("formador") Formador formador,
-							  BindingResult result) {
-		FormadorValidator validator = new FormadorValidator();
-		validator.validate(formador, result);
+    /**
+     * Shows the add form.
+     * @param model model for the view
+     * @return the add view
+     */
+    @GetMapping("/add-formador")
+    public String showAddForm(Model model) {
+        model.addAttribute("formador", new Formador());
+        return "formador/add";
+    }
 
-		if (result.hasErrors()) {
-			return "formador/add";
-		}
-		service.addFormador(formador);
-		return "redirect:/api/formador/add-formador";
-	}
+    /**
+     * Processes a new formador.
+     * @param formador formador data
+     * @param result validation errors
+     * @return redirect or add view on error
+     */
+    @PostMapping("/add")
+    public String addFormador(@ModelAttribute("formador") Formador formador,
+                              BindingResult result) {
+        FormadorValidator validator = new FormadorValidator();
+        validator.validate(formador, result);
 
-	@GetMapping("/delete/{id}")
-	public String delete(@PathVariable int id) {
-		service.deleteFormadorPorId(id);
-		return "redirect:/api/formador/list";
-	}
+        if (result.hasErrors()) {
+            return "formador/add";
+        }
+        service.addFormador(formador);
+        return "redirect:/api/formador/add-formador";
+    }
 
-	@GetMapping("/all")
-	public List<Formador> getAll() {
-		return service.getAll();
-	}
+    /**
+     * Deletes a formador.
+     * @param id formador identifier
+     * @return redirect to the list view
+     */
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable int id) {
+        service.deleteFormadorPorId(id);
+        return "redirect:/api/formador/list";
+    }
 
-	@GetMapping("/list")
-	public String list(Model model) {
-		model.addAttribute("formadors", service.getAll());
-		return "formador/list";
-	}
+    /**
+     * Returns all formadors.
+     * @return the formador list
+     */
+    @GetMapping("/all")
+    public List<Formador> getAll() {
+        return service.getAll();
+    }
 
-	@PostMapping("/create")
-	public void addFormador(@RequestBody Formador entity) {
-		service.addFormador(entity);
-	}
+    /**
+     * Shows the list of formadors.
+     * @param model model for the view
+     * @return the list view
+     */
+    @GetMapping("/list")
+    public String list(Model model) {
+        model.addAttribute("formadors", service.getAll());
+        return "formador/list";
+    }
 
-	@PutMapping("/update")
-	public void updateFormador(@RequestBody Formador entity) {
-		service.updateFormador(entity);
-	}
+    /**
+     * Creates a formador.
+     * @param entity formador data
+     */
+    @PostMapping("/create")
+    public void addFormador(@RequestBody Formador entity) {
+        service.addFormador(entity);
+    }
 
-	@DeleteMapping("/{id}")
-	public void deleteFormadorPorId(@PathVariable int id) {
-		service.deleteFormadorPorId(id);
-	}
+    /**
+     * Updates a formador.
+     * @param entity formador data
+     */
+    @PutMapping("/update")
+    public void updateFormador(@RequestBody Formador entity) {
+        service.updateFormador(entity);
+    }
 
-	@DeleteMapping("/name/{nombre}")
-	public void deleteFormadorPorNombre(@PathVariable String nombre) {
-		service.deleteFormadorPorNombre(nombre);
-	}
+    /**
+     * Deletes a formador by ID.
+     * @param id formador identifier
+     */
+    @DeleteMapping("/{id}")
+    public void deleteFormadorPorId(@PathVariable int id) {
+        service.deleteFormadorPorId(id);
+    }
+
+    /**
+     * Deletes a formador by name.
+     * @param nombre formador name
+     */
+    @DeleteMapping("/name/{nombre}")
+    public void deleteFormadorPorNombre(@PathVariable String nombre) {
+        service.deleteFormadorPorNombre(nombre);
+    }
 }

@@ -27,17 +27,16 @@
             <td th:text="${request.proximidad}"></td>
             <td>
                 <a th:if="${request.estado == 'En revisión'}"
-                   th:href="@{/APRequest/aprobar/{id}(id=${request.idSolicitud})}">Aprovar</a>
+                   th:href="@{/APRequest/aprobar/{id}(id=${request.idSolicitud})}">Detalles</a>
 
-                <a th:href="@{/APRequest/update/{id}(id=${request.idSolicitud})}">Edita</a>
+                <a th:href="@{/APRequest/updateAdmin/{id}(id=${request.idSolicitud})}">Edita</a>
                 <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}">Esborra</a>
             </td>
         </tr>
         </tbody>
     </table>
     <br>
-    <a th:href="@{/APRequest/add}">Afegeix sol·licitud</a>
-    <br><br>
+    <a th:href="@{/APRequest/addAdmin}">Afegeix sol·licitud</a>    <br><br>
     <a th:href="@{/}">Tornar</a>
 </main>
 </body>

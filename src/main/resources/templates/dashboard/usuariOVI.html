@@ -1,46 +1,36 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>SgOVI - Usuari OVI</title>
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+    <title>SgOVI - Usuario OVI</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
-<body class="bg-light">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <span class="navbar-brand">SgOVI</span>
-        <div class="ms-auto">
-            <span class="text-light me-3 small"
-                  th:text="'Benvingut, ' + ${usuari.nombre}"></span>
-            <a th:href="@{/logout}" class="btn btn-outline-light btn-sm">Tancar sessió</a>
-        </div>
+<body class="dashboard">
+<nav aria-label="Navegación principal">
+    <span class="nav-brand">SgOVI</span>
+    <div class="nav-right">
+        <span class="nav-user" th:text="'Bienvenido, ' + ${usuari.nombre}">Bienvenido</span>
+        <a th:href="@{/logout}" class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
 
-<main class="container py-5">
-    <h2 class="mb-4">El meu espai</h2>
+<main>
+    <h1 class="page-title">Mi espacio</h1>
+    <p class="page-subtitle">Gestiona tu perfil y consulta el estado de tus solicitudes.</p>
 
-    <div class="row g-4">
-        <div class="col-md-6">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">El meu perfil</h5>
-                    <p class="card-text text-muted">Consulta i modifica les teues dades.</p>
-                    <a th:href="@{/UsuariOVI/update/{id}(id=${usuari.idUsuario})}"
-                       class="btn btn-primary">Veure perfil</a>
-                </div>
-            </div>
+    <div class="cards-grid">
+        <div class="dashboard-card">
+            <div class="card-icon" aria-hidden="true">👤</div>
+            <h2 class="card-title">Mi perfil</h2>
+            <p class="card-desc">Consulta y modifica tus datos personales.</p>
+            <a th:href="@{/UsuariOVI/profile}" class="btn-card">Ver perfil</a>
         </div>
-        <div class="col-md-6">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">Les meues sol·licituds</h5>
-                    <p class="card-text text-muted">Consulta l'estat de les teues sol·licituds d'assistència.</p>
-                    <a th:href="@{/APRequest/mylist}" class="btn btn-primary">Veure sol·licituds</a>
-                </div>
-            </div>
+        <div class="dashboard-card">
+            <div class="card-icon" aria-hidden="true">📋</div>
+            <h2 class="card-title">Mis solicitudes</h2>
+            <p class="card-desc">Consulta el estado de tus solicitudes de asistencia.</p>
+            <a th:href="@{/APRequest/mylist}" class="btn-card">Ver solicitudes</a>
         </div>
     </div>
 </main>

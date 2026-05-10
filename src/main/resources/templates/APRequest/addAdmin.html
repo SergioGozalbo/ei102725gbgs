@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Afegeix Sol·licitud (Admin)</title>
+</head>
+<body>
+<h1>Nova Sol·licitud d'Assistència (Admin)</h1>
+<form th:action="@{/APRequest/addAdmin}" th:object="${apRequest}" method="post">
+
+  <label>Usuari OVI:</label>
+  <select th:field="*{idUsuarioOvi}">
+    <option th:each="u : ${usuariosOvi}" th:value="${u.idUsuario}" th:text="${u.nombre}"></option>
+  </select>
+  <br/>
+
+  <label>Tipus Assistència:</label>
+  <input type="text" th:field="*{tipoAsistencia}" />
+  <br/>
+
+  <label>Preferències:</label>
+  <textarea th:field="*{preferencias}"></textarea>
+  <br/>
+
+  <label>Província:</label>
+  <select th:field="*{proximidad}">
+    <option th:each="p : ${provincias}" th:value="${p}" th:text="${p}"></option>
+  </select>
+  <br/>
+
+  <button type="submit">Guardar</button>
+  <a th:href="@{/APRequest/list}">Cancel·lar</a>
+</form>
+</body>
+</html>

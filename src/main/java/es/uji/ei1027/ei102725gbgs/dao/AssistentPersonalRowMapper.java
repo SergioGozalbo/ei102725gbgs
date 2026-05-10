@@ -7,9 +7,22 @@ import org.springframework.lang.NonNull;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public final class AssistentPersonalRowMapper implements RowMapper<AssistentPersonal> {
+/**
+ * A row mapper for converting database rows to {@link AssistentPersonal} entities.
+ */
+public final class AssistentPersonalRowMapper
+        implements RowMapper<AssistentPersonal> {
+    /**
+     * Maps a row from the database result set to an {@link AssistentPersonal} entity.
+     *
+     * @param rs the result set containing the row data
+     * @param rowNum the row number
+     * @return the mapped {@link AssistentPersonal} entity
+     * @throws SQLException if an error occurs while reading the result set
+     */
     @Override
-    public AssistentPersonal mapRow(@NonNull ResultSet rs, int rowNum) throws SQLException {
+    public AssistentPersonal mapRow(@NonNull ResultSet rs,
+            int rowNum) throws SQLException {
         AssistentPersonal asistente = new AssistentPersonal();
         asistente.setIdAsistente(rs.getString("id_asistente"));
         asistente.setNombre(rs.getString("nombre"));

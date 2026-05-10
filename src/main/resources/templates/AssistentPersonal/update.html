@@ -1,76 +1,83 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>Actualizar asistente</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Editar Asistente</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
-<body>
+<body class="form-page">
+<nav>
+    <span class="nav-brand">SgOVI</span>
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
 <main>
-    <h1>Actualizar asistente</h1>
-
-    <form th:action="@{/AssistentPersonal/update}" th:object="${assistentPersonal}" method="post">
+    <div class="page-actions">
         <div>
-            <label for="idAsistente">Id asistente:</label>
-            <input type="text" id="idAsistente" th:field="*{idAsistente}" readonly>
+            <h1 class="page-title">Editar Asistente Personal</h1>
+            <p class="page-subtitle">Modifica los datos del asistente.</p>
         </div>
-        <br>
+    </div>
 
-        <div>
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" th:field="*{nombre}">
-            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red;"></span>
-        </div>
-        <br>
+    <div class="form-card">
+        <form th:action="@{/AssistentPersonal/update}" th:object="${assistentPersonal}" method="post">
+            <div class="form-group">
+                <label for="idAsistente">ID Asistente</label>
+                <input id="idAsistente" type="text" th:field="*{idAsistente}" class="input-readonly" readonly/>
+            </div>
 
-        <div>
-            <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" th:field="*{apellidos}">
-        </div>
-        <br>
+            <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input id="nombre" type="text" th:field="*{nombre}" placeholder="Nombre"/>
+                <div th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="error"></div>
+            </div>
 
-        <div>
-            <label for="email">Email:</label>
-            <input type="text" id="email" th:field="*{email}">
-            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" style="color:red;"></span>
-        </div>
-        <br>
+            <div class="form-group">
+                <label for="apellidos">Apellidos</label>
+                <input id="apellidos" type="text" th:field="*{apellidos}" placeholder="Apellidos"/>
+            </div>
 
-        <div>
-            <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" th:field="*{telefono}">
-            <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" style="color:red;"></span>
-        </div>
-        <br>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" type="email" th:field="*{email}" placeholder="correo@ejemplo.com"/>
+                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></div>
+            </div>
 
-        <div>
-            <label for="formacionAcademica">Formación Académica:</label><br>
-            <textarea id="formacionAcademica" th:field="*{formacionAcademica}" rows="4" cols="50"></textarea>
-        </div>
-        <br>
+            <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input id="telefono" type="text" th:field="*{telefono}" placeholder="6XXXXXXXX"/>
+                <div th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="error"></div>
+            </div>
 
-        <div>
-            <label for="experiencia">Experiencia:</label><br>
-            <textarea id="experiencia" th:field="*{experiencia}" rows="4" cols="50"></textarea>
-        </div>
-        <br>
+            <div class="form-group">
+                <label for="formacionAcademica">Formación académica</label>
+                <textarea id="formacionAcademica" th:field="*{formacionAcademica}" rows="4"
+                          placeholder="Formación académica"></textarea>
+            </div>
 
-        <div>
-            <label for="estadoAceptado">Estado de Aceptación:</label>
-            <select id="estadoAceptado" th:field="*{estadoAceptado}">
-                <option value="Pendiente">Pendiente</option>
-                <option value="Aceptado">Aceptado</option>
-                <option value="Rechazado">Rechazado</option>
-            </select>
-        </div>
-        <br>
+            <div class="form-group">
+                <label for="experiencia">Experiencia</label>
+                <textarea id="experiencia" th:field="*{experiencia}" rows="4"
+                          placeholder="Experiencia profesional"></textarea>
+            </div>
 
-        <input type="hidden" th:field="*{password}">
+            <div class="form-group">
+                <label for="estadoAceptado">Estado de aceptación</label>
+                <select id="estadoAceptado" th:field="*{estadoAceptado}">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Aceptado">Aceptado</option>
+                    <option value="Rechazado">Rechazado</option>
+                </select>
+            </div>
 
-        <button type="submit">Actualizar</button>
-    </form>
+            <input type="hidden" th:field="*{password}"/>
 
-    <br>
-    <a th:href="@{/AssistentPersonal/list}">Volver a la lista</a>
+            <button type="submit" class="btn btn-primary">Actualizar</button>
+        </form>
+    </div>
 </main>
 </body>
 </html>

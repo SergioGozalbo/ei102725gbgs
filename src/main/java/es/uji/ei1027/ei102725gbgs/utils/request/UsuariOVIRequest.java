@@ -1,5 +1,8 @@
 package es.uji.ei1027.ei102725gbgs.utils.request;
 
+/**
+ * Request class for creating or updating an OVI user profile.
+ */
 public class UsuariOVIRequest {
     /** User first name. */
     private String nombre;

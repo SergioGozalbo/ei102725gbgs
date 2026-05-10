@@ -19,40 +19,72 @@ import es.uji.ei1027.ei102725gbgs.services.SelectionServiceImpl;
 @RequestMapping("/api/selection")
 public class SelectionController {
 
-	private final SelectionServiceImpl service;
+    /**
+     * Service used by this controller to perform operations on Selection entities.
+     */
+    private final SelectionServiceImpl service;
 
-	@Autowired
-	public SelectionController(SelectionServiceImpl service) {
-		this.service = service;
-	}
+    /**
+     * Creates a new controller.
+     * @param service selection service
+     */
+    @Autowired
+    public SelectionController(SelectionServiceImpl service) {
+        this.service = service;
+    }
 
-	@GetMapping("/{id}")
-	public Selection getByID(@PathVariable int id) {
-		return service.getByID(id);
-	}
+    /**
+     * Returns one selection.
+     * @param id selection identifier
+     * @return the selection
+     */
+    @GetMapping("/{id}")
+    public Selection getByID(@PathVariable int id) {
+        return service.getByID(id);
+    }
 
-	@GetMapping("/all")
-	public List<Selection> getAll() {
-		return service.getAll();
-	}
+    /**
+     * Returns all selections.
+     * @return the selection list
+     */
+    @GetMapping("/all")
+    public List<Selection> getAll() {
+        return service.getAll();
+    }
 
-	@PostMapping("/create")
-	public void addSelection(@RequestBody Selection entity) {
-		service.addSelection(entity);
-	}
+    /**
+     * Creates a selection.
+     * @param entity selection data
+     */
+    @PostMapping("/create")
+    public void addSelection(@RequestBody Selection entity) {
+        service.addSelection(entity);
+    }
 
-	@PutMapping("/update")
-	public void updateSelection(@RequestBody Selection entity) {
-		service.updateSelection(entity);
-	}
+    /**
+     * Updates a selection.
+     * @param entity selection data
+     */
+    @PutMapping("/update")
+    public void updateSelection(@RequestBody Selection entity) {
+        service.updateSelection(entity);
+    }
 
-	@DeleteMapping("/{id}")
-	public void deleteSelectionPorId(@PathVariable int id) {
-		service.deleteSelectionPorId(id);
-	}
+    /**
+     * Deletes a selection by ID.
+     * @param id selection identifier
+     */
+    @DeleteMapping("/{id}")
+    public void deleteSelectionPorId(@PathVariable int id) {
+        service.deleteSelectionPorId(id);
+    }
 
-	@DeleteMapping("/assistant/{idAsistente}")
-	public void deleteSelectionPorAsistente(@PathVariable String idAsistente) {
-		service.deleteSelectionPorAsistente(idAsistente);
-	}
+    /**
+     * Deletes selections for an assistant.
+     * @param idAsistente assistant identifier
+     */
+    @DeleteMapping("/assistant/{idAsistente}")
+    public void deleteSelectionPorAsistente(@PathVariable String idAsistente) {
+        service.deleteSelectionPorAsistente(idAsistente);
+    }
 }

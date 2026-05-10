@@ -1,32 +1,34 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="ca">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>SgOVI - Registre</title>
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"/>
+    <title>SgOVI - Registro</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
-<body class="bg-light">
-<main class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="card shadow p-4 text-center" style="width: 100%; max-width: 480px;">
-        <h1 class="h4 mb-2">SgOVI - Registre</h1>
-        <p class="text-muted mb-4">Tria el tipus de compte que vols crear</p>
-
-        <div class="d-grid gap-3">
-            <a th:href="@{/registro/usuariOVI}" class="btn btn-primary btn-lg">
-                Sóc Usuari OVI
-            </a>
-            <a th:href="@{/registro/assistentPersonal}" class="btn btn-outline-primary btn-lg">
-                Vull ser Assistent Personal
-            </a>
+<body>
+<div class="card" style="max-width: 420px; text-align: center;">
+    <div class="header">
+        <div class="logo">
+            <svg width="34" height="34" viewBox="0 0 32 32" fill="none">
+                <circle cx="12" cy="9" r="4" fill="white"/>
+                <circle cx="22" cy="9" r="3" fill="white" opacity="0.5"/>
+                <path d="M4 24c0-4.418 3.582-8 8-8s8 3.582 8 8" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M22 18c2.761 0 5 2.239 5 5" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+            </svg>
         </div>
-
-        <hr/>
-        <p class="small mb-0">
-            Ja tens compte? <a th:href="@{/login}">Inicia sessió</a>
-        </p>
+        <h1>Crear cuenta</h1>
+        <p class="subtitle">Elige el tipo de cuenta que quieres crear</p>
     </div>
-</main>
+
+    <a th:href="@{/registro/usuariOVI}" class="btn btn-primary">Soy Usuario OVI</a>
+    <a th:href="@{/registro/assistentPersonal}" class="btn btn-outline">Quiero ser Asistente Personal</a>
+
+    <div class="divider"></div>
+
+    <p class="footer-text">
+        ¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a>
+    </p>
+</div>
 </body>
 </html>
