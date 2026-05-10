@@ -287,10 +287,7 @@ public class APRequestController {
     @RequestMapping(value = "/aprobar/{id}", method = RequestMethod.GET)
     public String mostrarAprobar(Model model, @PathVariable int id) {
         APRequest solicitud = apRequestDao.getAPRequest(id);
-        List<AssistentPersonal> candidatos =
-                assistentPersonalDao.getAssistentsPersonalsByEstado("aceptado");
         model.addAttribute("solicitud", solicitud);
-        model.addAttribute("candidatos", candidatos);
         return "APRequest/aprobar";
     }
 
@@ -300,8 +297,8 @@ public class APRequestController {
      * @return a redirect to the list of APRequest entities after approval
      */
     @RequestMapping(value = "/aprobar", method = RequestMethod.POST)
-    public String processAprobar(@RequestParam int idSolicitud) {
-        apRequestDao.updateEstado(idSolicitud, "Aprobada");
+    public String processAprobar(@RequestParam int idSolicitud, @RequestParam String estado) {
+        apRequestDao.updateEstado(idSolicitud, estado);
         return "redirect:/APRequest/list";
     }
 
@@ -458,5 +455,47 @@ public class APRequestController {
         apRequestDao.updateEstado(idSolicitud, "Cerrada con contrato");
 
         return "redirect:/APRequest/mylist";
+    }
+
+    @RequestMapping(value = "/addAdmin", method = RequestMethod.GET)
+    public String addAPRequestAdmin(Model model) {
+        APRequest request = new APRequest();
+        request.setEstado("En revisión");
+        model.addAttribute("apRequest", request);
+        model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
+        model.addAttribute("provincias", getListaProvincias());
+        return "APRequest/addAdmin";
+    }
+
+    @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
+    public String processAddAdmin(@ModelAttribute("apRequest") APRequest apRequest, BindingResult br, Model model) {
+        int nextId = apRequestDao.getAPRequests().stream().mapToInt(APRequest::getIdSolicitud).max().orElse(0) + 1;
+        apRequest.setIdSolicitud(nextId);
+        apRequestValidator.validate(apRequest, br);
+        if (br.hasErrors()) {
+            model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
+            model.addAttribute("provincias", getListaProvincias());
+            return "APRequest/addAdmin";
+        }
+        apRequestDao.addAPRequest(apRequest);
+        return "redirect:/APRequest/list";
+    }
+
+    @RequestMapping(value = "/updateAdmin/{idSolicitud}", method = RequestMethod.GET)
+    public String editAPRequestAdmin(Model model, @PathVariable int idSolicitud) {
+        model.addAttribute("apRequest", apRequestDao.getAPRequest(idSolicitud));
+        model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
+        model.addAttribute("provincias", getListaProvincias());
+        return "APRequest/updateAdmin";
+    }
+
+    @RequestMapping(value = "/updateAdmin", method = RequestMethod.POST)
+    public String processUpdateAdmin(@ModelAttribute("apRequest") APRequest apRequest, BindingResult br, Model model) {
+        if (br.hasErrors()) {
+            model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
+            return "APRequest/updateAdmin";
+        }
+        apRequestDao.updateAPRequest(apRequest);
+        return "redirect:/APRequest/list";
     }
 }

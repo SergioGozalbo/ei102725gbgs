@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edita Sol·licitud (Admin)</title>
+</head>
+<body>
+<h1>Editar Sol·licitud #<span th:text="${apRequest.idSolicitud}"></span></h1>
+
+<form th:action="@{/APRequest/updateAdmin}" th:object="${apRequest}" method="post">
+    <input type="hidden" th:field="*{idSolicitud}" />
+
+    <label>Usuari OVI:</label>
+    <input type="text" th:field="*{idUsuarioOvi}" readonly />
+    <br/>
+
+    <label>Estat:</label>
+    <select th:field="*{estado}">
+        <option value="En revisión">En revisión</option>
+        <option value="Aprobada">Aprobada</option>
+        <option value="Rechazada">Rechazada</option>
+        <option value="Cerrada con contrato">Cerrada con contrato</option>
+    </select>
+    <br/>
+
+    <label>Tipus Assistència:</label>
+    <input type="text" th:field="*{tipoAsistencia}" />
+    <br/>
+
+    <label>Preferències:</label>
+    <textarea th:field="*{preferencias}"></textarea>
+    <br/>
+
+    <button type="submit">Actualitzar</button>
+    <a th:href="@{/APRequest/list}">Tornar</a>
+</form>
+</body>
+</html>
