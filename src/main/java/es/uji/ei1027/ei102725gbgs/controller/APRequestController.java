@@ -108,7 +108,7 @@ public class APRequestController {
 
     /**
      * Constructor for APRequestController.
-     * @param apRequestDao DAO for APRequest entities; must not be {@code null
+    * @param apRequestDao DAO for APRequest entities; must not be {@code null}
      * @param usuariOVIDao DAO for UsuariOVI entities; must not be {@code null}
      * @param assistentPersonalDao DAO for AssistentPersonal entities; must not be {@code null}
      * @param apRequestValidator Validator for APRequest entities; must not be {@code null}
