@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>SgOVI - Nova Sol·licitud</title>
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body>
-<div class="card">
+<body class="form-page">
+<div class="form-card">
     <div class="header">
         <div class="logo">
             <span style="color: white; font-weight: bold; font-size: 1.5rem;">+</span>
@@ -21,8 +21,7 @@
 
         <div class="form-group">
             <label>Tipus d'Assistència</label>
-            <select th:field="*{tipoAsistencia}"
-                    style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 2px solid #e5e7eb;">
+            <select th:field="*{tipoAsistencia}">
                 <option value="">-- Selecciona --</option>
                 <option value="PAP">PAP (Personal)</option>
                 <option value="PATI">PATI (Técnica)</option>
@@ -32,8 +31,7 @@
 
         <div class="form-group">
             <label>Província (Proximitat)</label>
-            <select th:field="*{proximidad}"
-                    style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 2px solid #e5e7eb;">
+            <select th:field="*{proximidad}">
                 <option value="">-- Selecciona Província --</option>
                 <option th:each="prov : ${provincias}" th:value="${prov}" th:text="${prov}"></option>
             </select>
