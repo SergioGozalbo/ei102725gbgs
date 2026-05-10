@@ -5,7 +5,11 @@ import es.uji.ei1027.ei102725gbgs.dao.AssistentPersonalDaoImpl;
 import es.uji.ei1027.ei102725gbgs.dao.UsuariOVIDaoImpl;
 import es.uji.ei1027.ei102725gbgs.dao.SelectionDaoImpl;
 import es.uji.ei1027.ei102725gbgs.dao.RegistreContracteDaoImpl;
-import es.uji.ei1027.ei102725gbgs.model.*;
+import es.uji.ei1027.ei102725gbgs.model.APRequest;
+import es.uji.ei1027.ei102725gbgs.model.AssistentPersonal;
+import es.uji.ei1027.ei102725gbgs.model.Selection;
+import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
+import es.uji.ei1027.ei102725gbgs.model.RegistreContracte;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -95,16 +99,21 @@ public class APRequestController {
      * DAO for Selection entities.
      */
     private final SelectionDaoImpl selectionDao;
+
+    /**
+     * DAO for RegistreContracte entities.
+     */
     private final RegistreContracteDaoImpl registreContracteDao;
 
 
     /**
      * Constructor for APRequestController.
-     * @param apRequestDao the APRequestDaoImpl instance for accessing APRequest data
-     * @param usuariOVIDao the UsuariOVIDaoImpl instance for accessing UsuariOVI data
-     * @param assistentPersonalDao the AssistentPersonalDaoImpl instance for accessing AssistentPersonal data
-     * @param apRequestValidator the APRequestValidator instance for validating APRequest entities
-     * @param selectionDao the SelectionDaoImpl instance for accessing Selection data
+     * @param apRequestDao DAO for APRequest entities; must not be {@code null
+     * @param usuariOVIDao DAO for UsuariOVI entities; must not be {@code null}
+     * @param assistentPersonalDao DAO for AssistentPersonal entities; must not be {@code null}
+     * @param apRequestValidator Validator for APRequest entities; must not be {@code null}
+     * @param selectionDao DAO for Selection entities; must not be {@code null}
+     * @param registreContracteDao DAO for RegistreContracte entities; must not be {@code null}
      */
     @Autowired
     public APRequestController(APRequestDaoImpl apRequestDao,
@@ -167,7 +176,9 @@ public class APRequestController {
     @RequestMapping(value = "/mylist", method = RequestMethod.GET)
     public String listMyRequests(Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         List<APRequest> requests = apRequestDao.getAPRequestsByUsuari(usuari.getIdUsuario());
         List<RegistreContracte> todosContratos = registreContracteDao.getRegistresContractes();
@@ -322,10 +333,14 @@ public class APRequestController {
     @RequestMapping(value = "/mylistChooseAP/{id}", method = RequestMethod.GET)
     public String mylistChooseAP(@PathVariable int id, Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         APRequest request = apRequestDao.getAPRequest(id);
-        if (request == null) return "redirect:/APRequest/mylist";
+        if (request == null) {
+            return "redirect:/APRequest/mylist";
+        }
 
         // Obtener todas las selecciones para esta solicitud
         List<Selection> selecciones = selectionDao.getSelectionsBySolicitud(id);
@@ -334,7 +349,9 @@ public class APRequestController {
         List<AssistentPersonal> candidatos = new ArrayList<>();
         for (Selection s : selecciones) {
             AssistentPersonal ap = assistentPersonalDao.getAssistentPersonal(s.getIdAsistente());
-            if (ap != null) candidatos.add(ap);
+            if (ap != null) {
+                candidatos.add(ap);
+            }
         }
 
         model.addAttribute("request", request);
@@ -357,10 +374,14 @@ public class APRequestController {
             @PathVariable String idAsistente,
             Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         AssistentPersonal assistent = assistentPersonalDao.getAssistentPersonal(idAsistente);
-        if (assistent == null) return "redirect:/APRequest/mylistChooseAP/" + idSolicitud;
+        if (assistent == null) {
+            return "redirect:/APRequest/mylistChooseAP/" + idSolicitud;
+        }
 
         model.addAttribute("assistent", assistent);
         model.addAttribute("idSolicitud", idSolicitud);
@@ -382,7 +403,9 @@ public class APRequestController {
             @PathVariable String idAsistente,
             HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         // 1. Comprobar si esta solicitud ya tiene un contrato — si es así, no hacer nada
         List<Selection> todasSelecciones = selectionDao.getSelectionsBySolicitud(idSolicitud);
@@ -403,7 +426,9 @@ public class APRequestController {
                 break;
             }
         }
-        if (seleccionElegida == null) return "redirect:/APRequest/mylist";
+        if (seleccionElegida == null) {
+            return "redirect:/APRequest/mylist";
+        }
 
         // 3. Crear el contrato solo para la selección elegida
         int nextIdContrato = registreContracteDao.getRegistresContractes().stream()
