@@ -515,11 +515,6 @@ input[type="text"][readonly] {
     border: 0;
 }
 
-
-
-/* --- Extensiones para MyRequests --- */
-
-/* Fila cuando ya has sido seleccionado (bloqueada) */
 .fila-bloqueada {
     background-color: #f8fafc !important;
     border-left: 4px solid #0f1f3d;
@@ -541,8 +536,13 @@ input[type="text"][readonly] {
     color: #6b7280;
 }
 
-/* Ajuste para el estado en espera */
 .text-waiting {
     color: #6b7280;
     font-style: italic;
+}
+
+.input-readonly {
+    background: #e5e7eb;
+    color: #1f2937;
+    cursor: not-allowed;
 }
