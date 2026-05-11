@@ -1,43 +1,71 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Lista solicitudes</title>
+    <meta charset="UTF-8"/>
+    <title>SgOVI - Sol·licituds d'Assistència</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
-<body>
+<body class="dashboard">
+<nav>
+    <span class="nav-brand">SgOVI - Administració</span>
+    <div class="nav-right">
+        <a th:href="@{/dashboard/admin}" class="btn-logout">Tornar al panel</a>
+    </div>
+</nav>
 <main>
-    <h1>Solicituds d'Assistència</h1>
-    <table border="1">
-        <thead>
-        <tr>
-            <th>ID Solicitud</th>
-            <th>ID Usuario OVI</th>
-            <th>Tipo Asistencia</th>
-            <th>Estado</th>
-            <th>Proximidad</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="request : ${requests}">
-            <td th:text="${request.idSolicitud}"></td>
-            <td th:text="${request.idUsuarioOvi}"></td>
-            <td th:text="${request.tipoAsistencia}"></td>
-            <td th:text="${request.estado}"></td>
-            <td th:text="${request.proximidad}"></td>
-            <td>
-                <a th:if="${request.estado == 'En revisión'}"
-                   th:href="@{/APRequest/aprobar/{id}(id=${request.idSolicitud})}">Detalles</a>
+    <div class="page-actions">
+        <div>
+            <h1 class="page-title">Sol·licituds d'Assistència</h1>
+            <p class="page-subtitle">Gestiona totes les sol·licituds del sistema.</p>
+        </div>
+        <a th:href="@{/APRequest/addAdmin}" class="btn-new">+ Nova sol·licitud</a>
+    </div>
 
-                <a th:href="@{/APRequest/updateAdmin/{id}(id=${request.idSolicitud})}">Edita</a>
-                <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}">Esborra</a>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <br>
-    <a th:href="@{/APRequest/addAdmin}">Afegeix sol·licitud</a>    <br><br>
-    <a th:href="@{/}">Tornar</a>
+    <div class="table-container">
+        <div th:if="${#lists.isEmpty(requests)}"
+             style="text-align: center; padding: 2rem; color: #6b7280;">
+            No hi ha sol·licituds registrades.
+        </div>
+        <table th:unless="${#lists.isEmpty(requests)}">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuari OVI</th>
+                <th>Tipus</th>
+                <th>Estat</th>
+                <th>Província</th>
+                <th>Accions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="request : ${requests}">
+                <td th:text="${request.idSolicitud}"></td>
+                <td th:text="${request.idUsuarioOvi}"></td>
+                <td th:text="${request.tipoAsistencia}"></td>
+                <td>
+                    <span class="badge-estat"
+                          th:classappend="${request.estado == 'Aprobada'} ? 'badge-acceptat' :
+                                         (${request.estado == 'Rechazada'} ? 'badge-rebutjat' :
+                                         'badge-pendent')"
+                          th:text="${request.estado}"></span>
+                </td>
+                <td th:text="${request.proximidad}"></td>
+                <td>
+                    <div class="table-actions">
+                        <a th:if="${request.estado == 'En revisión'}"
+                           th:href="@{/APRequest/aprobar/{id}(id=${request.idSolicitud})}"
+                           class="btn-edit">Revisar</a>
+                        <a th:href="@{/APRequest/updateAdmin/{id}(id=${request.idSolicitud})}"
+                           class="btn-edit">Edita</a>
+                        <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}"
+                           class="btn-delete"
+                           onclick="return confirm('Estàs segur?')">Esborra</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </main>
 </body>
 </html>
