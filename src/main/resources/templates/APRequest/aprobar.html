@@ -2,12 +2,41 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>Aprobar solicitud</title>
 </head>
-<body>
+<body class="table-page">
+<nav>
+    <span class="nav-brand">SgOVI</span>
+
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">
+            Cerrar sesión
+        </a>
+    </div>
+</nav>
+
 <main>
-    <h1>Aprobar solicitud</h1>
+    <div class="page-actions">
+
+        <div>
+            <h1 class="page-title">
+                Aprobar solicitud
+            </h1>
+
+            <p class="page-subtitle">
+                Revisa la solicitud y los candidatos disponibles
+            </p>
+        </div>
+
+        <a th:href="@{/APRequest/list}"
+           class="btn-back">
+            Volver a la lista
+        </a>
+
+    </div>
+
+    <div class="form-card">
 
     <!-- Dati della solicitud -->
     <section>
@@ -21,7 +50,9 @@
     <!-- Candidatos disponibles -->
     <section>
         <h2>Candidatos disponibles</h2>
-        <table>
+            <div class="table-container">
+            <table style="min-width: 900px;">
+
             <thead>
                 <tr>
                     <th>ID</th>
@@ -43,16 +74,33 @@
                 </tr>
             </tbody>
         </table>
+            </div>
     </section>
 
     <!-- Bottone di approvazione -->
-    <form th:action="@{/APRequest/aprobar}" method="post">
-        <input type="hidden" name="idSolicitud" th:value="${solicitud.idSolicitud}"/>
-        <button type="submit">Confirmar aprobación</button>
-    </form>
+    <div class="divider"></div>
 
-    <br>
-    <a th:href="@{/APRequest/list}">Tornar</a>
+    <div style="display:flex; gap:1rem; margin-top:1rem;">
+
+        <form th:action="@{/APRequest/aprobar}" method="post">
+
+            <input type="hidden"
+                   name="idSolicitud"
+                   th:value="${solicitud.idSolicitud}"/>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Confirmar aprobación
+            </button>
+        </form>
+
+        <a th:href="@{/APRequest/list}"
+           class="btn btn-outline">
+            Volver
+        </a>
+
+    </div>
+    </div>
 </main>
 </body>
 </html>

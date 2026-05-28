@@ -1,14 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>Lista solicitudes</title>
 </head>
-<body>
+
+<body class="table-page">
+
+<nav>
+    <span class="nav-brand">SgOVI</span>
+
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">
+            Cerrar sesión
+        </a>
+    </div>
+</nav>
+
 <main>
-    <h1>Solicituds d'Assistència</h1>
-    <table border="1">
+    <div class="page-actions">
+        <div>
+        <h1 class="page-title">
+            Solicitudes de Asistencia
+        </h1>
+
+        <p class="page-subtitle">
+            Lista de todas las solicitudes registradas
+        </p>
+    </div>
+
+    <div style="display:flex; gap:0.75rem;">
+
+        <a th:href="@{/APRequest/add}"
+           class="btn-new">
+            + Nueva solicitud
+        </a>
+
+        <a th:href="@{/}"
+           class="btn-back">
+            Volver al menú
+        </a>
+    </div>
+    </div>
+
+    <div class="table-container">
+
+        <table style="min-width: 900px;">
+
         <thead>
         <tr>
             <th>ID Solicitud</th>
@@ -27,19 +66,31 @@
             <td th:text="${request.estado}"></td>
             <td th:text="${request.proximidad}"></td>
             <td>
-                <a th:if="${request.estado == 'En revisión'}"
-                   th:href="@{/APRequest/aprobar/{id}(id=${request.idSolicitud})}">Aprovar</a>
 
-                <a th:href="@{/APRequest/update/{id}(id=${request.idSolicitud})}">Edita</a>
-                <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}">Esborra</a>
+                <div class="table-actions">
+
+                <a th:if="${request.estado == 'En revisión'}"
+                   th:href="@{/APRequest/aprobar/{id}(id=${request.idSolicitud})}"
+                   class="btn btn-primary">
+                    Aprovar
+                </a>
+
+                <a th:href="@{/APRequest/update/{id}(id=${request.idSolicitud})}"
+                    class="btn-edit">
+                    Edita
+                </a>
+
+                <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}"
+                   class="btn-delete">
+                    Esborra
+                </a>
+
+                </div>
             </td>
         </tr>
         </tbody>
-    </table>
-    <br>
-    <a th:href="@{/APRequest/add}">Afegeix sol·licitud</a>
-    <br><br>
-    <a th:href="@{/}">Tornar</a>
+        </table>
+    </div>
 </main>
 </body>
 </html>

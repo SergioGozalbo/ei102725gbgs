@@ -1,24 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Create new formador</title>
+    <title>Crear formador nuevo</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
-<div class="form-card">
+
+<nav>
+    <span class="nav-brand">SgOVI</span>
+
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">
+            Logout
+        </a>
+    </div>
+</nav>
+
+<main>
+
+<div class="page-actions">
+
+    <div>
+
     <h1 class="page-title">
-        New formador
+        Nuevo formador
     </h1>
+
+        <p class="page-subtitle">
+            Crea un nuevo perfil de formador
+        </p>
+    </div>
+    <a th:href="@{/formador/list}"
+       class="btn-back">
+        Volver a la lista
+    </a>
+    </div>
+
+    <div class="form-card">
 
     <form th:action="@{/api/formador/add}"
           th:object="${formador}"
           method="post">
 
         <div class="form-group">
-            <label for="nombre">Name:</label>
-                <input id="nombre" type="text" th:field="*{nombre}">
+            <label for="nombre">Nombre:</label>
+                <input id="nombre"
+                       type="text"
+                       th:field="*{nombre}"
+                       placeholder="Nombre del formador">
 
             <div th:if="${#fields.hasErrors('nombre')}"
                  th:errors="*{nombre}"
@@ -27,8 +58,11 @@
         </div>
 
         <div class="form-group">
-            <label for="apellidos">Surname:</label>
-                <input id="apellidos" type="text" th:field="*{apellidos}">
+            <label for="apellidos">Apellidos:</label>
+                <input id="apellidos"
+                       type="text"
+                       th:field="*{apellidos}"
+                       placeholder="Apellidos del formador">
 
             <div th:if="${#fields.hasErrors('apellidos')}"
                  th:errors="*{apellidos}"
@@ -37,8 +71,11 @@
         </div>
 
         <div class="form-group">
-            <label for="especialidad">Specialty:</label>
-                <input id="especialidad" type="text" th:field="*{especialidad}">
+            <label for="especialidad">Especialidad:</label>
+                <input id="especialidad"
+                       type="text"
+                       th:field="*{especialidad}"
+                       placeholder="Especialidad">
 
             <div th:if="${#fields.hasErrors('especialidad')}"
                  th:errors="*{especialidad}"
@@ -46,7 +83,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Create formador</button>
+        <button type="submit" class="btn btn-primary">Crear formador</button>
         <a th:href="@{/formador/list}"
            class="btn btn-outline">
             Volver
@@ -55,5 +92,6 @@
 
 </div>
 
+</main>
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -8,32 +8,77 @@
 
 <body class="table-page">
 
+<nav>
+    <span class="nav-brand">SgOVI</span>
+
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">
+            Cerrar sesión
+        </a>
+    </div>
+</nav>
+
 <main>
 
-<h1 class="page-title">
-    Formadors
-</h1>
+    <div class="page-actions">
+
+        <div>
+            <h1 class="page-title">
+                Formadores
+            </h1>
+
+            <p class="page-subtitle">
+                Lista de todos los formadores registrados
+            </p>
+        </div>
+
+        <div style="display:flex; gap:0.75rem;">
+
+            <a th:href="@{/formador/add}"
+               class="btn-new">
+                + Nuevo formador
+            </a>
+
+            <a th:href="@{/}"
+               class="btn-back">
+                Volver al menú
+            </a>
+
+        </div>
+
+    </div>
 
     <div class="table-container">
-       <table>
+       <table style="min-width: 700px;">
           <thead>
           <tr>
-              <th>Name</th>
-              <th>Action</th>
+              <th>Nombre</th>
+              <th>Acciones</th>
     </tr>
           </thead>
            <tbody>
            <tr th:each="f : ${formadors}">
                <td th:text="${f.nombre}"></td>
                <td>
-                   <a th:href="@{/api/formador/delete/{id}(id=${f.idFormador})}"
-                      class="btn-delete">
-                       Delete
-                   </a>
+
+                   <div class="table-actions">
+                       <a th:href="@{/api/formador/delete/{id}(id=${f.idFormador})}"
+                          class="btn-delete">
+                           Eliminar
+                       </a>
+
+                   </div>
+
                </td>
+
            </tr>
            </tbody>
+
        </table>
+
     </div>
+
 </main>
 </body>
+
+</html>

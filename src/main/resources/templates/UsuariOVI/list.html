@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -7,21 +7,54 @@
 </head>
 <body class="table-page">
 
+<nav>
+    <span class="nav-brand">SgOVI</span>
+
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">
+            Cerrar sesión
+        </a>
+    </div>
+</nav>
+
 <main>
+    <div class="page-actions">
+
+        <div>
 
     <h1 class="page-title">
         Lista de usuarios
     </h1>
+
+            <p class="page-subtitle">
+                Lista de todos los usuarios registrados.
+            </p>
+        </div>
+
+        <div style="display:flex; gap:0.75rem;">
+
+            <a th:href="@{/UsuariOVI/add}"
+               class="btn-new">
+                +Nuevo usuario
+            </a>
+
+            <a th:href="@{/}"
+               class="btn-back">
+                Volver al menú
+            </a>
+        </div>
+    </div>
+
 <div class="table-container">
-    <table>
+    <table style="min-width: 900px;">
         <thead>
         <tr>
-            <th>id</th>
+            <th>ID</th>
             <th>Nombre</th>
             <th>Apellidos</th>
             <th>Email</th>
             <th>Contraseña</th>
-            <th>teléfono</th>
+            <th>Teléfono</th>
             <th>Confirmación RGPD</th>
             <th>Acciones</th>
         </tr>
@@ -35,31 +68,30 @@
             <td th:text="${usuario.password}"></td>
             <td th:text="${usuario.telefono}"></td>
             <td th:text="${usuario.consentimientoRgpd ? 'Si' : 'No'}"></td>
+
             <td>
-                <a th:href="@{/UsuariOVI/update/{id}(id=${usuario.idUsuario})}"
-                class="btn-edit">
-                    Edita
-                </a>
-                <a th:href="@{/UsuariOVI/delete/{id}(id=${usuario.idUsuario})}"
-                class="btn-delete">
-                    Esborra
-                </a>
+
+                <div class="table-actions">
+
+                    <a th:href="@{/UsuariOVI/update/{id}(id=${usuario.idUsuario})}"
+                       class="btn-edit">
+                        Editar
+                    </a>
+
+                    <a th:href="@{/UsuariOVI/delete/{id}(id=${usuario.idUsuario})}"
+                       class="btn-delete">
+                        Eliminar
+                    </a>
+
+                </div>
             </td>
         </tr>
         </tbody>
     </table>
 </div>
 
-    <a th:href="@{/UsuariOVI/add}"
-    class="btn-new">
-        Afegeix usuario
-    </a>
-
 <br><br>
-<a th:href="@{/}"
-class="btn-back">
-    Tornar
-</a>
+
 </main>
 </body>
 </html>

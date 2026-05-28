@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>SgOVI - Añadir usuario</title>
@@ -7,21 +7,35 @@
 </head>
 <body class="form-page">
 
-<div class="form-card">
-    <div class="header">
+<nav>
+    <span class="nav-brand">SgOVI</span>
 
-        <div class="logo">
-            <span style="color:white;
-                         font-weight:bold;
-                         font-size:1.5rem;">+</span>
-        </div>
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">
+            Cerrar sesión
+        </a>
+    </div>
+</nav>
+
+<main>
+
+<div class="page-actions">
+
+    <div>
+        <h1 class="page-title">Añadir usuario</h1>
+        <p class="page-subtitle">
+            Registra un nuevo usuario OVI
+        </p>
     </div>
 
-    <h1>Añadir usuario</h1>
+    <a th:href="@{/UsuariOVI/list}"
+       class="btn-back">
+        Volver a la lista
+    </a>
 
-    <p class="subtitle">
-       Registra un nuevo usuario OVI
-    </p>
+</div>
+
+<div class="form-card">
 
     <form th:action="@{/UsuariOVI/add}" th:object="${usuariOVI}" method="post">
 
@@ -45,7 +59,7 @@
         </div>
 
         <div class="form-group">
-            <label for="password">Contreaseña:</label>
+            <label for="password">Contraseña:</label>
             <input type="password" id="password" th:field="*{password}"
                    placeholder="********">
         </div>
@@ -53,7 +67,7 @@
         <div class="form-group">
             <label for="telefono">Teléfono:</label>
             <input type="text" id="telefono" th:field="*{telefono}"
-            placeholder="6XXXXXXXXXX">
+            placeholder="6XXXXXXXX">
             <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"
                   class="error"></span>
         </div>
@@ -69,9 +83,8 @@
         </button>
     </form>
 
-    <a th:href="@{/UsuariOVI/list}"
-    class="btn btn-outline">Volver a la lista</a>
 </div>
+</main>
 
 </body>
 </html>
