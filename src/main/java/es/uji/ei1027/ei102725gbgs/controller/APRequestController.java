@@ -321,35 +321,19 @@ public class APRequestController {
     }
 
     /**
-     * Shows the list of candidates (assistants) who applied for a request.
-     * @param id request identifier
-     * @param model model for the view
-     * @param session session data
-     * @return the candidate list view or redirect to login
+     * Shows available assistants for the user to choose from.
      */
     @RequestMapping(value = "/mylistChooseAP/{id}", method = RequestMethod.GET)
     public String mylistChooseAP(@PathVariable int id, Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) {
-            return "redirect:/login";
-        }
+        if (usuari == null) return "redirect:/login";
 
         APRequest request = apRequestDao.getAPRequest(id);
-        if (request == null) {
-            return "redirect:/APRequest/mylist";
-        }
+        if (request == null) return "redirect:/APRequest/mylist";
 
-        // Obtener todas las selecciones para esta solicitud
-        List<Selection> selecciones = selectionDao.getSelectionsBySolicitud(id);
-
-        // Obtener los asistentes correspondientes
-        List<AssistentPersonal> candidatos = new ArrayList<>();
-        for (Selection s : selecciones) {
-            AssistentPersonal ap = assistentPersonalDao.getAssistentPersonal(s.getIdAsistente());
-            if (ap != null) {
-                candidatos.add(ap);
-            }
-        }
+        // Cargar TODOS los asistentes aprobados, sin filtrar por Selection
+        List<AssistentPersonal> candidatos =
+                assistentPersonalDao.getAssistentsPersonalsByEstado("Aceptado");
 
         model.addAttribute("request", request);
         model.addAttribute("candidatos", candidatos);
@@ -386,12 +370,8 @@ public class APRequestController {
     }
 
     /**
-     * Processes the acceptance of an assistant for a request.
-     * Creates a RegistreContracte, removes other candidates' selections.
-     * @param idSolicitud request identifier
-     * @param idAsistente chosen assistant identifier
-     * @param session session data
-     * @return redirect to mylist
+     * Accepts an assistant directly.
+     * Creates the Selection on the spot, then creates the contract.
      */
     @RequestMapping(value = "/acceptarAssistent/{idSolicitud}/{idAsistente}",
             method = RequestMethod.GET)
@@ -399,59 +379,41 @@ public class APRequestController {
             @PathVariable int idSolicitud,
             @PathVariable String idAsistente,
             HttpSession session) {
+
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) {
-            return "redirect:/login";
-        }
+        if (usuari == null) return "redirect:/login";
 
-        // 1. Comprobar si esta solicitud ya tiene un contrato — si es así, no hacer nada
-        List<Selection> todasSelecciones = selectionDao.getSelectionsBySolicitud(idSolicitud);
-        for (Selection s : todasSelecciones) {
-            RegistreContracte existente = registreContracteDao
-                    .getRegistreContracteBySeleccion(s.getIdSeleccion());
-            if (existente != null) {
-                // Ya hay contrato, no crear otro
-                return "redirect:/APRequest/mylist";
+        // 1. Comprobar que esta solicitud no tenga ya un contrato
+        List<Selection> seleccionesExistentes =
+                selectionDao.getSelectionsBySolicitud(idSolicitud);
+        for (Selection s : seleccionesExistentes) {
+            if (registreContracteDao.getRegistreContracteBySeleccion(
+                    s.getIdSeleccion()) != null) {
+                return "redirect:/APRequest/mylist"; // ya tiene contrato
             }
         }
 
-        // 2. Encontrar la selección del asistente elegido
-        Selection seleccionElegida = null;
-        for (Selection s : todasSelecciones) {
-            if (s.getIdAsistente().equals(idAsistente)) {
-                seleccionElegida = s;
-                break;
-            }
-        }
-        if (seleccionElegida == null) {
-            return "redirect:/APRequest/mylist";
-        }
+        // 2. Crear la Selection en el momento de la elección
+        int nextIdSelection = selectionDao.getSelections().stream()
+                .mapToInt(Selection::getIdSeleccion).max().orElse(0) + 1;
 
-        // 3. Crear el contrato solo para la selección elegida
+        Selection seleccion = new Selection();
+        seleccion.setIdSeleccion(nextIdSelection);
+        seleccion.setIdSolicitud(idSolicitud);
+        seleccion.setIdAsistente(idAsistente);
+        selectionDao.addSelection(seleccion);
+
+        // 3. Crear el contrato para esa selección
         int nextIdContrato = registreContracteDao.getRegistresContractes().stream()
-                .mapToInt(RegistreContracte::getIdContrato)
-                .max().orElse(0) + 1;
+                .mapToInt(RegistreContracte::getIdContrato).max().orElse(0) + 1;
 
         RegistreContracte contracte = new RegistreContracte();
         contracte.setIdContrato(nextIdContrato);
-        contracte.setIdSeleccion(seleccionElegida.getIdSeleccion());
+        contracte.setIdSeleccion(nextIdSelection);
         contracte.setFechaInicio(java.time.LocalDate.now());
         registreContracteDao.addRegistreContracte(contracte);
 
-        // 4. Borrar SOLO las selecciones que NO tienen contrato
-        for (Selection s : todasSelecciones) {
-            if (s.getIdSeleccion() != seleccionElegida.getIdSeleccion()) {
-                RegistreContracte c = registreContracteDao
-                        .getRegistreContracteBySeleccion(s.getIdSeleccion());
-                if (c == null) {
-                    // Solo borramos si no tiene contrato
-                    selectionDao.deleteSelectionPorId(s.getIdSeleccion());
-                }
-            }
-        }
-
-        // 5. Actualizar estado — usa el valor exacto que acepta tu BD
-        // Cambia "Tancada amb contracte" por lo que devuelva el constraint
+        // 4. Cerrar la solicitud
         apRequestDao.updateEstado(idSolicitud, "Cerrada con contrato");
 
         return "redirect:/APRequest/mylist";
