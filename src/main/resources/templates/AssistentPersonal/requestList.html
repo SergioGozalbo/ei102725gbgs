@@ -1,58 +1,57 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>SgOVI - Sol·licituds Disponibles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SgOVI - Solicitudes Disponibles</title>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
-<body class="dashboard">
-<nav>
-  <span class="nav-brand">SgOVI - Assistents</span>
+<body class="table-page">
+<nav aria-label="Navegación principal">
+  <span class="nav-brand">SgOVI</span>
   <div class="nav-right">
-    <a th:href="@{/dashboard/assistentPersonal}" class="btn-logout">Tornar al panel</a>
+    <a th:href="@{/dashboard/assistentPersonal}" class="btn-logout">Volver al panel</a>
   </div>
 </nav>
 <main>
   <div class="page-actions">
     <div>
-      <h1 class="page-title">Sol·licituds Disponibles</h1>
-      <p class="page-subtitle">Sol·licituds aprovades en les quals et pots postular</p>
+      <h1 class="page-title">Solicitudes Disponibles</h1>
+      <p class="page-subtitle">Solicitudes aprobadas en las que puedes postularte.</p>
     </div>
-    <a th:href="@{/AssistentPersonal/myrequests}" class="btn-new">
-      Les meues peticions acceptades
-    </a>
+    <a th:href="@{/AssistentPersonal/myrequests}" class="btn-new">Mis peticiones aceptadas</a>
   </div>
 
   <div class="table-container">
     <div th:if="${#lists.isEmpty(requests)}"
-         style="text-align: center; padding: 2rem; color: #6b7280;">
-      No hi ha sol·licituds disponibles en aquest moment.
+         style="text-align: center; padding: 2rem; color: #4b5563;">
+      No hay solicitudes disponibles en este momento.
     </div>
     <table th:unless="${#lists.isEmpty(requests)}">
+      <caption class="visually-hidden">Lista de solicitudes disponibles</caption>
       <thead>
       <tr>
-        <th>Usuari OVI</th>
-        <th>Província</th>
-        <th>Tipus</th>
-        <th>Accions</th>
+        <th scope="col">Usuario OVI</th>
+        <th scope="col">Provincia</th>
+        <th scope="col">Tipo</th>
+        <th scope="col">Acciones</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="req : ${requests}">
         <td>
-                    <span th:each="u : ${usuarios}"
-                          th:if="${u.idUsuario == req.idUsuarioOvi}"
-                          th:text="${u.nombre} + ' ' + ${u.apellidos}"></span>
+                        <span th:each="u : ${usuarios}"
+                              th:if="${u.idUsuario == req.idUsuarioOvi}"
+                              th:text="${u.nombre} + ' ' + ${u.apellidos}"></span>
         </td>
         <td th:text="${req.proximidad}"></td>
         <td>
-                    <span class="badge-estat badge-pendent"
-                          th:text="${req.tipoAsistencia}"></span>
+          <span class="badge-estat badge-pendent" th:text="${req.tipoAsistencia}"></span>
         </td>
         <td>
           <div class="table-actions">
             <a th:href="@{/AssistentPersonal/requestDetails/{id}(id=${req.idSolicitud})}"
-               class="btn-edit">Veure detalls</a>
+               class="btn-edit">Ver detalles</a>
           </div>
         </td>
       </tr>

@@ -77,14 +77,6 @@
             <version>2.6.0</version>
         </dependency>
 
-        <!-- Source: https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-checkstyle-plugin -->
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.6.0</version>
-            <scope>compile</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -114,6 +106,29 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <!-- Checkstyle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.6.0</version>
+            </plugin>
+
+            <!-- Javadoc -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+
+                <configuration>
+                    <reportOutputDirectory>
+                        ${project.basedir}/docs
+                    </reportOutputDirectory>
+
+                    <destDir>javadoc</destDir>
+                </configuration>
+        </plugin>
+
         </plugins>
     </build>
 </project>

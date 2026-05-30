@@ -1,7 +1,15 @@
 package es.uji.ei1027.ei102725gbgs.controller;
 
-import es.uji.ei1027.ei102725gbgs.dao.*;
-import es.uji.ei1027.ei102725gbgs.model.*;
+import es.uji.ei1027.ei102725gbgs.dao.APRequestDaoImpl;
+import es.uji.ei1027.ei102725gbgs.dao.AssistentPersonalDaoImpl;
+import es.uji.ei1027.ei102725gbgs.dao.RegistreContracteDaoImpl;
+import es.uji.ei1027.ei102725gbgs.dao.SelectionDaoImpl;
+import es.uji.ei1027.ei102725gbgs.dao.UsuariOVIDaoImpl;
+import es.uji.ei1027.ei102725gbgs.model.APRequest;
+import es.uji.ei1027.ei102725gbgs.model.AssistentPersonal;
+import es.uji.ei1027.ei102725gbgs.model.RegistreContracte;
+import es.uji.ei1027.ei102725gbgs.model.Selection;
+import es.uji.ei1027.ei102725gbgs.model.UsuariOVI;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -88,13 +96,45 @@ class AssistentPersonalValidator implements Validator {
 @RequestMapping("/AssistentPersonal")
 public class AssistentPersonalController {
 
+    /**
+     * DAO for AssistentPersonal entities.
+     */
     private final AssistentPersonalDaoImpl assistentPersonalDao;
+
+    /**
+     * Validator for AssistentPersonal entities.
+     */
     private final AssistentPersonalValidator assistentPersonalValidator;
+
+    /**
+     * DAO for APRequest entities.
+     */
     private final APRequestDaoImpl apRequestDao;
+
+    /**
+     * DAO for Selection entities.
+     */
     private final SelectionDaoImpl selectionDao;
+
+    /**
+     * DAO for UsuariOVI entities.
+     */
     private final UsuariOVIDaoImpl usuariOVIDao;
+
+    /**
+     * DAO for RegistreContracte entities.
+     */
     private final RegistreContracteDaoImpl registreContracteDao;
 
+    /**
+     * Constructor with dependencies injected by Spring.
+     * @param assistentPersonalDao DAO
+     * @param assistentPersonalValidator Validator
+     * @param apRequestDao DAO
+     * @param selectionDao DAO
+     * @param usuariOVIDao DAO
+     * @param registreContracteDao DAO
+     */
     @Autowired
     public AssistentPersonalController(AssistentPersonalDaoImpl assistentPersonalDao,
                                        AssistentPersonalValidator assistentPersonalValidator,
@@ -277,11 +317,18 @@ public class AssistentPersonalController {
         return "redirect:profile";
     }
 
-    // 1. LISTA DE SOLICITUDES DISPONIBLES (Filtradas)
+    /**
+     * Shows the list of available requests for the logged-in assistant, filtering out those already accepted by him.
+     * @param model model for the view
+     * @param session HTTP session containing the logged-in assistant
+     * @return the view for available requests or redirect to login if not authenticated
+     */
     @RequestMapping("/requests")
     public String listRequests(Model model, HttpSession session) {
         AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (ap == null) return "redirect:/login";
+        if (ap == null) {
+            return "redirect:/login";
+        }
 
         // Obtener IDs de solicitudes que este asistente YA ha aceptado
         List<Integer> acceptedIds = selectionDao.getSelectionsByAsistente(ap.getIdAsistente())
@@ -297,15 +344,24 @@ public class AssistentPersonalController {
         return "AssistentPersonal/requestList";
     }
 
-    // 2. DETALLES COMPLETOS (Con datos del UsuariOVI)
+    /**
+     * Shows the details of a specific request, including whether the logged-in assistant has already accepted it.
+     * @param id the ID of the request to show details for
+     * @param model model for the view
+     * @param session HTTP session containing the logged-in assistant
+     * @return the view for request details or redirect to login if not authenticated
+     */
     @RequestMapping("/requestDetails/{id}")
     public String requestDetails(@PathVariable int id, Model model, HttpSession session) {
         AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (ap == null) return "redirect:/login";
+        if (ap == null) {
+            return "redirect:/login";
+        }
 
         APRequest request = apRequestDao.getAPRequest(id);
-        if (request == null)
+        if (request == null) {
             return "redirect:/AssistentPersonal/requests";
+        }
 
         UsuariOVI usuario = usuariOVIDao.getUsuariOVI(request.getIdUsuarioOvi());
         if (usuario == null) {
@@ -323,10 +379,18 @@ public class AssistentPersonalController {
         return "AssistentPersonal/requestDetails";
     }
 
+    /**
+     * Shows the assistant's accepted requests and their contract status.
+     * @param model model for the view
+     * @param session HTTP session containing the logged-in assistant
+     * @return the view for the assistant's requests or redirect to login if not authenticated
+     */
     @RequestMapping("/myrequests")
     public String myRequests(Model model, HttpSession session) {
         AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (ap == null) return "redirect:/login";
+        if (ap == null) {
+            return "redirect:/login";
+        }
 
         List<Selection> mySelections = selectionDao.getSelectionsByAsistente(ap.getIdAsistente());
         List<APRequest> myAcceptedRequests = new ArrayList<>();
@@ -356,10 +420,18 @@ public class AssistentPersonalController {
         return "AssistentPersonal/myrequests";
     }
 
+    /**
+     * Accepts a request by creating a new selection for the logged-in assistant and the specified request ID.
+     * @param id the ID of the request to accept
+     * @param session the HTTP session containing the logged-in assistant
+     * @return redirect to the assistant's requests page or login if not authenticated
+     */
     @RequestMapping(value = "/acceptRequest/{id}")
     public String acceptRequest(@PathVariable int id, HttpSession session) {
         AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (ap == null) return "redirect:/login";
+        if (ap == null) {
+            return "redirect:/login";
+        }
 
         // Calcular siguiente ID
         int nextId = selectionDao.getSelections().stream()
@@ -375,10 +447,18 @@ public class AssistentPersonalController {
         return "redirect:/AssistentPersonal/myrequests";
     }
 
+    /**
+     * Cancels a request by deleting the corresponding selection if it exists and has no contract.
+     * @param id the ID of the request to cancel
+     * @param session the HTTP session containing the logged-in assistant
+     * @return redirect to the assistant's requests page or login if not authenticated
+     */
     @RequestMapping("/cancelRequest/{id}")
     public String cancelRequest(@PathVariable int id, HttpSession session) {
         AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (ap == null) return "redirect:/login";
+        if (ap == null) {
+            return "redirect:/login";
+        }
 
         // 1. Buscamos la selección que corresponde a esta solicitud (Bucle tradicional)
         List<Selection> selecciones = selectionDao.getSelectionsByAsistente(ap.getIdAsistente());
@@ -410,4 +490,3 @@ public class AssistentPersonalController {
         return "redirect:/AssistentPersonal/myrequests";
     }
 }
-

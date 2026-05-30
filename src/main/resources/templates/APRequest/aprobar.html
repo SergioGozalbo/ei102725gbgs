@@ -2,105 +2,37 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <title>Aprobar solicitud</title>
+    <title>Detalles de la Solicitud</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
-<body class="table-page">
-<nav>
-    <span class="nav-brand">SgOVI</span>
+<body>
+<div class="card">
+    <h1>Detalles de Solicitud #<span th:text="${solicitud.idSolicitud}"></span></h1>
 
-    <div class="nav-right">
-        <a th:href="@{/logout}" class="btn-logout">
-            Cerrar sesión
-        </a>
-    </div>
-</nav>
-
-<main>
-    <div class="page-actions">
-
-        <div>
-            <h1 class="page-title">
-                Aprobar solicitud
-            </h1>
-
-            <p class="page-subtitle">
-                Revisa la solicitud y los candidatos disponibles
-            </p>
-        </div>
-
-        <a th:href="@{/APRequest/list}"
-           class="btn-back">
-            Volver a la lista
-        </a>
-
+    <div class="details-section">
+        <p><strong>Usuario OVI:</strong> <span th:text="${solicitud.idUsuarioOvi}"></span></p>
+        <p><strong>Tipo Asistencia:</strong> <span th:text="${solicitud.tipoAsistencia}"></span></p>
+        <p><strong>Preferencias:</strong> <span th:text="${solicitud.preferencias}"></span></p>
+        <p><strong>Proximidad:</strong> <span th:text="${solicitud.proximidad}"></span></p>
+        <p><strong>Estado Actual:</strong> <span th:text="${solicitud.estado}"></span></p>
     </div>
 
-    <div class="form-card">
+    <div class="actions" style="margin-top: 20px; display: flex; gap: 10px;">
+        <<form th:action="@{/APRequest/aprobar}" method="post">
+        <input type="hidden" name="idSolicitud" th:value="${solicitud.idSolicitud}"/>
 
-    <!-- Dati della solicitud -->
-    <section>
-        <h2>Solicitud #<span th:text="${solicitud.idSolicitud}"></span></h2>
-        <p>Usuario: <span th:text="${solicitud.idUsuarioOvi}"></span></p>
-        <p>Tipo asistencia: <span th:text="${solicitud.tipoAsistencia}"></span></p>
-        <p>Preferencias: <span th:text="${solicitud.preferencias}"></span></p>
-        <p>Proximidad: <span th:text="${solicitud.proximidad}"></span></p>
-    </section>
+        <button type="submit" name="estado" value="Aprobada" class="btn btn-primary">
+            Aprobar Solicitud
+        </button>
 
-    <!-- Candidatos disponibles -->
-    <section>
-        <h2>Candidatos disponibles</h2>
-            <div class="table-container">
-            <table style="min-width: 900px;">
-
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nombre</th>
-                    <th>Apellidos</th>
-                    <th>Email</th>
-                    <th>Formación</th>
-                    <th>Experiencia</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="c : ${candidatos}">
-                    <td th:text="${c.idAsistente}"></td>
-                    <td th:text="${c.nombre}"></td>
-                    <td th:text="${c.apellidos}"></td>
-                    <td th:text="${c.email}"></td>
-                    <td th:text="${c.formacionAcademica}"></td>
-                    <td th:text="${c.experiencia}"></td>
-                </tr>
-            </tbody>
-        </table>
-            </div>
-    </section>
-
-    <!-- Bottone di approvazione -->
-    <div class="divider"></div>
-
-    <div style="display:flex; gap:1rem; margin-top:1rem;">
-
-        <form th:action="@{/APRequest/aprobar}" method="post">
-
-            <input type="hidden"
-                   name="idSolicitud"
-                   th:value="${solicitud.idSolicitud}"/>
-
-            <button type="submit"
-                    class="btn btn-primary">
-                Confirmar aprobación
-            </button>
-        </form>
-
-        <a th:href="@{/APRequest/list}"
-           class="btn btn-outline">
-            Volver
-        </a>
-
+        <button type="submit" name="estado" value="Rechazada" class="btn" style="background-color: #dc2626; color: white;">
+            Rechazar Solicitud
+        </button>
+    </form>
     </div>
-    </div>
-</main>
+
+    <br>
+    <a th:href="@{/APRequest/list}" class="footer-text">Volver a la lista</a>
+</div>
 </body>
 </html>

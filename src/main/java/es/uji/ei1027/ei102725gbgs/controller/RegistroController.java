@@ -66,33 +66,28 @@ public class RegistroController {
             BindingResult bindingResult,
             Model model) {
 
-        // Validación básica
-        if (usuariOVI.getNombre() == null
-            || usuariOVI.getNombre().trim().isEmpty()) {
-            bindingResult.rejectValue("nombre", "obligatorio",
-                    "El nom és obligatori");
+        // Validación básica (mantenemos la tuya)
+        if (usuariOVI.getNombre() == null || usuariOVI.getNombre().trim().isEmpty()) {
+            bindingResult.rejectValue("nombre", "obligatorio", "El nom és obligatori");
         }
-        if (usuariOVI.getEmail() == null
-            || usuariOVI.getEmail().trim().isEmpty()) {
-            bindingResult.rejectValue("email", "obligatorio",
-                    "L'email és obligatori");
+        if (usuariOVI.getEmail() == null || usuariOVI.getEmail().trim().isEmpty()) {
+            bindingResult.rejectValue("email", "obligatorio", "L'email és obligatori");
         }
-        if (usuariOVI.getPassword() == null
-            || usuariOVI.getPassword().trim().isEmpty()) {
-            bindingResult.rejectValue("password", "obligatorio",
-                    "La contrasenya és obligatoria");
+        if (usuariOVI.getPassword() == null || usuariOVI.getPassword().trim().isEmpty()) {
+            bindingResult.rejectValue("password", "obligatorio", "La contrasenya és obligatoria");
         }
         if (!usuariOVI.isConsentimientoRgpd()) {
-            bindingResult.rejectValue("consentimientoRgpd", "obligatorio",
-                    "Has d'acceptar el tractament de dades");
+            bindingResult.rejectValue("consentimientoRgpd", "obligatorio", "Has d'acceptar el tractament de dades");
         }
 
         if (bindingResult.hasErrors()) {
             return "autenticacion/registroUsuariOVI";
         }
 
-        // Generar ID único y guardar
-        usuariOVI.setIdUsuario(UUID.randomUUID().toString());
+        int nextId = usuariOVIDao.getUsuariosOVI().size() + 1;
+        String formattedId = String.format("U%03d", nextId);
+        usuariOVI.setIdUsuario(formattedId);
+
         usuariOVIDao.addUsuariOVI(usuariOVI);
 
         return "redirect:/login";
@@ -122,30 +117,28 @@ public class RegistroController {
             BindingResult bindingResult,
             Model model) {
 
-        // Validación básica
-        if (assistent.getNombre() == null
-            || assistent.getNombre().trim().isEmpty()) {
-            bindingResult.rejectValue("nombre", "obligatorio",
-                    "El nom és obligatori");
+        // Validación básica (mantenemos la tuya)
+        if (assistent.getNombre() == null || assistent.getNombre().trim().isEmpty()) {
+            bindingResult.rejectValue("nombre", "obligatorio", "El nom és obligatori");
         }
-        if (assistent.getEmail() == null
-            || assistent.getEmail().trim().isEmpty()) {
-            bindingResult.rejectValue("email", "obligatorio",
-                    "L'email és obligatori");
+        if (assistent.getEmail() == null || assistent.getEmail().trim().isEmpty()) {
+            bindingResult.rejectValue("email", "obligatorio", "L'email és obligatori");
         }
-        if (assistent.getPassword() == null
-            || assistent.getPassword().trim().isEmpty()) {
-            bindingResult.rejectValue("password", "obligatorio",
-                    "La contrasenya és obligatoria");
+        if (assistent.getPassword() == null || assistent.getPassword().trim().isEmpty()) {
+            bindingResult.rejectValue("password", "obligatorio", "La contrasenya és obligatoria");
         }
 
         if (bindingResult.hasErrors()) {
             return "autenticacion/registroAssistent";
         }
 
-        // El asistente empieza con estado pendiente de aprobación
-        assistent.setIdAsistente(UUID.randomUUID().toString());
-        assistent.setEstadoAceptado("PENDIENTE");
+        // --- CORRECCIÓN ID ASISTENTE ---
+        int nextId = assistentPersonalDao.getAssistentsPersonals().size() + 1;
+        String formattedId = String.format("A%03d", nextId);
+        assistent.setIdAsistente(formattedId);
+
+        assistent.setEstadoAceptado("Pendiente");
+
         assistentPersonalDao.addAssistentPersonal(assistent);
 
         return "redirect:/login";

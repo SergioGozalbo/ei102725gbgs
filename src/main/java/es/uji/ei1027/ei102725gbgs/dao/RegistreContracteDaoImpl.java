@@ -114,4 +114,18 @@ public class RegistreContracteDaoImpl {
             return new ArrayList<RegistreContracte>();
         }
     }
+    /**
+     * Retrieves the RegistreContracte linked to a given selection.
+     * @param idSeleccion the selection identifier
+     * @return the contract or null if none exists
+     */
+    public RegistreContracte getRegistreContracteBySeleccion(int idSeleccion) {
+        try {
+            return jdbcTemplate.queryForObject(
+                    "SELECT * FROM REGISTRE_CONTRACTE WHERE id_seleccion = ?",
+                    new RegistreContracteRowMapper(), idSeleccion);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 }
