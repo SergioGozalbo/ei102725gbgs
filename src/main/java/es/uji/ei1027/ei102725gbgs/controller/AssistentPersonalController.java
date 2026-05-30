@@ -245,8 +245,15 @@ public class AssistentPersonalController {
      * @return redirect to the list view
      */
     @RequestMapping(value = "/delete/{idAsistente}")
-    public String processDelete(@PathVariable String idAsistente) {
-        assistentPersonalDao.deleteAssistentPersonalPorId(idAsistente);
+    public String processDelete(@PathVariable String idAsistente,
+                                org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            assistentPersonalDao.deleteAssistentPersonalPorId(idAsistente);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("errorMsg",
+                    "No es pot eliminar aquest assistent perquè té contractes o seleccions associades.");
+            return "redirect:/AssistentPersonal/list";
+        }
         return "redirect:../list";
     }
 
@@ -426,8 +433,6 @@ public class AssistentPersonalController {
         com.itextpdf.text.Font normalFont = new com.itextpdf.text.Font(
                 com.itextpdf.text.Font.FontFamily.HELVETICA, 12);
 
-        document.add(new com.itextpdf.text.Paragraph(
-                "Número de contracte: " + contracte.getIdContrato(), boldFont));
         document.add(new com.itextpdf.text.Paragraph(
                 "Data d'inici: " + contracte.getFechaInicio(), normalFont));
         document.add(new com.itextpdf.text.Paragraph(

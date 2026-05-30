@@ -141,8 +141,10 @@ public class APRequestController {
      * @return the name of the view to render the list of APRequest entities
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String listAPRequest(Model model) {
+    public String listAPRequest(Model model, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
         model.addAttribute("requests", apRequestDao.getAPRequests());
+        model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI()); // añade esto
         return "APRequest/list";
     }
 
@@ -355,17 +357,28 @@ public class APRequestController {
             @PathVariable String idAsistente,
             Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) {
-            return "redirect:/login";
-        }
+        if (usuari == null) return "redirect:/login";
 
-        AssistentPersonal assistent = assistentPersonalDao.getAssistentPersonal(idAsistente);
-        if (assistent == null) {
+        AssistentPersonal assistent =
+                assistentPersonalDao.getAssistentPersonal(idAsistente);
+        if (assistent == null)
             return "redirect:/APRequest/mylistChooseAP/" + idSolicitud;
+
+        // Comprobar si ya tiene contrato
+        List<Selection> selecciones =
+                selectionDao.getSelectionsBySolicitud(idSolicitud);
+        boolean yaElegido = false;
+        for (Selection s : selecciones) {
+            if (registreContracteDao.getRegistreContracteBySeleccion(
+                    s.getIdSeleccion()) != null) {
+                yaElegido = true;
+                break;
+            }
         }
 
         model.addAttribute("assistent", assistent);
         model.addAttribute("idSolicitud", idSolicitud);
+        model.addAttribute("yaElegido", yaElegido);
         return "APRequest/mylistChooseAPDetails";
     }
 
@@ -459,5 +472,253 @@ public class APRequestController {
         }
         apRequestDao.updateAPRequest(apRequest);
         return "redirect:/APRequest/list";
+    }
+    /**
+     * Generates and downloads the PDF contract for a given request (OVI user side).
+     * @param idSolicitud request identifier
+     * @param session session data
+     * @param response HTTP response
+     */
+    @RequestMapping(value = "/contrato/{idSolicitud}", method = RequestMethod.GET)
+    public void verContrato(@PathVariable int idSolicitud,
+                            HttpSession session,
+                            jakarta.servlet.http.HttpServletResponse response) throws Exception {
+
+        UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
+        if (usuari == null) {
+            response.sendRedirect("/login");
+            return;
+        }
+
+        // Buscar la selección de esta solicitud
+        List<Selection> selecciones = selectionDao.getSelectionsBySolicitud(idSolicitud);
+        Selection seleccion = null;
+        for (Selection s : selecciones) {
+            if (registreContracteDao.getRegistreContracteBySeleccion(
+                    s.getIdSeleccion()) != null) {
+                seleccion = s;
+                break;
+            }
+        }
+        if (seleccion == null) {
+            response.sendRedirect("/APRequest/mylist");
+            return;
+        }
+
+        RegistreContracte contracte = registreContracteDao
+                .getRegistreContracteBySeleccion(seleccion.getIdSeleccion());
+        APRequest solicitud = apRequestDao.getAPRequest(idSolicitud);
+        AssistentPersonal assistent = assistentPersonalDao
+                .getAssistentPersonal(seleccion.getIdAsistente());
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition",
+                "inline; filename=\"contrato_" + idSolicitud + ".pdf\"");
+
+        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+        com.itextpdf.text.pdf.PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+
+        com.itextpdf.text.Font titleFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 20,
+                com.itextpdf.text.Font.BOLD);
+        com.itextpdf.text.Font boldFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 12,
+                com.itextpdf.text.Font.BOLD);
+        com.itextpdf.text.Font normalFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 12);
+
+        document.add(new com.itextpdf.text.Paragraph(
+                "CONTRACTE D'ASSISTÈNCIA PERSONAL", titleFont));
+        document.add(new com.itextpdf.text.Paragraph("SgOVI - Servei de Gestió OVI\n\n"));
+        document.add(new com.itextpdf.text.Chunk(
+                new com.itextpdf.text.pdf.draw.LineSeparator()));
+        document.add(new com.itextpdf.text.Paragraph("\n"));
+
+        document.add(new com.itextpdf.text.Paragraph(
+                "Data d'inici: " + contracte.getFechaInicio(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Data de fi: " + (contracte.getFechaFin() != null
+                        ? contracte.getFechaFin() : "Indefinida"), normalFont));
+        document.add(new com.itextpdf.text.Paragraph("\n"));
+
+        document.add(new com.itextpdf.text.Paragraph("USUARI OVI", boldFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Nom: " + usuari.getNombre() + " " + usuari.getApellidos(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Email: " + usuari.getEmail(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Telèfon: " + usuari.getTelefono(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph("\n"));
+
+        document.add(new com.itextpdf.text.Paragraph("ASSISTENT PERSONAL", boldFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Nom: " + assistent.getNombre() + " " + assistent.getApellidos(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Email: " + assistent.getEmail(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Telèfon: " + assistent.getTelefono(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph("\n"));
+
+        document.add(new com.itextpdf.text.Paragraph("SERVEI", boldFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Tipus: " + solicitud.getTipoAsistencia(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Província: " + solicitud.getProximidad(), normalFont));
+        if (solicitud.getPreferencias() != null && !solicitud.getPreferencias().isEmpty()) {
+            document.add(new com.itextpdf.text.Paragraph(
+                    "Preferències: " + solicitud.getPreferencias(), normalFont));
+        }
+
+        document.close();
+    }
+
+    /**
+     * Lists all contracts for the admin.
+     * @param model model for the view
+     * @param session session data
+     * @return the contracts list view
+     */
+    @RequestMapping(value = "/contratos", method = RequestMethod.GET)
+    public String listarContratos(Model model, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        List<RegistreContracte> contratos =
+                registreContracteDao.getRegistresContractes();
+
+        // Para cada contrato, enriquecer con datos de solicitud y asistente
+        List<java.util.Map<String, Object>> contratosEnriquecidos = new ArrayList<>();
+        for (RegistreContracte c : contratos) {
+            // Buscar la selección para obtener el asistente
+            // Reutilizamos selectionDao que ya está inyectado
+            List<Selection> sels = selectionDao.getSelections();
+            Selection sel = null;
+            for (Selection s : sels) {
+                if (s.getIdSeleccion() == c.getIdSeleccion()) {
+                    sel = s;
+                    break;
+                }
+            }
+
+            java.util.Map<String, Object> row = new java.util.HashMap<>();
+            row.put("contrato", c);
+
+            if (sel != null) {
+                APRequest req = apRequestDao.getAPRequest(sel.getIdSolicitud());
+                AssistentPersonal ap = assistentPersonalDao
+                        .getAssistentPersonal(sel.getIdAsistente());
+                UsuariOVI ovi = req != null
+                        ? usuariOVIDao.getUsuariOVI(req.getIdUsuarioOvi()) : null;
+
+                row.put("solicitud", req);
+                row.put("assistent", ap);
+                row.put("usuari", ovi);
+            }
+
+            contratosEnriquecidos.add(row);
+        }
+
+        model.addAttribute("contratos", contratosEnriquecidos);
+        return "APRequest/contratos";
+    }
+
+    /**
+     * Generates the PDF of a contract by contract ID (admin access).
+     * @param idContrato contract identifier
+     * @param session session data
+     * @param response HTTP response
+     */
+    @RequestMapping(value = "/contratoPdf/{idContrato}", method = RequestMethod.GET)
+    public void contratoPdfAdmin(@PathVariable int idContrato,
+                                 HttpSession session,
+                                 jakarta.servlet.http.HttpServletResponse response) throws Exception {
+
+        if (session.getAttribute("admin") == null) {
+            response.sendRedirect("/login");
+            return;
+        }
+
+        RegistreContracte contracte =
+                registreContracteDao.getRegistreContracte(idContrato);
+        if (contracte == null) {
+            response.sendRedirect("/APRequest/contratos");
+            return;
+        }
+
+        // Buscar selección
+        Selection seleccion = null;
+        for (Selection s : selectionDao.getSelections()) {
+            if (s.getIdSeleccion() == contracte.getIdSeleccion()) {
+                seleccion = s;
+                break;
+            }
+        }
+
+        APRequest solicitud = seleccion != null
+                ? apRequestDao.getAPRequest(seleccion.getIdSolicitud()) : null;
+        AssistentPersonal assistent = seleccion != null
+                ? assistentPersonalDao.getAssistentPersonal(seleccion.getIdAsistente()) : null;
+        UsuariOVI usuari = solicitud != null
+                ? usuariOVIDao.getUsuariOVI(solicitud.getIdUsuarioOvi()) : null;
+
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition",
+                "inline; filename=\"contrato_" + idContrato + ".pdf\"");
+
+        com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+        com.itextpdf.text.pdf.PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+
+        com.itextpdf.text.Font titleFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 20,
+                com.itextpdf.text.Font.BOLD);
+        com.itextpdf.text.Font boldFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 12,
+                com.itextpdf.text.Font.BOLD);
+        com.itextpdf.text.Font normalFont = new com.itextpdf.text.Font(
+                com.itextpdf.text.Font.FontFamily.HELVETICA, 12);
+
+        document.add(new com.itextpdf.text.Paragraph(
+                "CONTRACTE D'ASSISTÈNCIA PERSONAL", titleFont));
+        document.add(new com.itextpdf.text.Paragraph("SgOVI - Servei de Gestió OVI\n\n"));
+        document.add(new com.itextpdf.text.Chunk(
+                new com.itextpdf.text.pdf.draw.LineSeparator()));
+        document.add(new com.itextpdf.text.Paragraph("\n"));
+
+
+        document.add(new com.itextpdf.text.Paragraph(
+                "Data d'inici: " + contracte.getFechaInicio(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Data de fi: " + (contracte.getFechaFin() != null
+                        ? contracte.getFechaFin() : "Indefinida"), normalFont));
+        document.add(new com.itextpdf.text.Paragraph("\n"));
+
+        if (usuari != null) {
+            document.add(new com.itextpdf.text.Paragraph("USUARI OVI", boldFont));
+            document.add(new com.itextpdf.text.Paragraph(
+                    "Nom: " + usuari.getNombre() + " " + usuari.getApellidos(), normalFont));
+            document.add(new com.itextpdf.text.Paragraph(
+                    "Email: " + usuari.getEmail(), normalFont));
+            document.add(new com.itextpdf.text.Paragraph("\n"));
+        }
+
+        if (assistent != null) {
+            document.add(new com.itextpdf.text.Paragraph("ASSISTENT PERSONAL", boldFont));
+            document.add(new com.itextpdf.text.Paragraph(
+                    "Nom: " + assistent.getNombre() + " " + assistent.getApellidos(), normalFont));
+            document.add(new com.itextpdf.text.Paragraph(
+                    "Email: " + assistent.getEmail(), normalFont));
+            document.add(new com.itextpdf.text.Paragraph("\n"));
+        }
+
+        if (solicitud != null) {
+            document.add(new com.itextpdf.text.Paragraph("SERVEI", boldFont));
+            document.add(new com.itextpdf.text.Paragraph(
+                    "Tipus: " + solicitud.getTipoAsistencia(), normalFont));
+            document.add(new com.itextpdf.text.Paragraph(
+                    "Província: " + solicitud.getProximidad(), normalFont));
+        }
+
+        document.close();
     }
 }

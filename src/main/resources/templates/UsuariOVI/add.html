@@ -1,49 +1,78 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Añadir usuario</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Nou Usuari OVI</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
-<body>
-
+<body class="form-page">
+<nav>
+    <span class="nav-brand">SgOVI - Administració</span>
+    <div class="nav-right">
+        <a th:href="@{/UsuariOVI/list}" class="btn-logout">Tornar a la llista</a>
+    </div>
+</nav>
 <main>
-    <h1>Añadir usuario</h1>
-
-    <form th:action="@{/UsuariOVI/add}" th:object="${usuariOVI}" method="post">
-
+    <div class="page-actions">
         <div>
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" th:field="*{nombre}">
-            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" style="color:red;"></span>
+            <h1 class="page-title">Nou Usuari OVI</h1>
+            <p class="page-subtitle">Omple les dades per registrar un nou usuari.</p>
         </div>
-        <div>
-            <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" th:field="*{apellidos}">
-        </div>
-        <div>
-            <label for="email">Email:</label>
-            <input type="text" id="email" th:field="*{email}">
-        </div>
-        <div>
-            <label for="password">Contreaseña:</label>
-            <input type="text" id="password" th:field="*{password}">
-        </div>
-        <div>
-            <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" th:field="*{telefono}">
-            <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" style="color:red;"></span>
-        </div>
-        <div>
-            <label for="consentimientoRgpd">Accepto el tractament de dades (RGPD):</label>
-            <input type="checkbox" id="consentimientoRgpd" th:field="*{consentimientoRgpd}">
-            <span th:if="${#fields.hasErrors('consentimientoRgpd')}" th:errors="*{consentimientoRgpd}" style="color:red;"></span>
-        </div>
-        <button type="submit">Guardar</button>
-    </form>
-
-    <br>
-    <a th:href="@{/UsuariOVI/list}">Volver a la lista</a>
+    </div>
+    <div class="form-card">
+        <form th:action="@{/UsuariOVI/add}" th:object="${usuariOVI}" method="post">
+            <div class="form-group">
+                <label for="nombre">Nom</label>
+                <input id="nombre" type="text" th:field="*{nombre}" placeholder="Nom"/>
+                <div th:if="${#fields.hasErrors('nombre')}"
+                     th:errors="*{nombre}" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="apellidos">Cognoms</label>
+                <input id="apellidos" type="text" th:field="*{apellidos}"
+                       placeholder="Cognoms"/>
+                <div th:if="${#fields.hasErrors('apellidos')}"
+                     th:errors="*{apellidos}" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" type="email" th:field="*{email}"
+                       placeholder="correu@exemple.com"/>
+                <div th:if="${#fields.hasErrors('email')}"
+                     th:errors="*{email}" class="error"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">Contrasenya</label>
+                <input id="password" type="password" th:field="*{password}"
+                       placeholder="••••••••"/>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Telèfon</label>
+                <input id="telefono" type="text" th:field="*{telefono}"
+                       placeholder="6XXXXXXXX"/>
+                <div th:if="${#fields.hasErrors('telefono')}"
+                     th:errors="*{telefono}" class="error"></div>
+            </div>
+            <div class="form-group"
+                 style="flex-direction: row; align-items: center; gap: 0.75rem;">
+                <input type="checkbox" id="consentimientoRgpd"
+                       th:field="*{consentimientoRgpd}"
+                       style="width: auto; margin: 0;"/>
+                <label for="consentimientoRgpd" style="margin: 0;">
+                    Accepte el tractament de dades (RGPD)
+                </label>
+                <div th:if="${#fields.hasErrors('consentimientoRgpd')}"
+                     th:errors="*{consentimientoRgpd}" class="error"></div>
+            </div>
+            <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+                <button type="submit" class="btn btn-primary"
+                        style="flex:1;">Guardar</button>
+                <a th:href="@{/UsuariOVI/list}" class="btn btn-outline"
+                   style="flex:1; text-align:center;">Cancel·lar</a>
+            </div>
+        </form>
+    </div>
 </main>
-
 </body>
 </html>

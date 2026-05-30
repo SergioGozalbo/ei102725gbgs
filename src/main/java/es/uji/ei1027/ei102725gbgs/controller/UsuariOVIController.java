@@ -207,9 +207,17 @@ public class UsuariOVIController {
      * @return redirect to the list view
      */
     @RequestMapping(value = "/delete/{idUsuario}")
-    public String processDelete(@PathVariable String idUsuario) {
-        usuariOVIDao.deleteUsuariOVIPorId(idUsuario);
-        return "redirect:../list";
+    public String processDelete(@PathVariable String idUsuario,
+                                org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            usuariOVIDao.deleteUsuariOVIPorId(idUsuario);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("errorMsg",
+                    "No es pot eliminar aquest usuari perquè té sol·licituds associades. "
+                            + "Elimina primer les seues sol·licituds.");
+            return "redirect:/UsuariOVI/list";
+        }
+        return "redirect:/UsuariOVI/list";
     }
 
     /**

@@ -1,52 +1,56 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>SgOVI - Solicitudes de Asistencia</title>
+    <title>SgOVI - Sol·licituds</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
 </head>
-<body class="dashboard">
+<body class="table-page">
 <nav>
-    <span class="nav-brand">SgOVI - Administración</span>
+    <span class="nav-brand">SgOVI - Administració</span>
     <div class="nav-right">
-        <a th:href="@{/dashboard/admin}" class="btn-logout">Volver al panel</a>
+        <a th:href="@{/dashboard/admin}" class="btn-logout">Tornar al panell</a>
     </div>
 </nav>
 <main>
     <div class="page-actions">
         <div>
-            <h1 class="page-title">Solicitudes de Asistencia</h1>
-            <p class="page-subtitle">Gestiona todas las solicitudes del sistema.</p>
+            <h1 class="page-title">Sol·licituds d'Assistència</h1>
+            <p class="page-subtitle">Gestiona totes les sol·licituds del sistema.</p>
         </div>
-        <a th:href="@{/APRequest/addAdmin}" class="btn-new">+ Nueva solicitud</a>
+        <div style="display:flex; gap:0.75rem;">
+            <a th:href="@{/APRequest/contratos}" class="btn-back">Veure contractes</a>
+            <a th:href="@{/APRequest/addAdmin}" class="btn-new">+ Nova sol·licitud</a>
+        </div>
     </div>
 
-    <div class="table-container">
-        <div th:if="${#lists.isEmpty(requests)}"
-             style="text-align: center; padding: 2rem; color: #6b7280;">
-            No hay solicitudes registradas.
-        </div>
-        <table th:unless="${#lists.isEmpty(requests)}">
+    <div th:if="${#lists.isEmpty(requests)}"
+         style="text-align:center; padding:2rem; color:#6b7280;">
+        No hi ha sol·licituds registrades.
+    </div>
+
+    <div class="table-container" th:unless="${#lists.isEmpty(requests)}">
+        <table id="tablaSolicitudes" style="width:100%">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Usuario OVI</th>
-                <th>Tipo</th>
-                <th>Estado</th>
-                <th>Provincia</th>
-                <th>Acciones</th>
+                <th>Usuari OVI</th>
+                <th>Tipus</th>
+                <th>Estat</th>
+                <th>Província</th>
+                <th>Accions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="request : ${requests}">
-                <td th:text="${request.idSolicitud}"></td>
                 <td th:text="${request.idUsuarioOvi}"></td>
                 <td th:text="${request.tipoAsistencia}"></td>
                 <td>
                     <span class="badge-estat"
-                          th:classappend="${request.estado == 'Aprobada'} ? 'badge-acceptat' :
-                                         (${request.estado == 'Rechazada'} ? 'badge-rebutjat' :
-                                         'badge-pendent')"
+                          th:classappend="${request.estado == 'Aprobada'} ? ' badge-acceptat' :
+                                         (${request.estado == 'Rechazada'} ? ' badge-rebutjat' :
+                                         ' badge-pendent')"
                           th:text="${request.estado}"></span>
                 </td>
                 <td th:text="${request.proximidad}"></td>
@@ -59,7 +63,7 @@
                            class="btn-edit">Editar</a>
                         <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}"
                            class="btn-delete"
-                           onclick="return confirm('¿Estás seguro?')">Eliminar</a>
+                           onclick="return confirm('Estàs segur?')">Eliminar</a>
                     </div>
                 </td>
             </tr>
@@ -67,5 +71,18 @@
         </table>
     </div>
 </main>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#tablaSolicitudes').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/ca.json'
+            },
+            pageLength: 10,
+            columnDefs: [{ orderable: false, targets: 4 }]
+        });
+    });
+</script>
 </body>
 </html>
