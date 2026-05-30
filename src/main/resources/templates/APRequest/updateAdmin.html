@@ -1,43 +1,42 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>SgOVI - Editar Sol·licitud</title>
+    <title>SgOVI - Editar Solicitud</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body class="form-page">
 <nav>
-    <span class="nav-brand">SgOVI - Administració</span>
+    <span class="nav-brand">SgOVI - Administración</span>
     <div class="nav-right">
-        <a th:href="@{/APRequest/list}" class="btn-logout">Tornar a la llista</a>
+        <a th:href="@{/logout}" class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
 <main>
-    <h1 class="page-title">Editar Sol·licitud</h1>
-    <p class="page-subtitle">Modifica les dades de la sol·licitud.</p>
+    <h1 class="page-title">Editar Solicitud</h1>
+    <p class="page-subtitle">Modifica los datos de la solicitud.</p>
 
     <div class="form-card">
         <form th:action="@{/APRequest/updateAdmin}" th:object="${apRequest}" method="post">
-
             <input type="hidden" th:field="*{idSolicitud}"/>
             <input type="hidden" th:field="*{idUsuarioOvi}"/>
 
             <div class="form-group">
-                <label>Usuari OVI</label>
+                <label>Usuario OVI</label>
                 <div class="field-readonly" th:text="${apRequest.idUsuarioOvi}"></div>
             </div>
 
             <div class="form-group">
-                <label for="estado">Estat</label>
+                <label for="estado">Estado</label>
                 <select id="estado" th:field="*{estado}">
-                    <option value="En revisión">En revisió</option>
-                    <option value="Aprobada">Aprovada</option>
-                    <option value="Rechazada">Rebutjada</option>
+                    <option value="En revisión">En revisión</option>
+                    <option value="Aprobada">Aprobada</option>
+                    <option value="Rechazada">Rechazada</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label for="tipoAsistencia">Tipus d'Assistència</label>
+                <label for="tipoAsistencia">Tipo de Asistencia</label>
                 <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
                     <option value="PAP">PAP</option>
                     <option value="PATI">PATI</option>
@@ -45,7 +44,7 @@
             </div>
 
             <div class="form-group">
-                <label for="proximidad">Província</label>
+                <label for="proximidad">Provincia</label>
                 <select id="proximidad" th:field="*{proximidad}">
                     <option th:each="p : ${provincias}"
                             th:value="${p}" th:text="${p}"></option>
@@ -53,13 +52,13 @@
             </div>
 
             <div class="form-group">
-                <label for="preferencias">Preferències</label>
+                <label for="preferencias">Preferencias</label>
                 <textarea id="preferencias" th:field="*{preferencias}" rows="4"></textarea>
             </div>
 
             <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;">Actualitzar</button>
-                <a th:href="@{/APRequest/list}" class="btn btn-outline" style="flex: 1; text-align: center;">Cancel·lar</a>
+                <button type="submit" class="btn btn-primary" style="flex: 1;">Actualizar</button>
+                <a th:href="@{/APRequest/list}" class="btn btn-outline" style="flex: 1; text-align: center;">Cancelar</a>
             </div>
         </form>
     </div>

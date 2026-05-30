@@ -1,40 +1,40 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>SgOVI - Sol·licituds d'Assistència</title>
+    <title>SgOVI - Solicitudes de Asistencia</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body class="dashboard">
 <nav>
-    <span class="nav-brand">SgOVI - Administració</span>
+    <span class="nav-brand">SgOVI - Administración</span>
     <div class="nav-right">
-        <a th:href="@{/dashboard/admin}" class="btn-logout">Tornar al panel</a>
+        <a th:href="@{/dashboard/admin}" class="btn-logout">Volver al panel</a>
     </div>
 </nav>
 <main>
     <div class="page-actions">
         <div>
-            <h1 class="page-title">Sol·licituds d'Assistència</h1>
-            <p class="page-subtitle">Gestiona totes les sol·licituds del sistema.</p>
+            <h1 class="page-title">Solicitudes de Asistencia</h1>
+            <p class="page-subtitle">Gestiona todas las solicitudes del sistema.</p>
         </div>
-        <a th:href="@{/APRequest/addAdmin}" class="btn-new">+ Nova sol·licitud</a>
+        <a th:href="@{/APRequest/addAdmin}" class="btn-new">+ Nueva solicitud</a>
     </div>
 
     <div class="table-container">
         <div th:if="${#lists.isEmpty(requests)}"
              style="text-align: center; padding: 2rem; color: #6b7280;">
-            No hi ha sol·licituds registrades.
+            No hay solicitudes registradas.
         </div>
         <table th:unless="${#lists.isEmpty(requests)}">
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Usuari OVI</th>
-                <th>Tipus</th>
-                <th>Estat</th>
-                <th>Província</th>
-                <th>Accions</th>
+                <th>Usuario OVI</th>
+                <th>Tipo</th>
+                <th>Estado</th>
+                <th>Provincia</th>
+                <th>Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -56,10 +56,10 @@
                            th:href="@{/APRequest/aprobar/{id}(id=${request.idSolicitud})}"
                            class="btn-edit">Revisar</a>
                         <a th:href="@{/APRequest/updateAdmin/{id}(id=${request.idSolicitud})}"
-                           class="btn-edit">Edita</a>
+                           class="btn-edit">Editar</a>
                         <a th:href="@{/APRequest/delete/{id}(id=${request.idSolicitud})}"
                            class="btn-delete"
-                           onclick="return confirm('Estàs segur?')">Esborra</a>
+                           onclick="return confirm('¿Estás seguro?')">Eliminar</a>
                     </div>
                 </td>
             </tr>

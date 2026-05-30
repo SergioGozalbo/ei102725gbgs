@@ -1,28 +1,28 @@
 <!DOCTYPE html>
-<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8"/>
-  <title>SgOVI - Nova Sol·licitud</title>
+  <title>SgOVI - Nueva Solicitud</title>
   <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body class="form-page">
 <nav>
-  <span class="nav-brand">SgOVI - Administració</span>
+  <span class="nav-brand">SgOVI - Administración</span>
   <div class="nav-right">
-    <a th:href="@{/APRequest/list}" class="btn-logout">Tornar a la llista</a>
+    <a th:href="@{/APRequest/list}" class="btn-logout">Volver a la lista</a>
   </div>
 </nav>
 <main>
-  <h1 class="page-title">Nova Sol·licitud d'Assistència</h1>
-  <p class="page-subtitle">Crea una nova sol·licitud per a un usuari OVI.</p>
+  <h1 class="page-title">Nueva Solicitud de Asistencia</h1>
+  <p class="page-subtitle">Crea una nueva solicitud para un usuario OVI.</p>
 
   <div class="form-card">
     <form th:action="@{/APRequest/addAdmin}" th:object="${apRequest}" method="post">
 
       <div class="form-group">
-        <label for="idUsuarioOvi">Usuari OVI</label>
+        <label for="idUsuarioOvi">Usuario OVI</label>
         <select id="idUsuarioOvi" th:field="*{idUsuarioOvi}">
-          <option value="">-- Selecciona un usuari --</option>
+          <option value="">-- Selecciona un usuario --</option>
           <option th:each="u : ${usuariosOvi}"
                   th:value="${u.idUsuario}"
                   th:text="${u.nombre} + ' ' + ${u.apellidos}"></option>
@@ -32,7 +32,7 @@
       </div>
 
       <div class="form-group">
-        <label for="tipoAsistencia">Tipus d'Assistència</label>
+        <label for="tipoAsistencia">Tipo de Asistencia</label>
         <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
           <option value="">-- Selecciona --</option>
           <option value="PAP">PAP</option>
@@ -43,7 +43,7 @@
       </div>
 
       <div class="form-group">
-        <label for="proximidad">Província</label>
+        <label for="proximidad">Provincia</label>
         <select id="proximidad" th:field="*{proximidad}">
           <option value="">-- Selecciona --</option>
           <option th:each="p : ${provincias}"
@@ -52,16 +52,16 @@
       </div>
 
       <div class="form-group">
-        <label for="preferencias">Preferències</label>
+        <label for="preferencias">Preferencias</label>
         <textarea id="preferencias" th:field="*{preferencias}"
-                  rows="4" placeholder="Descriu les preferències..."></textarea>
+                  rows="4" placeholder="Describe las preferencias..."></textarea>
       </div>
 
       <input type="hidden" th:field="*{estado}"/>
 
       <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
         <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar</button>
-        <a th:href="@{/APRequest/list}" class="btn btn-outline" style="flex: 1; text-align: center;">Cancel·lar</a>
+        <a th:href="@{/APRequest/list}" class="btn btn-outline" style="flex: 1; text-align: center;">Cancelar</a>
       </div>
     </form>
   </div>
