@@ -6,6 +6,9 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
+
+<main>
+
 <div class="card">
     <div class="header">
         <div class="logo">
@@ -21,8 +24,10 @@
         <input type="hidden" th:field="*{estado}"/>
 
         <div class="form-group">
-            <label class="field-label">Tipus d'Assistència</label>
-            <select th:field="*{tipoAsistencia}" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 2px solid #e5e7eb;">
+            <label for="tipoAsistencia" class="field-label">Tipus d'Assistència</label>
+            <select id="tipoAsistencia"
+                    th:field="*{tipoAsistencia}"
+                    class="form-select">
                 <option value="PAP">PAP (Personal)</option>
                 <option value="PATI">PATI (Tècnica)</option>
             </select>
@@ -30,22 +35,28 @@
         </div>
 
         <div class="form-group">
-            <label class="field-label">Província</label>
-            <select th:field="*{proximidad}" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 2px solid #e5e7eb;">
+            <label for="proximidad" class="field-label">Província</label>
+            <select id="proximidad"
+                    th:field="*{proximidad}"
+                    class="form-select">
                 <option th:each="prov : ${provincias}" th:value="${prov}" th:text="${prov}"></option>
             </select>
             <div class="error" th:if="${#fields.hasErrors('proximidad')}" th:errors="*{proximidad}"></div>
         </div>
 
         <div class="form-group">
-            <label class="field-label">Preferències</label>
-            <textarea th:field="*{preferencias}" rows="4"></textarea>
+            <label for="preferencias" class="field-label">Preferències</label>
+            <textarea id="preferencias"
+                      th:field="*{preferencias}"
+                      rows="4"></textarea>
             <div class="error" th:if="${#fields.hasErrors('preferencias')}" th:errors="*{preferencias}"></div>
         </div>
 
         <button type="submit" class="btn btn-primary">Guardar Canvis</button>
         <a th:href="@{/APRequest/mylist}" class="btn btn-outline">Tornar a la meua llista</a>
     </form>
+
 </div>
+</main>
 </body>
 </html>

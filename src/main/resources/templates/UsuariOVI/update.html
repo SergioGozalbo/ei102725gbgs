@@ -1,4 +1,106 @@
 <!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Actualizar usuario</title>
+</head>
+<body class="form-page">
+
+<nav>
+    <span class="nav-brand">SgOVI</span>
+
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">
+            Cerrar sesión
+        </a>
+    </div>
+</nav>
+
+<main>
+
+<div class="page-actions">
+    <div>
+        <h1 class="page-title">
+        Actualizar usuario
+    </h1>
+
+        <p class="page-subtitle">
+            Modifica los datos del usuario.
+        </p>
+        </div>
+
+    <a th:href="@{/UsuariOVI/list}"
+       class="btn-back">
+        Volver a la lista
+    </a>
+
+    </div>
+
+    <div class="form-card">
+
+    <form th:action="@{/UsuariOVI/update}" th:object="${usuariOVI}" method="post">
+
+        <div class="form-group">
+            <label for="idUsuario">Id usuario:</label>
+            <input type="text"
+                   id="idUsuario"
+                   th:field="*{idUsuario}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text"
+                   id="nombre"
+                   th:field="*{nombre}"
+                   placeholder="Nombre">
+        </div>
+
+        <div class="form-group">
+            <label for="apellidos">Apellidos:</label>
+            <input type="text"
+                   id="apellidos"
+                   th:field="*{apellidos}"
+                   placeholder="Apellidos">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email"
+                   id="email"
+                   th:field="*{email}"
+                   placeholder="correo@ejemplo.com">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password"
+                   id="password"
+                   th:field="*{password}"
+                   placeholder="********">
+        </div>
+
+        <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="text"
+                   id="telefono"
+                   th:field="*{telefono}"
+                   placeholder="6XXXXXXXX">
+        </div>
+
+        <div class="checkbox-group">
+            <input type="checkbox"
+                   id="consentimientoRgpd"
+                   th:field="*{consentimientoRgpd}">
+            <label for="consentimientoRgpd">Consentimiento:</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Actualizar
+        </button>
+    </form>
+
+</div>
 <html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
