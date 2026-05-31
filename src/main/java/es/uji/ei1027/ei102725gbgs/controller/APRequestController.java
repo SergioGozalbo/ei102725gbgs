@@ -105,6 +105,15 @@ public class APRequestController {
      */
     private final RegistreContracteDaoImpl registreContracteDao;
 
+    /**
+     * Font size for PDF title.
+     */
+    private static final int TITLE_FONT_SIZE = 20;
+
+    /**
+     * Font size for PDF body text.
+     */
+    private static final int BODY_FONT_SIZE = 12;
 
     /**
      * Constructor for APRequestController.
@@ -143,7 +152,9 @@ public class APRequestController {
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listAPRequest(Model model, HttpSession session) {
-        if (session.getAttribute("admin") == null) return "redirect:/login";
+        if (session.getAttribute("admin") == null) {
+            return "redirect:/login";
+        }
         model.addAttribute("requests", apRequestDao.getAPRequests());
         model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI()); // añade esto
         return "APRequest/list";
@@ -334,10 +345,14 @@ public class APRequestController {
     @RequestMapping(value = "/mylistChooseAP/{id}", method = RequestMethod.GET)
     public String mylistChooseAP(@PathVariable int id, Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         APRequest request = apRequestDao.getAPRequest(id);
-        if (request == null) return "redirect:/APRequest/mylist";
+        if (request == null) {
+            return "redirect:/APRequest/mylist";
+        }
 
         // Cargar TODOS los asistentes aprobados, sin filtrar por Selection
         List<AssistentPersonal> candidatos =
@@ -363,12 +378,16 @@ public class APRequestController {
             @PathVariable String idAsistente,
             Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         AssistentPersonal assistent =
                 assistentPersonalDao.getAssistentPersonal(idAsistente);
-        if (assistent == null)
+        if (assistent == null) {
             return "redirect:/APRequest/mylistChooseAP/" + idSolicitud;
+        }
+
 
         // Comprobar si ya tiene contrato
         List<Selection> selecciones =
@@ -404,7 +423,9 @@ public class APRequestController {
             HttpSession session) {
 
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         // 1. Comprobar que esta solicitud no tenga ya un contrato
         List<Selection> seleccionesExistentes =
@@ -555,13 +576,13 @@ public class APRequestController {
         document.open();
 
         com.itextpdf.text.Font titleFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 20,
-                com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, TITLE_FONT_SIZE,
+            com.itextpdf.text.Font.BOLD);
         com.itextpdf.text.Font boldFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 12,
-                com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, BODY_FONT_SIZE,
+            com.itextpdf.text.Font.BOLD);
         com.itextpdf.text.Font normalFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 12);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, BODY_FONT_SIZE);
 
         document.add(new com.itextpdf.text.Paragraph(
                 "CONTRACTE D'ASSISTÈNCIA PERSONAL", titleFont));
@@ -616,7 +637,9 @@ public class APRequestController {
      */
     @RequestMapping(value = "/contratos", method = RequestMethod.GET)
     public String listarContratos(Model model, HttpSession session) {
-        if (session.getAttribute("admin") == null) return "redirect:/login";
+        if (session.getAttribute("admin") == null) {
+            return "redirect:/login";
+        }
 
         List<RegistreContracte> contratos =
                 registreContracteDao.getRegistresContractes();
@@ -705,13 +728,13 @@ public class APRequestController {
         document.open();
 
         com.itextpdf.text.Font titleFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 20,
-                com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, TITLE_FONT_SIZE,
+            com.itextpdf.text.Font.BOLD);
         com.itextpdf.text.Font boldFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 12,
-                com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, BODY_FONT_SIZE,
+            com.itextpdf.text.Font.BOLD);
         com.itextpdf.text.Font normalFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 12);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, BODY_FONT_SIZE);
 
         document.add(new com.itextpdf.text.Paragraph(
                 "CONTRACTE D'ASSISTÈNCIA PERSONAL", titleFont));

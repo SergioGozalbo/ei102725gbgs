@@ -38,7 +38,9 @@ public class Mensaje {
     /**
      * Default constructor.
      */
-    public Mensaje() {}
+    public Mensaje() {
+
+    }
 
     /**
      * Returns the message id.

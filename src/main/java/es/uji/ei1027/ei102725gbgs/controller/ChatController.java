@@ -57,10 +57,14 @@ public class ChatController {
                            Model model, HttpSession session) {
 
         String remitenteType = getRemitenteType(session);
-        if (remitenteType == null) return "redirect:/login";
+        if (remitenteType == null) {
+            return "redirect:/login";
+        }
 
         APRequest solicitud = apRequestDao.getAPRequest(idSolicitud);
-        if (solicitud == null) return "redirect:/login";
+        if (solicitud == null) {
+            return "redirect:/login";
+        }
 
         List<Mensaje> mensajes = mensajeDao.getMensajesBySolicitud(idSolicitud);
 
@@ -84,7 +88,9 @@ public class ChatController {
                               HttpSession session) {
 
         String remitenteType = getRemitenteType(session);
-        if (remitenteType == null) return "redirect:/login";
+        if (remitenteType == null) {
+            return "redirect:/login";
+        }
 
         String remitenteId = getRemitenteId(session, remitenteType);
 
@@ -106,8 +112,12 @@ public class ChatController {
      * @return 'OVI' if an OVI user is logged in, 'ASISTENT' if an assistant is logged in, or {@code null} if no user is logged in
      */
     private String getRemitenteType(HttpSession session) {
-        if (session.getAttribute("usuariOVI") != null) return "OVI";
-        if (session.getAttribute("assistentPersonal") != null) return "ASISTENT";
+        if (session.getAttribute("usuariOVI") != null) {
+            return "OVI";
+        }
+        if (session.getAttribute("assistentPersonal") != null) {
+            return "ASISTENT";
+        }
         return null;
     }
 
