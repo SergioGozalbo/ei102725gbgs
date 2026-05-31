@@ -15,9 +15,9 @@
 <main>
     <div class="page-actions">
         <div>
-            <h1 class="page-title">Candidats disponibles</h1>
+            <h1 class="page-title">Assistents disponibles</h1>
             <p class="page-subtitle">
-                Assistents que s'han postulat per a la teua sol·licitud de tipus
+                Tria l'assistent per a la teua sol·licitud de tipus
                 <strong th:text="${request.tipoAsistencia}"></strong>
                 a <strong th:text="${request.proximidad}"></strong>.
             </p>
@@ -27,7 +27,7 @@
     <div th:if="${#lists.isEmpty(candidatos)}"
          style="background: #e0f2fe; border: 1px solid #7dd3fc; color: #0369a1;
                 border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 1.5rem;">
-        Encara no hi ha cap assistent postulat per a aquesta sol·licitud.
+        No hi ha assistents disponibles en aquest moment.
     </div>
 
     <div class="table-container" th:unless="${#lists.isEmpty(candidatos)}">
@@ -36,23 +36,23 @@
             <tr>
                 <th>Nom</th>
                 <th>Cognoms</th>
-                <th>Província</th>
-                <th>Estat</th>
-                <th>Accions</th>
+                <th>Formació</th>
+                <th>Experiència</th>
+                <th>Acció</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="candidat : ${candidatos}">
                 <td th:text="${candidat.nombre}"></td>
                 <td th:text="${candidat.apellidos}"></td>
-                <td th:text="${candidat.estadoAceptado}"></td>
-                <td>
-                    <span class="badge-estat badge-acceptat">Postulat</span>
-                </td>
+                <td th:text="${candidat.formacionAcademica}"></td>
+                <td th:text="${candidat.experiencia}"></td>
                 <td>
                     <div class="table-actions">
+                        <!-- Ver detalles antes de confirmar -->
                         <a th:href="@{/APRequest/mylistChooseAPDetails/{idSolicitud}/{idAsistente}
-                            (idSolicitud=${request.idSolicitud}, idAsistente=${candidat.idAsistente})}"
+                            (idSolicitud=${request.idSolicitud},
+                             idAsistente=${candidat.idAsistente})}"
                            class="btn-edit">Veure detalls</a>
                     </div>
                 </td>

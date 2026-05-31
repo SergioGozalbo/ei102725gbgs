@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>SgOVI - Contractes</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
+</head>
+<body class="table-page">
+<nav>
+    <span class="nav-brand">SgOVI - Administració</span>
+    <div class="nav-right">
+        <a th:href="@{/APRequest/list}" class="btn-logout">Tornar a sol·licituds</a>
+    </div>
+</nav>
+<main>
+    <div class="page-actions">
+        <div>
+            <h1 class="page-title">Contractes actius</h1>
+            <p class="page-subtitle">Tots els contractes generats al sistema.</p>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(contratos)}"
+         style="text-align:center; padding:2rem; color:#6b7280;">
+        No hi ha contractes registrats.
+    </div>
+
+    <div class="table-container" th:unless="${#lists.isEmpty(contratos)}">
+        <table id="tablaContratos" style="width:100%">
+            <thead>
+            <tr>
+                <th>Usuari OVI</th>
+                <th>Assistent</th>
+                <th>Tipus</th>
+                <th>Província</th>
+                <th>Data inici</th>
+                <th>Data fi</th>
+                <th>Accions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row : ${contratos}">
+                <td th:text="${row.usuari != null}
+                    ? ${row.usuari.nombre} + ' ' + ${row.usuari.apellidos}
+                    : '—'"></td>
+                <td th:text="${row.assistent != null}
+                    ? ${row.assistent.nombre} + ' ' + ${row.assistent.apellidos}
+                    : '—'"></td>
+                <td th:text="${row.solicitud != null}
+                    ? ${row.solicitud.tipoAsistencia} : '—'"></td>
+                <td th:text="${row.solicitud != null}
+                    ? ${row.solicitud.proximidad} : '—'"></td>
+                <td th:text="${row.contrato.fechaInicio}"></td>
+                <td th:text="${row.contrato.fechaFin != null}
+                    ? ${row.contrato.fechaFin} : 'Indefinida'"></td>
+                <td>
+                    <a th:href="@{/APRequest/contratoPdf/{id}(id=${row.contrato.idContrato})}"
+                       class="btn-edit" target="_blank">Veure PDF</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#tablaContratos').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/ca.json'
+            },
+            pageLength: 10,
+            columnDefs: [{ orderable: false, targets: 6 }]
+        });
+    });
+</script>
+</body>
+</html>

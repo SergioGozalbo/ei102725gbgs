@@ -92,6 +92,86 @@
 
 <br><br>
 
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Usuaris OVI</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet"
+          href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
+</head>
+<body class="table-page">
+<nav aria-label="Navegació principal">
+    <span class="nav-brand">SgOVI - Administració</span>
+    <div class="nav-right">
+        <a th:href="@{/}" class="btn-logout">Tornar al menú</a>
+    </div>
+</nav>
+<main>
+    <!-- Mensaje de error FK -->
+    <div th:if="${errorMsg}"
+         style="background:#fee2e2; border:1px solid #fca5a5; color:#991b1b;
+                border-radius:10px; padding:1rem 1.2rem; margin-bottom:1.5rem;
+                display:flex; align-items:center; gap:0.75rem;">
+        <span style="font-size:1.3rem;">⚠️</span>
+        <span th:text="${errorMsg}"></span>
+    </div>
+
+    <div class="page-actions">
+        <div>
+            <h1 class="page-title">Usuaris OVI</h1>
+            <p class="page-subtitle">Llista de tots els usuaris registrats.</p>
+        </div>
+        <a th:href="@{/UsuariOVI/add}" class="btn-new">+ Nou usuari</a>
+    </div>
+
+    <div class="table-container">
+        <table id="tablaUsuarios" style="width:100%">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Cognoms</th>
+                <th>Email</th>
+                <th>Telèfon</th>
+                <th>RGPD</th>
+                <th>Accions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="usuario : ${usuarios}">
+                <td th:text="${usuario.nombre}"></td>
+                <td th:text="${usuario.apellidos}"></td>
+                <td th:text="${usuario.email}"></td>
+                <td th:text="${usuario.telefono}"></td>
+                <td th:text="${usuario.consentimientoRgpd ? 'Sí' : 'No'}"></td>
+                <td>
+                    <div class="table-actions">
+                        <a th:href="@{/UsuariOVI/update/{id}(id=${usuario.idUsuario})}"
+                           class="btn-edit">Editar</a>
+                        <a th:href="@{/UsuariOVI/delete/{id}(id=${usuario.idUsuario})}"
+                           class="btn-delete"
+                           onclick="return confirm('Estàs segur que vols eliminar aquest usuari?')">
+                            Eliminar</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </main>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#tablaUsuarios').DataTable({
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/ca.json'
+            },
+            pageLength: 10,
+            columnDefs: [{ orderable: false, targets: 5 }]
+        });
+    });
+</script>
 </body>
 </html>

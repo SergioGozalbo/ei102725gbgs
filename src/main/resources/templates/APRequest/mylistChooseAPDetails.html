@@ -9,7 +9,10 @@
 <nav>
     <span class="nav-brand">SgOVI</span>
     <div class="nav-right">
-        <a th:href="@{/APRequest/mylistChooseAP/{id}(id=${idSolicitud})}"
+        <a th:if="${yaElegido}"
+           th:href="@{/APRequest/mylist}" class="btn-logout">Tornar</a>
+        <a th:unless="${yaElegido}"
+           th:href="@{/APRequest/mylistChooseAP/{id}(id=${idSolicitud})}"
            class="btn-logout">Tornar als candidats</a>
     </div>
 </nav>
@@ -64,17 +67,18 @@
         </div>
     </div>
 
-    <div class="table-actions">
-        <a th:href="@{/APRequest/acceptarAssistent/{idSolicitud}/{idAsistente}
-            (idSolicitud=${idSolicitud}, idAsistente=${assistent.idAsistente})}"
+    <div class="table-actions" style="margin-top: 1.5rem;">
+        <a th:unless="${yaElegido}"
+           th:href="@{/APRequest/acceptarAssistent/{idSolicitud}/{idAsistente}
+           (idSolicitud=${idSolicitud}, idAsistente=${assistent.idAsistente})}"
            class="btn-new"
-           style="background: #166534;"
+           style="background:#166534;"
            onclick="return confirm('Estàs segur que vols acceptar aquest assistent? Aquesta acció és irreversible.')">
             ✓ Acceptar aquest assistent
         </a>
-        <a th:href="@{/APRequest/mylistChooseAP/{id}(id=${idSolicitud})}"
-           class="btn-back">
-            Tornar als candidats
+        <!-- Si ya está elegido: solo volver -->
+        <a th:href="@{/APRequest/mylist}" class="btn-back">
+            Tornar a les meues sol·licituds
         </a>
     </div>
 </main>

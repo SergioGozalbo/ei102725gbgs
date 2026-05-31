@@ -131,6 +131,11 @@ public class UsuariOVIDaoImpl {
         }
     }
 
+    /**
+     * Checks if a UsuariOVI with the given email exists in the database.
+     * @param email the email to check for existence; must not be {@code null}
+     * @return {@code true} if a UsuariOVI with the given email exists, {@code false} otherwise
+     */
     public boolean existeEmail(String email) {
         Integer count = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM USUARIO_OVI WHERE email = ?",

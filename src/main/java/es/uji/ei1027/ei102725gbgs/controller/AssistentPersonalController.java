@@ -127,6 +127,16 @@ public class AssistentPersonalController {
     private final RegistreContracteDaoImpl registreContracteDao;
 
     /**
+     * Font size for the title.
+     */
+    private static final int TITLE_FONT_SIZE = 20;
+
+    /**
+     * Font size for PDF body text.
+     */
+    private static final int BODY_FONT_SIZE = 12;
+
+    /**
      * Constructor with dependencies injected by Spring.
      * @param assistentPersonalDao DAO
      * @param assistentPersonalValidator Validator
@@ -242,11 +252,19 @@ public class AssistentPersonalController {
     /**
      * Deletes an assistant.
      * @param idAsistente assistant identifier
+     * @param redirectAttributes attributes for messages
      * @return redirect to the list view
      */
     @RequestMapping(value = "/delete/{idAsistente}")
-    public String processDelete(@PathVariable String idAsistente) {
-        assistentPersonalDao.deleteAssistentPersonalPorId(idAsistente);
+    public String processDelete(@PathVariable String idAsistente,
+                                org.springframework.web.servlet.mvc.support.RedirectAttributes redirectAttributes) {
+        try {
+            assistentPersonalDao.deleteAssistentPersonalPorId(idAsistente);
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("errorMsg",
+                    "No es pot eliminar aquest assistent perquè té contractes o seleccions associades.");
+            return "redirect:/AssistentPersonal/list";
+        }
         return "redirect:../list";
     }
 
@@ -318,175 +336,156 @@ public class AssistentPersonalController {
     }
 
     /**
-     * Shows the list of available requests for the logged-in assistant, filtering out those already accepted by him.
+     * Shows the requests where this assistant has been chosen by a user.
      * @param model model for the view
      * @param session HTTP session containing the logged-in assistant
-     * @return the view for available requests or redirect to login if not authenticated
+     * @return the view or redirect to login
      */
     @RequestMapping("/requests")
-    public String listRequests(Model model, HttpSession session) {
-        AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
+    public String myAssignedRequests(Model model, HttpSession session) {
+        AssistentPersonal ap =
+                (AssistentPersonal) session.getAttribute("assistentPersonal");
         if (ap == null) {
             return "redirect:/login";
         }
 
-        // Obtener IDs de solicitudes que este asistente YA ha aceptado
-        List<Integer> acceptedIds = selectionDao.getSelectionsByAsistente(ap.getIdAsistente())
-                .stream().map(Selection::getIdSolicitud).toList();
+        // Buscar todas las selecciones donde este asistente fue elegido
+        List<Selection> misSelecciones =
+                selectionDao.getSelectionsByAsistente(ap.getIdAsistente());
 
-        // Filtrar: Solo "Aprobada" y que NO estén en la lista de aceptadas por él
-        List<APRequest> availableRequests = apRequestDao.getAPRequests().stream()
-                .filter(r -> "Aprobada".equalsIgnoreCase(r.getEstado()) && !acceptedIds.contains(r.getIdSolicitud()))
-                .toList();
+        List<APRequest> solicitudesAsignadas = new ArrayList<>();
+        List<RegistreContracte> todosLosContratos =
+                registreContracteDao.getRegistresContractes();
 
-        model.addAttribute("requests", availableRequests);
-        model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI()); // Para sacar los nombres
+        for (Selection s : misSelecciones) {
+            // Solo incluir si tiene contrato (es decir, el usuario lo eligió de verdad)
+            boolean tieneContrato = todosLosContratos.stream()
+                    .anyMatch(c -> c.getIdSeleccion() == s.getIdSeleccion());
+            if (tieneContrato) {
+                APRequest req = apRequestDao.getAPRequest(s.getIdSolicitud());
+                if (req != null) {
+                    solicitudesAsignadas.add(req);
+                }
+            }
+        }
+
+        model.addAttribute("requests", solicitudesAsignadas);
+        model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI());
         return "AssistentPersonal/requestList";
     }
 
     /**
-     * Shows the details of a specific request, including whether the logged-in assistant has already accepted it.
-     * @param id the ID of the request to show details for
-     * @param model model for the view
-     * @param session HTTP session containing the logged-in assistant
-     * @return the view for request details or redirect to login if not authenticated
+     * Generates and downloads the PDF contract for a given request.
+     * @param idSolicitud request identifier
+     * @param session session data
+     * @param response HTTP response to write the PDF to
      */
-    @RequestMapping("/requestDetails/{id}")
-    public String requestDetails(@PathVariable int id, Model model, HttpSession session) {
-        AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
+    @RequestMapping(value = "/contrato/{idSolicitud}", method = RequestMethod.GET)
+    public void verContrato(@PathVariable int idSolicitud,
+                            HttpSession session,
+                            jakarta.servlet.http.HttpServletResponse response) throws Exception {
+
+        AssistentPersonal ap =
+                (AssistentPersonal) session.getAttribute("assistentPersonal");
         if (ap == null) {
-            return "redirect:/login";
+            response.sendRedirect("/login");
+            return;
         }
 
-        APRequest request = apRequestDao.getAPRequest(id);
-        if (request == null) {
-            return "redirect:/AssistentPersonal/requests";
-        }
-
-        UsuariOVI usuario = usuariOVIDao.getUsuariOVI(request.getIdUsuarioOvi());
-        if (usuario == null) {
-            usuario = new UsuariOVI();
-            usuario.setNombre("No disponible");
-        }
-
-        // Comprobar si ya aceptó esta solicitud
-        boolean yaAceptada = selectionDao.getSelectionsByAsistente(ap.getIdAsistente())
-                .stream().anyMatch(s -> s.getIdSolicitud() == id);
-
-        model.addAttribute("request", request);
-        model.addAttribute("usuario", usuario);
-        model.addAttribute("yaAceptada", yaAceptada);
-        return "AssistentPersonal/requestDetails";
-    }
-
-    /**
-     * Shows the assistant's accepted requests and their contract status.
-     * @param model model for the view
-     * @param session HTTP session containing the logged-in assistant
-     * @return the view for the assistant's requests or redirect to login if not authenticated
-     */
-    @RequestMapping("/myrequests")
-    public String myRequests(Model model, HttpSession session) {
-        AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (ap == null) {
-            return "redirect:/login";
-        }
-
-        List<Selection> mySelections = selectionDao.getSelectionsByAsistente(ap.getIdAsistente());
-        List<APRequest> myAcceptedRequests = new ArrayList<>();
-        List<Integer> solicitudesConContrato = new ArrayList<>();
-
-        List<RegistreContracte> todosLosContratos = registreContracteDao.getRegistresContractes();
-
-        for (Selection s : mySelections) {
-            APRequest req = apRequestDao.getAPRequest(s.getIdSolicitud());
-            if (req != null) {
-                myAcceptedRequests.add(req);
-
-                // Comprobar si esta selección tiene contrato
-                boolean tieneContrato = todosLosContratos.stream()
-                        .anyMatch(c -> c.getIdSeleccion() == s.getIdSeleccion());
-                if (tieneContrato) {
-                    solicitudesConContrato.add(s.getIdSolicitud());
-                }
-            }
-        }
-
-        model.addAttribute("requests", myAcceptedRequests);
-        model.addAttribute("selections", mySelections);
-        model.addAttribute("solicitudesConContrato", solicitudesConContrato);
-        model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI());
-
-        return "AssistentPersonal/myrequests";
-    }
-
-    /**
-     * Accepts a request by creating a new selection for the logged-in assistant and the specified request ID.
-     * @param id the ID of the request to accept
-     * @param session the HTTP session containing the logged-in assistant
-     * @return redirect to the assistant's requests page or login if not authenticated
-     */
-    @RequestMapping(value = "/acceptRequest/{id}")
-    public String acceptRequest(@PathVariable int id, HttpSession session) {
-        AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (ap == null) {
-            return "redirect:/login";
-        }
-
-        // Calcular siguiente ID
-        int nextId = selectionDao.getSelections().stream()
-                .mapToInt(Selection::getIdSeleccion)
-                .max().orElse(0) + 1;
-
-        Selection selection = new Selection();
-        selection.setIdSeleccion(nextId);
-        selection.setIdSolicitud(id);
-        selection.setIdAsistente(ap.getIdAsistente());
-
-        selectionDao.addSelection(selection);
-        return "redirect:/AssistentPersonal/myrequests";
-    }
-
-    /**
-     * Cancels a request by deleting the corresponding selection if it exists and has no contract.
-     * @param id the ID of the request to cancel
-     * @param session the HTTP session containing the logged-in assistant
-     * @return redirect to the assistant's requests page or login if not authenticated
-     */
-    @RequestMapping("/cancelRequest/{id}")
-    public String cancelRequest(@PathVariable int id, HttpSession session) {
-        AssistentPersonal ap = (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (ap == null) {
-            return "redirect:/login";
-        }
-
-        // 1. Buscamos la selección que corresponde a esta solicitud (Bucle tradicional)
-        List<Selection> selecciones = selectionDao.getSelectionsByAsistente(ap.getIdAsistente());
-        Selection miSeleccion = null;
-        for (Selection s : selecciones) {
-            if (s.getIdSolicitud() == id) {
-                miSeleccion = s;
+        // Buscar la selección de este asistente para esta solicitud
+        Selection seleccion = null;
+        for (Selection s : selectionDao.getSelectionsByAsistente(ap.getIdAsistente())) {
+            if (s.getIdSolicitud() == idSolicitud) {
+                seleccion = s;
                 break;
             }
         }
-
-        if (miSeleccion != null) {
-            // 2. Comprobar si existe un contrato para esta selección específica
-            List<RegistreContracte> todosLosContratos = registreContracteDao.getRegistresContractes();
-            boolean tieneContrato = false;
-            for (RegistreContracte c : todosLosContratos) {
-                if (c.getIdSeleccion() == miSeleccion.getIdSeleccion()) {
-                    tieneContrato = true;
-                    break;
-                }
-            }
-
-            // 3. Solo borramos si no hay contrato (evita el Error 500)
-            if (!tieneContrato) {
-                selectionDao.deleteSelection(id, ap.getIdAsistente());
-            }
+        if (seleccion == null) {
+            response.sendRedirect("/AssistentPersonal/requests");
+            return;
         }
 
-        return "redirect:/AssistentPersonal/myrequests";
+        RegistreContracte contracte = registreContracteDao
+                .getRegistreContracteBySeleccion(seleccion.getIdSeleccion());
+        if (contracte == null) {
+            response.sendRedirect("/AssistentPersonal/requests");
+            return;
+        }
+
+        APRequest solicitud = apRequestDao.getAPRequest(idSolicitud);
+        UsuariOVI usuari = usuariOVIDao.getUsuariOVI(solicitud.getIdUsuarioOvi());
+
+        // Generar PDF en memoria
+        response.setContentType("application/pdf");
+        response.setHeader("Content-Disposition",
+                "inline; filename=\"contrato_" + idSolicitud + ".pdf\"");
+
+        com.itextpdf.text.Document document =
+                new com.itextpdf.text.Document();
+        com.itextpdf.text.pdf.PdfWriter.getInstance(
+                document, response.getOutputStream());
+        document.open();
+
+        // Título
+        com.itextpdf.text.Font titleFont = new com.itextpdf.text.Font(
+            com.itextpdf.text.Font.FontFamily.HELVETICA, TITLE_FONT_SIZE,
+            com.itextpdf.text.Font.BOLD);
+        document.add(new com.itextpdf.text.Paragraph(
+                "CONTRACTE D'ASSISTÈNCIA PERSONAL", titleFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "SgOVI - Servei de Gestió OVI\n\n"));
+
+        // Línea separadora
+        com.itextpdf.text.pdf.draw.LineSeparator line =
+                new com.itextpdf.text.pdf.draw.LineSeparator();
+        document.add(new com.itextpdf.text.Chunk(line));
+        document.add(new com.itextpdf.text.Paragraph("\n"));
+
+        // Datos del contrato
+        com.itextpdf.text.Font boldFont = new com.itextpdf.text.Font(
+            com.itextpdf.text.Font.FontFamily.HELVETICA, BODY_FONT_SIZE,
+            com.itextpdf.text.Font.BOLD);
+        com.itextpdf.text.Font normalFont = new com.itextpdf.text.Font(
+            com.itextpdf.text.Font.FontFamily.HELVETICA, BODY_FONT_SIZE);
+
+        document.add(new com.itextpdf.text.Paragraph(
+                "Data d'inici: " + contracte.getFechaInicio(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Data de fi: " + (contracte.getFechaFin() != null
+                        ? contracte.getFechaFin() : "Indefinida"), normalFont));
+        document.add(new com.itextpdf.text.Paragraph("\n"));
+
+        document.add(new com.itextpdf.text.Paragraph("USUARI OVI", boldFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Nom: " + usuari.getNombre() + " " + usuari.getApellidos(),
+                normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Email: " + usuari.getEmail(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Telèfon: " + usuari.getTelefono(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph("\n"));
+
+        document.add(new com.itextpdf.text.Paragraph("ASSISTENT PERSONAL", boldFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Nom: " + ap.getNombre() + " " + ap.getApellidos(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Email: " + ap.getEmail(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Telèfon: " + ap.getTelefono(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph("\n"));
+
+        document.add(new com.itextpdf.text.Paragraph("SERVEI", boldFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Tipus d'assistència: " + solicitud.getTipoAsistencia(), normalFont));
+        document.add(new com.itextpdf.text.Paragraph(
+                "Província: " + solicitud.getProximidad(), normalFont));
+        if (solicitud.getPreferencias() != null
+                && !solicitud.getPreferencias().isEmpty()) {
+            document.add(new com.itextpdf.text.Paragraph(
+                    "Preferències: " + solicitud.getPreferencias(), normalFont));
+        }
+
+        document.close();
     }
+
 }

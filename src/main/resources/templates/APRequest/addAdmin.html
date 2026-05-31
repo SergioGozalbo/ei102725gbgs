@@ -1,35 +1,70 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Afegeix Sol·licitud (Admin)</title>
+  <meta charset="UTF-8"/>
+  <title>SgOVI - Nueva Solicitud</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
-<body>
-<h1>Nova Sol·licitud d'Assistència (Admin)</h1>
-<form th:action="@{/APRequest/addAdmin}" th:object="${apRequest}" method="post">
+<body class="form-page">
+<nav>
+  <span class="nav-brand">SgOVI - Administración</span>
+  <div class="nav-right">
+    <a th:href="@{/APRequest/list}" class="btn-logout">Volver a la lista</a>
+  </div>
+</nav>
+<main>
+  <h1 class="page-title">Nueva Solicitud de Asistencia</h1>
+  <p class="page-subtitle">Crea una nueva solicitud para un usuario OVI.</p>
 
-  <label>Usuari OVI:</label>
-  <select th:field="*{idUsuarioOvi}">
-    <option th:each="u : ${usuariosOvi}" th:value="${u.idUsuario}" th:text="${u.nombre}"></option>
-  </select>
-  <br/>
+  <div class="form-card">
+    <form th:action="@{/APRequest/addAdmin}" th:object="${apRequest}" method="post">
 
-  <label>Tipus Assistència:</label>
-  <input type="text" th:field="*{tipoAsistencia}" />
-  <br/>
+      <div class="form-group">
+        <label for="idUsuarioOvi">Usuario OVI</label>
+        <select id="idUsuarioOvi" th:field="*{idUsuarioOvi}">
+          <option value="">-- Selecciona un usuario --</option>
+          <option th:each="u : ${usuariosOvi}"
+                  th:value="${u.idUsuario}"
+                  th:text="${u.nombre} + ' ' + ${u.apellidos}"></option>
+        </select>
+        <div th:if="${#fields.hasErrors('idUsuarioOvi')}"
+             th:errors="*{idUsuarioOvi}" class="error"></div>
+      </div>
 
-  <label>Preferències:</label>
-  <textarea th:field="*{preferencias}"></textarea>
-  <br/>
+      <div class="form-group">
+        <label for="tipoAsistencia">Tipo de Asistencia</label>
+        <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
+          <option value="">-- Selecciona --</option>
+          <option value="PAP">PAP</option>
+          <option value="PATI">PATI</option>
+        </select>
+        <div th:if="${#fields.hasErrors('tipoAsistencia')}"
+             th:errors="*{tipoAsistencia}" class="error"></div>
+      </div>
 
-  <label>Província:</label>
-  <select th:field="*{proximidad}">
-    <option th:each="p : ${provincias}" th:value="${p}" th:text="${p}"></option>
-  </select>
-  <br/>
+      <div class="form-group">
+        <label for="proximidad">Provincia</label>
+        <select id="proximidad" th:field="*{proximidad}">
+          <option value="">-- Selecciona --</option>
+          <option th:each="p : ${provincias}"
+                  th:value="${p}" th:text="${p}"></option>
+        </select>
+      </div>
 
-  <button type="submit">Guardar</button>
-  <a th:href="@{/APRequest/list}">Cancel·lar</a>
-</form>
+      <div class="form-group">
+        <label for="preferencias">Preferencias</label>
+        <textarea id="preferencias" th:field="*{preferencias}"
+                  rows="4" placeholder="Describe las preferencias..."></textarea>
+      </div>
+
+      <input type="hidden" th:field="*{estado}"/>
+
+      <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+        <button type="submit" class="btn btn-primary" style="flex: 1;">Guardar</button>
+        <a th:href="@{/APRequest/list}" class="btn btn-outline" style="flex: 1; text-align: center;">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</main>
 </body>
 </html>
