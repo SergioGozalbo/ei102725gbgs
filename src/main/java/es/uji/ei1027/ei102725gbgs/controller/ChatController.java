@@ -22,9 +22,21 @@ import java.util.List;
 @RequestMapping("/chat")
 public class ChatController {
 
+    /**
+     * DAO for accessing Mensaje data, used to retrieve and store chat messages.
+     */
     private final MensajeDaoImpl mensajeDao;
+
+    /**
+     * DAO for accessing APRequest data, used to retrieve request details for the chat context.
+     */
     private final APRequestDaoImpl apRequestDao;
 
+    /**
+     * Constructor for ChatController.
+     * @param mensajeDao the MensajeDaoImpl to access message data
+     * @param apRequestDao the APRequestDaoImpl to access request data
+     */
     @Autowired
     public ChatController(MensajeDaoImpl mensajeDao,
                           APRequestDaoImpl apRequestDao) {
@@ -45,10 +57,14 @@ public class ChatController {
                            Model model, HttpSession session) {
 
         String remitenteType = getRemitenteType(session);
-        if (remitenteType == null) return "redirect:/login";
+        if (remitenteType == null) {
+            return "redirect:/login";
+        }
 
         APRequest solicitud = apRequestDao.getAPRequest(idSolicitud);
-        if (solicitud == null) return "redirect:/login";
+        if (solicitud == null) {
+            return "redirect:/login";
+        }
 
         List<Mensaje> mensajes = mensajeDao.getMensajesBySolicitud(idSolicitud);
 
@@ -72,7 +88,9 @@ public class ChatController {
                               HttpSession session) {
 
         String remitenteType = getRemitenteType(session);
-        if (remitenteType == null) return "redirect:/login";
+        if (remitenteType == null) {
+            return "redirect:/login";
+        }
 
         String remitenteId = getRemitenteId(session, remitenteType);
 
@@ -88,14 +106,27 @@ public class ChatController {
         return "redirect:/chat/" + idSolicitud;
     }
 
-    /** Returns 'OVI', 'ASISTENT', or null if nobody is logged in. */
+    /**
+     * Determines the sender type based on the session attributes.
+     * @param session the HTTP session to check for user attributes
+     * @return 'OVI' if an OVI user is logged in, 'ASISTENT' if an assistant is logged in, or {@code null} if no user is logged in
+     */
     private String getRemitenteType(HttpSession session) {
-        if (session.getAttribute("usuariOVI") != null) return "OVI";
-        if (session.getAttribute("assistentPersonal") != null) return "ASISTENT";
+        if (session.getAttribute("usuariOVI") != null) {
+            return "OVI";
+        }
+        if (session.getAttribute("assistentPersonal") != null) {
+            return "ASISTENT";
+        }
         return null;
     }
 
-    /** Returns the ID of whoever is logged in. */
+    /**
+     * Determines the sender ID based on the session attributes and sender type.
+     * @param session the HTTP session to check for user attributes
+     * @param type the sender type ('OVI' or 'ASISTENT')
+     * @return the sender ID corresponding to the logged-in user of the specified type
+     */
     private String getRemitenteId(HttpSession session, String type) {
         if ("OVI".equals(type)) {
             return ((UsuariOVI) session.getAttribute("usuariOVI")).getIdUsuario();

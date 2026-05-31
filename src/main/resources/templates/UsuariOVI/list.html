@@ -1,4 +1,97 @@
 <!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Lista usuarios</title>
+</head>
+<body class="table-page">
+
+<nav>
+    <span class="nav-brand">SgOVI</span>
+
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">
+            Cerrar sesión
+        </a>
+    </div>
+</nav>
+
+<main>
+    <div class="page-actions">
+
+        <div>
+
+    <h1 class="page-title">
+        Lista de usuarios
+    </h1>
+
+            <p class="page-subtitle">
+                Lista de todos los usuarios registrados.
+            </p>
+        </div>
+
+        <div style="display:flex; gap:0.75rem;">
+
+            <a th:href="@{/UsuariOVI/add}"
+               class="btn-new">
+                +Nuevo usuario
+            </a>
+
+            <a th:href="@{/}"
+               class="btn-back">
+                Volver al menú
+            </a>
+        </div>
+    </div>
+
+<div class="table-container">
+    <table style="min-width: 900px;">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellidos</th>
+            <th>Email</th>
+            <th>Contraseña</th>
+            <th>Teléfono</th>
+            <th>Confirmación RGPD</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="usuario : ${usuarios}">
+            <td th:text="${usuario.idUsuario}"></td>
+            <td th:text="${usuario.nombre}"></td>
+            <td th:text="${usuario.apellidos}"></td>
+            <td th:text="${usuario.email}"></td>
+            <td th:text="${usuario.password}"></td>
+            <td th:text="${usuario.telefono}"></td>
+            <td th:text="${usuario.consentimientoRgpd ? 'Si' : 'No'}"></td>
+
+            <td>
+
+                <div class="table-actions">
+
+                    <a th:href="@{/UsuariOVI/update/{id}(id=${usuario.idUsuario})}"
+                       class="btn-edit">
+                        Editar
+                    </a>
+
+                    <a th:href="@{/UsuariOVI/delete/{id}(id=${usuario.idUsuario})}"
+                       class="btn-delete">
+                        Eliminar
+                    </a>
+
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<br><br>
+
 <html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>

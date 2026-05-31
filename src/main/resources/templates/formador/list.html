@@ -1,36 +1,80 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
     <title>Formadors</title>
 </head>
-<body>
+<body class="table-page">
 
-<main class="container">
-    <h1>Formadors</h1>
+<nav>
+    <span class="nav-brand">SgOVI</span>
 
-    <table class="table table-striped">
-        <tr>
-            <th>Name</th>
-            <th>Surname</th>
-            <th>Specialty</th>
-            <th>Actions</th>
-        </tr>
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">
+            Cerrar sesión
+        </a>
+    </div>
+</nav>
 
-        <tr th:each="f : ${formadors}">
-            <td th:text="${f.nombre}"></td>
-            <td th:text="${f.apellidos}"></td>
-            <td th:text="${f.especialidad}"></td>
+<main>
+    <div class="page-actions">
+        <div>
+        <h1 class="page-title">
+            Formadores
+        </h1>
 
-            <td>
-                <a th:href="@{/api/formador/delete/{id}(id=${f.idFormador})}">
-                    Delete
-                </a>
-            </td>
-        </tr>
-    </table>
+        <p class="page-subtitle">
+            Lista de todos los formadores registrados
+        </p>
+    </div>
+
+    <div style="display:flex; gap:0.75rem;">
+
+        <a th:href="@{/formador/add}"
+           class="btn-new">
+            + Nuevo formador
+        </a>
+
+        <a th:href="@{/}"
+           class="btn-back">
+            Volver al menú
+        </a>
+
+    </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Especialidad</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="f : ${formadores}">
+                <td th:text="${f.nombre}"></td>
+                <td th:text="${f.apellidos}"></td>
+                <td th:text="${f.especialidad}"></td>
+
+                <td>
+                    <div class="table-actions">
+                        <a th:href="@{/api/formador/delete/{id}(id=${f.idFormador})}"
+                           class="btn-delete">
+                            Eliminar
+                        </a>
+                    </div>
+
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
 </main>
 
 </body>

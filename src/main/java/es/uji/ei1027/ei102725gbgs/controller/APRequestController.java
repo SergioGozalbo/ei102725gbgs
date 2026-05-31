@@ -106,6 +106,15 @@ public class APRequestController {
      */
     private final RegistreContracteDaoImpl registreContracteDao;
 
+    /**
+     * Font size for PDF title.
+     */
+    private static final int TITLE_FONT_SIZE = 20;
+
+    /**
+     * Font size for PDF body text.
+     */
+    private static final int BODY_FONT_SIZE = 12;
 
     /**
      * Constructor for APRequestController.
@@ -141,11 +150,14 @@ public class APRequestController {
      * Endpoint to list all APRequest entities.
      *
      * @param model the Model object to pass data to the view for rendering the list of APRequest entities
+     * @param session the HttpSession object to access session attributes for user authentication
      * @return the name of the view to render the list of APRequest entities
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public String listAPRequest(Model model, HttpSession session) {
-        if (session.getAttribute("admin") == null) return "redirect:/login";
+        if (session.getAttribute("admin") == null) {
+            return "redirect:/login";
+        }
         model.addAttribute("requests", apRequestDao.getAPRequests());
         model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI()); // añade esto
         return "APRequest/list";
@@ -307,6 +319,7 @@ public class APRequestController {
      * Endpoint to process the approval of an APRequest.
      *
      * @param idSolicitud the ID of the APRequest to be approved
+     * @param estado the new state to set for the APRequest
      * @return a redirect to the list of APRequest entities after approval
      */
     @RequestMapping(value = "/aprobar", method = RequestMethod.POST)
@@ -336,14 +349,22 @@ public class APRequestController {
 
     /**
      * Shows available assistants for the user to choose from.
+     * @param id the ID of the APRequest to choose an assistant for
+     * @param model the Model object to pass data to the view
+     * @param session the HttpSession object to access session attributes for user authentication
+     * @return the view for displaying available assistants
      */
     @RequestMapping(value = "/mylistChooseAP/{id}", method = RequestMethod.GET)
     public String mylistChooseAP(@PathVariable int id, Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         APRequest request = apRequestDao.getAPRequest(id);
-        if (request == null) return "redirect:/APRequest/mylist";
+        if (request == null) {
+            return "redirect:/APRequest/mylist";
+        }
 
         // Cargar TODOS los asistentes aprobados, sin filtrar por Selection
         List<AssistentPersonal> candidatos =
@@ -370,12 +391,16 @@ public class APRequestController {
             @PathVariable String idAsistente,
             Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         AssistentPersonal assistent =
                 assistentPersonalDao.getAssistentPersonal(idAsistente);
-        if (assistent == null)
+        if (assistent == null) {
             return "redirect:/APRequest/mylistChooseAP/" + idSolicitud;
+        }
+
 
         // Comprobar si ya tiene contrato
         List<Selection> selecciones =
@@ -398,6 +423,10 @@ public class APRequestController {
     /**
      * Accepts an assistant directly.
      * Creates the Selection on the spot, then creates the contract.
+     * @param idSolicitud request identifier
+     * @param idAsistente assistant identifier
+     * @param session session data
+     * @return redirect to the user's request list
      */
     @RequestMapping(value = "/acceptarAssistent/{idSolicitud}/{idAsistente}",
             method = RequestMethod.GET)
@@ -407,7 +436,9 @@ public class APRequestController {
             HttpSession session) {
 
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) return "redirect:/login";
+        if (usuari == null) {
+            return "redirect:/login";
+        }
 
         // 1. Comprobar que esta solicitud no tenga ya un contrato
         List<Selection> seleccionesExistentes =
@@ -445,6 +476,11 @@ public class APRequestController {
         return "redirect:/APRequest/mylist";
     }
 
+    /**
+     * Endpoint to show the form for adding a new APRequest by an admin.
+     * @param model the Model object to pass data to the view
+     * @return the name of the view to render the form for adding a new APRequest by an admin
+     */
     @RequestMapping(value = "/addAdmin", method = RequestMethod.GET)
     public String addAPRequestAdmin(Model model) {
         APRequest request = new APRequest();
@@ -455,6 +491,13 @@ public class APRequestController {
         return "APRequest/addAdmin";
     }
 
+    /**
+     * Endpoint to process the submission of a new APRequest by an admin.
+     * @param apRequest the APRequest object populated with data from the form submission
+     * @param br the BindingResult object to hold validation errors for the APRequest object
+     * @param model the Model object to pass data to the view
+     * @return the name of the view to render the form for adding a new APRequest by an admin
+     */
     @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
     public String processAddAdmin(@ModelAttribute("apRequest") APRequest apRequest, BindingResult br, Model model) {
         int nextId = apRequestDao.getAPRequests().stream().mapToInt(APRequest::getIdSolicitud).max().orElse(0) + 1;
@@ -469,6 +512,12 @@ public class APRequestController {
         return "redirect:/APRequest/list";
     }
 
+    /**
+     * Endpoint to show the form for editing an existing APRequest by an admin.
+     * @param model the Model object to pass data to the view
+     * @param idSolicitud the ID of the APRequest to be edited
+     * @return the name of the view to render the form for editing an existing APRequest by an admin
+     */
     @RequestMapping(value = "/updateAdmin/{idSolicitud}", method = RequestMethod.GET)
     public String editAPRequestAdmin(Model model, @PathVariable int idSolicitud) {
         model.addAttribute("apRequest", apRequestDao.getAPRequest(idSolicitud));
@@ -477,6 +526,13 @@ public class APRequestController {
         return "APRequest/updateAdmin";
     }
 
+    /**
+     * Endpoint to process the submission of an updated APRequest by an admin.
+     * @param apRequest the APRequest object populated with updated data from the form submission
+     * @param br the BindingResult object to hold validation errors for the APRequest object
+     * @param model the Model object to pass data to the view
+     * @return the name of the view to render the form for editing an existing APRequest by an admin
+     */
     @RequestMapping(value = "/updateAdmin", method = RequestMethod.POST)
     public String processUpdateAdmin(@ModelAttribute("apRequest") APRequest apRequest, BindingResult br, Model model) {
         if (br.hasErrors()) {
@@ -535,13 +591,13 @@ public class APRequestController {
         document.open();
 
         com.itextpdf.text.Font titleFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 20,
-                com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, TITLE_FONT_SIZE,
+            com.itextpdf.text.Font.BOLD);
         com.itextpdf.text.Font boldFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 12,
-                com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, BODY_FONT_SIZE,
+            com.itextpdf.text.Font.BOLD);
         com.itextpdf.text.Font normalFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 12);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, BODY_FONT_SIZE);
 
         document.add(new com.itextpdf.text.Paragraph(
                 "CONTRACTE D'ASSISTÈNCIA PERSONAL", titleFont));
@@ -597,7 +653,9 @@ public class APRequestController {
      */
     @RequestMapping(value = "/contratos", method = RequestMethod.GET)
     public String listarContratos(Model model, HttpSession session) {
-        if (session.getAttribute("admin") == null) return "redirect:/login";
+        if (session.getAttribute("admin") == null) {
+            return "redirect:/login";
+        }
 
         List<RegistreContracte> contratos =
                 registreContracteDao.getRegistresContractes();
@@ -687,13 +745,13 @@ public class APRequestController {
         document.open();
 
         com.itextpdf.text.Font titleFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 20,
-                com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, TITLE_FONT_SIZE,
+            com.itextpdf.text.Font.BOLD);
         com.itextpdf.text.Font boldFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 12,
-                com.itextpdf.text.Font.BOLD);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, BODY_FONT_SIZE,
+            com.itextpdf.text.Font.BOLD);
         com.itextpdf.text.Font normalFont = new com.itextpdf.text.Font(
-                com.itextpdf.text.Font.FontFamily.HELVETICA, 12);
+            com.itextpdf.text.Font.FontFamily.HELVETICA, BODY_FONT_SIZE);
 
         document.add(new com.itextpdf.text.Paragraph(
                 "CONTRACTE D'ASSISTÈNCIA PERSONAL", titleFont));
