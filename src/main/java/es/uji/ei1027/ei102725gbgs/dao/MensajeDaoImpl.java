@@ -15,8 +15,15 @@ import java.util.Objects;
 @Repository
 public class MensajeDaoImpl {
 
+    /**
+     * JDBC template used to execute SQL statements.
+     */
     private JdbcTemplate jdbcTemplate;
 
+    /**
+     * Injects the data source and initializes the JDBC template.
+     * @param dataSource the data source to use; must not be {@code null}
+     */
     @Autowired
     public void setDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(Objects.requireNonNull(dataSource));

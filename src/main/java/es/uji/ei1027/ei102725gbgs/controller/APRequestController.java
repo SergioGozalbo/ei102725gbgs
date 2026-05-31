@@ -138,6 +138,7 @@ public class APRequestController {
     /**
      * Endpoint to list all APRequest entities.
      * @param model the Model object to pass data to the view for rendering the list of APRequest entities
+     * @param session the HttpSession object to access session attributes for user authentication
      * @return the name of the view to render the list of APRequest entities
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -296,6 +297,7 @@ public class APRequestController {
     /**
      * Endpoint to process the approval of an APRequest.
      * @param idSolicitud the ID of the APRequest to be approved
+     * @param estado the new state to set for the APRequest
      * @return a redirect to the list of APRequest entities after approval
      */
     @RequestMapping(value = "/aprobar", method = RequestMethod.POST)
@@ -324,6 +326,10 @@ public class APRequestController {
 
     /**
      * Shows available assistants for the user to choose from.
+     * @param id the ID of the APRequest to choose an assistant for
+     * @param model the Model object to pass data to the view
+     * @param session the HttpSession object to access session attributes for user authentication
+     * @return the view for displaying available assistants
      */
     @RequestMapping(value = "/mylistChooseAP/{id}", method = RequestMethod.GET)
     public String mylistChooseAP(@PathVariable int id, Model model, HttpSession session) {
@@ -385,6 +391,10 @@ public class APRequestController {
     /**
      * Accepts an assistant directly.
      * Creates the Selection on the spot, then creates the contract.
+     * @param idSolicitud request identifier
+     * @param idAsistente assistant identifier
+     * @param session session data
+     * @return redirect to the user's request list
      */
     @RequestMapping(value = "/acceptarAssistent/{idSolicitud}/{idAsistente}",
             method = RequestMethod.GET)
@@ -432,6 +442,11 @@ public class APRequestController {
         return "redirect:/APRequest/mylist";
     }
 
+    /**
+     * Endpoint to show the form for adding a new APRequest by an admin.
+     * @param model the Model object to pass data to the view
+     * @return the name of the view to render the form for adding a new APRequest by an admin
+     */
     @RequestMapping(value = "/addAdmin", method = RequestMethod.GET)
     public String addAPRequestAdmin(Model model) {
         APRequest request = new APRequest();
@@ -442,6 +457,13 @@ public class APRequestController {
         return "APRequest/addAdmin";
     }
 
+    /**
+     * Endpoint to process the submission of a new APRequest by an admin.
+     * @param apRequest the APRequest object populated with data from the form submission
+     * @param br the BindingResult object to hold validation errors for the APRequest object
+     * @param model the Model object to pass data to the view
+     * @return the name of the view to render the form for adding a new APRequest by an admin
+     */
     @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
     public String processAddAdmin(@ModelAttribute("apRequest") APRequest apRequest, BindingResult br, Model model) {
         int nextId = apRequestDao.getAPRequests().stream().mapToInt(APRequest::getIdSolicitud).max().orElse(0) + 1;
@@ -456,6 +478,12 @@ public class APRequestController {
         return "redirect:/APRequest/list";
     }
 
+    /**
+     * Endpoint to show the form for editing an existing APRequest by an admin.
+     * @param model the Model object to pass data to the view
+     * @param idSolicitud the ID of the APRequest to be edited
+     * @return the name of the view to render the form for editing an existing APRequest by an admin
+     */
     @RequestMapping(value = "/updateAdmin/{idSolicitud}", method = RequestMethod.GET)
     public String editAPRequestAdmin(Model model, @PathVariable int idSolicitud) {
         model.addAttribute("apRequest", apRequestDao.getAPRequest(idSolicitud));
@@ -464,6 +492,13 @@ public class APRequestController {
         return "APRequest/updateAdmin";
     }
 
+    /**
+     * Endpoint to process the submission of an updated APRequest by an admin.
+     * @param apRequest the APRequest object populated with updated data from the form submission
+     * @param br the BindingResult object to hold validation errors for the APRequest object
+     * @param model the Model object to pass data to the view
+     * @return the name of the view to render the form for editing an existing APRequest by an admin
+     */
     @RequestMapping(value = "/updateAdmin", method = RequestMethod.POST)
     public String processUpdateAdmin(@ModelAttribute("apRequest") APRequest apRequest, BindingResult br, Model model) {
         if (br.hasErrors()) {

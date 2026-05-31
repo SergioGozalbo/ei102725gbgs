@@ -242,6 +242,7 @@ public class AssistentPersonalController {
     /**
      * Deletes an assistant.
      * @param idAsistente assistant identifier
+     * @param redirectAttributes attributes for messages
      * @return redirect to the list view
      */
     @RequestMapping(value = "/delete/{idAsistente}")

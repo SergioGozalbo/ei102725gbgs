@@ -204,6 +204,7 @@ public class UsuariOVIController {
     /**
      * Deletes a user.
      * @param idUsuario user identifier
+     * @param redirectAttributes attributes for messages
      * @return redirect to the list view
      */
     @RequestMapping(value = "/delete/{idUsuario}")
