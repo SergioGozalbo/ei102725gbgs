@@ -35,7 +35,7 @@
         <table id="tablaSolicitudes" style="width:100%">
             <thead>
             <tr>
-                <th>Usuari OVI</th>
+                <th>Nom i cognoms</th>
                 <th>Tipus</th>
                 <th>Estat</th>
                 <th>Província</th>
@@ -44,7 +44,12 @@
             </thead>
             <tbody>
             <tr th:each="request : ${requests}">
-                <td th:text="${request.idUsuarioOvi}"></td>
+                <td>
+                    <span th:each="u : ${usuarios}"
+                          th:if="${u.idUsuario == request.idUsuarioOvi}"
+                          th:text="${u.nombre} + ' ' + ${u.apellidos}">
+                    </span>
+                </td>
                 <td th:text="${request.tipoAsistencia}"></td>
                 <td>
                     <span class="badge-estat"

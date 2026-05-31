@@ -35,6 +35,7 @@ import java.util.List;
 class APRequestValidator implements Validator {
     /**
      * Checks whether this validator supports APRequest.
+     *
      * @param clazz class to check
      * @return true if supported
      */
@@ -45,7 +46,8 @@ class APRequestValidator implements Validator {
 
     /**
      * Validates an APRequest.
-     * @param obj object to validate
+     *
+     * @param obj    object to validate
      * @param errors validation errors
      */
     @Override
@@ -63,7 +65,6 @@ class APRequestValidator implements Validator {
         }
     }
 }
-
 
 
 /**
@@ -108,18 +109,19 @@ public class APRequestController {
 
     /**
      * Constructor for APRequestController.
-    * @param apRequestDao DAO for APRequest entities; must not be {@code null}
-     * @param usuariOVIDao DAO for UsuariOVI entities; must not be {@code null}
+     *
+     * @param apRequestDao         DAO for APRequest entities; must not be {@code null}
+     * @param usuariOVIDao         DAO for UsuariOVI entities; must not be {@code null}
      * @param assistentPersonalDao DAO for AssistentPersonal entities; must not be {@code null}
-     * @param apRequestValidator Validator for APRequest entities; must not be {@code null}
-     * @param selectionDao DAO for Selection entities; must not be {@code null}
+     * @param apRequestValidator   Validator for APRequest entities; must not be {@code null}
+     * @param selectionDao         DAO for Selection entities; must not be {@code null}
      * @param registreContracteDao DAO for RegistreContracte entities; must not be {@code null}
      */
     @Autowired
     public APRequestController(APRequestDaoImpl apRequestDao,
-                                UsuariOVIDaoImpl usuariOVIDao,
-                                AssistentPersonalDaoImpl assistentPersonalDao,
-                                APRequestValidator apRequestValidator,
+                               UsuariOVIDaoImpl usuariOVIDao,
+                               AssistentPersonalDaoImpl assistentPersonalDao,
+                               APRequestValidator apRequestValidator,
                                SelectionDaoImpl selectionDao,
                                RegistreContracteDaoImpl registreContracteDao) {
         this.apRequestDao = apRequestDao;
@@ -137,6 +139,7 @@ public class APRequestController {
 
     /**
      * Endpoint to list all APRequest entities.
+     *
      * @param model the Model object to pass data to the view for rendering the list of APRequest entities
      * @return the name of the view to render the list of APRequest entities
      */
@@ -150,7 +153,8 @@ public class APRequestController {
 
     /**
      * Endpoint to show the form for adding a new APRequest.
-     * @param model the Model object to pass data to the
+     *
+     * @param model   the Model object to pass data to the
      * @param session the HttpSession object to access session attributes for user authentication
      * @return the name of the view to render the form for adding a new APRequest
      */
@@ -171,7 +175,8 @@ public class APRequestController {
 
     /**
      * Endpoint to list APRequest entities for the currently logged-in user.
-     * @param model the Model object to pass data to the view for rendering the list of APRequest entities
+     *
+     * @param model   the Model object to pass data to the view for rendering the list of APRequest entities
      * @param session the HttpSession object to access session attributes for user authentication
      * @return the list of APRequest entities for the currently logged-in user
      */
@@ -208,13 +213,14 @@ public class APRequestController {
 
     /**
      * Endpoint to process the submission of a new APRequest.
-     * @param apRequest the APRequest object populated with data from the form submission
+     *
+     * @param apRequest     the APRequest object populated with data from the form submission
      * @param bindingResult the BindingResult object to hold validation errors for the APRequest object
-     * @param model the Model object to pass data to the view in case of validation errors
+     * @param model         the Model object to pass data to the view in case of validation errors
      * @return the name of the view to render the form for adding a new APRequest
      */
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-        public String processAddSubmit(
+    public String processAddSubmit(
             @ModelAttribute("apRequest") APRequest apRequest,
             BindingResult bindingResult,
             Model model) {
@@ -235,7 +241,8 @@ public class APRequestController {
 
     /**
      * Endpoint to show the form for editing an existing APRequest.
-     * @param model the Model object to pass data to the view for rendering the form for editing an existing APRequest
+     *
+     * @param model       the Model object to pass data to the view for rendering the form for editing an existing APRequest
      * @param idSolicitud the ID of the APRequest to be edited
      * @return the name of the view to render the form for editing an existing APRequest
      */
@@ -249,13 +256,14 @@ public class APRequestController {
 
     /**
      * Endpoint to process the submission of an updated APRequest.
-     * @param apRequest the APRequest object populated with updated data from the form submission
+     *
+     * @param apRequest     the APRequest object populated with updated data from the form submission
      * @param bindingResult the BindingResult object to hold validation errors for the APRequest object
-     * @param model the Model object to pass data to the view in case of validation errors
+     * @param model         the Model object to pass data to the view in case of validation errors
      * @return the name of the view to render the form for editing an existing APRequest
      */
     @RequestMapping(value = "/update", method = RequestMethod.POST)
-        public String processUpdateSubmit(
+    public String processUpdateSubmit(
             @ModelAttribute("apRequest") APRequest apRequest,
             BindingResult bindingResult,
             Model model) {
@@ -271,6 +279,7 @@ public class APRequestController {
 
     /**
      * Endpoint to delete an existing APRequest.
+     *
      * @param idSolicitud the ID of the APRequest to be deleted
      * @return a redirect to the list of APRequest entities after deletion
      */
@@ -282,8 +291,9 @@ public class APRequestController {
 
     /**
      * Endpoint to show the form for approving an APRequest.
+     *
      * @param model the Model object to pass data to the view for rendering the form for approving an APRequest
-     * @param id the ID of the APRequest to be approved
+     * @param id    the ID of the APRequest to be approved
      * @return the name of the view to render the form for approving an APRequest
      */
     @RequestMapping(value = "/aprobar/{id}", method = RequestMethod.GET)
@@ -295,6 +305,7 @@ public class APRequestController {
 
     /**
      * Endpoint to process the approval of an APRequest.
+     *
      * @param idSolicitud the ID of the APRequest to be approved
      * @return a redirect to the list of APRequest entities after approval
      */
@@ -306,7 +317,8 @@ public class APRequestController {
 
     /**
      * Shows the list of candidates for a specific APRequest.
-     * @param id the ID of the APRequest to show candidates for
+     *
+     * @param id    the ID of the APRequest to show candidates for
      * @param model the Model object to pass data to the view
      * @return the view for displaying candidates
      */
@@ -344,10 +356,11 @@ public class APRequestController {
 
     /**
      * Shows the details of a candidate assistant for a given request.
+     *
      * @param idSolicitud request identifier
      * @param idAsistente assistant identifier
-     * @param model model for the view
-     * @param session session data
+     * @param model       model for the view
+     * @param session     session data
      * @return the candidate details view or redirect to login
      */
     @RequestMapping(value = "/mylistChooseAPDetails/{idSolicitud}/{idAsistente}",
@@ -473,11 +486,13 @@ public class APRequestController {
         apRequestDao.updateAPRequest(apRequest);
         return "redirect:/APRequest/list";
     }
+
     /**
      * Generates and downloads the PDF contract for a given request (OVI user side).
+     *
      * @param idSolicitud request identifier
-     * @param session session data
-     * @param response HTTP response
+     * @param session     session data
+     * @param response    HTTP response
      */
     @RequestMapping(value = "/contrato/{idSolicitud}", method = RequestMethod.GET)
     public void verContrato(@PathVariable int idSolicitud,
@@ -575,7 +590,8 @@ public class APRequestController {
 
     /**
      * Lists all contracts for the admin.
-     * @param model model for the view
+     *
+     * @param model   model for the view
      * @param session session data
      * @return the contracts list view
      */
@@ -624,9 +640,10 @@ public class APRequestController {
 
     /**
      * Generates the PDF of a contract by contract ID (admin access).
+     *
      * @param idContrato contract identifier
-     * @param session session data
-     * @param response HTTP response
+     * @param session    session data
+     * @param response   HTTP response
      */
     @RequestMapping(value = "/contratoPdf/{idContrato}", method = RequestMethod.GET)
     public void contratoPdfAdmin(@PathVariable int idContrato,
