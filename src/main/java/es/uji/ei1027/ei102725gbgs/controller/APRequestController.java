@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -286,7 +287,8 @@ public class APRequestController {
     public String processAddSubmit(
             @ModelAttribute("apRequest") APRequest apRequest,
             BindingResult bindingResult,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
         int nextId = apRequestDao.getAPRequests().stream()
                 .mapToInt(APRequest::getIdSolicitud).max().orElse(0) + 1;
 
@@ -299,6 +301,8 @@ public class APRequestController {
             return "APRequest/add";
         }
         apRequestDao.addAPRequest(apRequest);
+        redirectAttributes.addFlashAttribute("msgOk",
+                "La solicitud ha sido creada correctamente.");
         return "redirect:/APRequest/mylist";
     }
 
@@ -329,7 +333,8 @@ public class APRequestController {
     public String processUpdateSubmit(
             @ModelAttribute("apRequest") APRequest apRequest,
             BindingResult bindingResult,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
         apRequestValidator.validate(apRequest, bindingResult);
         if (bindingResult.hasErrors()) {
             model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
@@ -337,6 +342,8 @@ public class APRequestController {
             return "APRequest/update";
         }
         apRequestDao.updateAPRequest(apRequest);
+        redirectAttributes.addFlashAttribute("msgOk",
+                "La solicitud ha sido actualizada correctamente.");
         return "redirect:/APRequest/mylist";
     }
 
@@ -347,8 +354,10 @@ public class APRequestController {
      * @return a redirect to the list of APRequest entities after deletion
      */
     @RequestMapping(value = "/delete/{idSolicitud}", method = RequestMethod.GET)
-    public String processDelete(@PathVariable int idSolicitud) {
+    public String processDelete(@PathVariable int idSolicitud, RedirectAttributes redirectAttributes) {
         apRequestDao.deleteAPRequestPorId(idSolicitud);
+        redirectAttributes.addFlashAttribute("msgOk",
+                "La solicitud ha sido eliminada correctamente.");
         return "redirect:/APRequest/mylist";
     }
 
@@ -392,8 +401,10 @@ public class APRequestController {
      * @return a redirect to the list of APRequest entities after approval
      */
     @RequestMapping(value = "/aprobar", method = RequestMethod.POST)
-    public String processAprobar(@RequestParam int idSolicitud, @RequestParam String estado) {
+    public String processAprobar(@RequestParam int idSolicitud, @RequestParam String estado, RedirectAttributes redirectAttributes) {
         apRequestDao.updateEstado(idSolicitud, estado);
+        redirectAttributes.addFlashAttribute("msgOk",
+                "El estado de la solicitud ha sido actualizado correctamente.");
         return "redirect:/APRequest/list";
     }
 
@@ -502,7 +513,8 @@ public class APRequestController {
     public String acceptarAssistent(
             @PathVariable int idSolicitud,
             @PathVariable String idAsistente,
-            HttpSession session) {
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
         if (usuari == null) {
@@ -515,6 +527,8 @@ public class APRequestController {
         for (Selection s : seleccionesExistentes) {
             if (registreContracteDao.getRegistreContracteBySeleccion(
                     s.getIdSeleccion()) != null) {
+                redirectAttributes.addFlashAttribute("msgError",
+                        "Esta solicitud ya tiene un contrato activo. No se pueden realizar más cambios.");
                 return "redirect:/APRequest/mylist"; // ya tiene contrato
             }
         }
@@ -541,7 +555,8 @@ public class APRequestController {
 
         // 4. Cerrar la solicitud
         apRequestDao.updateEstado(idSolicitud, "Cerrada con contrato");
-
+        redirectAttributes.addFlashAttribute("msgOk",
+                "Asistente aceptado. El contrato ha sido generado correctamente.");
         return "redirect:/APRequest/mylist";
     }
 

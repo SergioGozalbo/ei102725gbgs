@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -63,7 +64,8 @@ public class RegistroController {
     public String processRegistroUsuariOVI(
             @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
             BindingResult bindingResult,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
         // Validación básica (mantenemos la tuya)
         if (usuariOVI.getNombre() == null || usuariOVI.getNombre().trim().isEmpty()) {
@@ -83,11 +85,23 @@ public class RegistroController {
             return "autenticacion/registroUsuariOVI";
         }
 
-        int nextId = usuariOVIDao.getUsuariosOVI().size() + 1;
+        int nextId = usuariOVIDao.getUsuariosOVI().stream()
+                .mapToInt(u -> {
+                    try {
+                        return Integer.parseInt(u.getIdUsuario().substring(1));
+                    } catch (Exception e) {
+                        return 0;
+                    }
+                })
+                .max()
+                .orElse(0) + 1;
         String formattedId = String.format("U%03d", nextId);
         usuariOVI.setIdUsuario(formattedId);
 
         usuariOVIDao.addUsuariOVI(usuariOVI);
+
+        redirectAttributes.addFlashAttribute("msgOk",
+                "¡Cuenta creada correctamente! Ya puedes iniciar sesión.");
 
         return "redirect:/login";
     }
@@ -114,7 +128,8 @@ public class RegistroController {
     public String processRegistroAssistent(
             @ModelAttribute("assistentPersonal") AssistentPersonal assistent,
             BindingResult bindingResult,
-            Model model) {
+            Model model,
+            RedirectAttributes redirectAttributes) {
 
         // Validación básica (mantenemos la tuya)
         if (assistent.getNombre() == null || assistent.getNombre().trim().isEmpty()) {
@@ -132,13 +147,25 @@ public class RegistroController {
         }
 
         // --- CORRECCIÓN ID ASISTENTE ---
-        int nextId = assistentPersonalDao.getAssistentsPersonals().size() + 1;
+        int nextId = assistentPersonalDao.getAssistentsPersonals().stream()
+                .mapToInt(a -> {
+                    try {
+                        return Integer.parseInt(a.getIdAsistente().substring(1));
+                    } catch (Exception e) {
+                        return 0;
+                    }
+                })
+                .max()
+                .orElse(0) + 1;
         String formattedId = String.format("A%03d", nextId);
         assistent.setIdAsistente(formattedId);
 
         assistent.setEstadoAceptado("Pendiente");
 
         assistentPersonalDao.addAssistentPersonal(assistent);
+
+        redirectAttributes.addFlashAttribute("msgInfo",
+                "Solicitud enviada. Tu cuenta está pendiente de aprobación por el administrador. Puedes iniciar sesión");
 
         return "redirect:/login";
     }

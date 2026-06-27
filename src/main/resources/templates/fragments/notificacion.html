@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="notificacion">
+    <div th:if="${msgOk}" class="notif notif-ok" role="alert">
+        <span th:text="${msgOk}"></span>
+    </div>
+    <div th:if="${msgError}" class="notif notif-error" role="alert">
+        <span th:text="${msgError}"></span>
+    </div>
+    <div th:if="${msgInfo}" class="notif notif-info" role="alert">
+        <span th:text="${msgInfo}"></span>
+    </div>
+</div>
+</body>
+</html>

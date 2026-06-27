@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -294,7 +295,8 @@ public class UsuariOVIController {
     public String processProfileEdit(
             @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
             BindingResult bindingResult,
-            HttpSession session) {
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
         usuariOVIValidator.validate(usuariOVI, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -303,6 +305,8 @@ public class UsuariOVIController {
 
         usuariOVIDao.updateUsuariOVI(usuariOVI);
         session.setAttribute("usuariOVI", usuariOVI);
+        redirectAttributes.addFlashAttribute("msgOk",
+                "Tu perfil ha sido actualizado correctamente.");
         return "redirect:profile";
     }
 

@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.Validator;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -355,7 +356,8 @@ public class AssistentPersonalController {
     public String processProfileEdit(
             @ModelAttribute("assistentPersonal") AssistentPersonal assistentPersonal,
             BindingResult bindingResult,
-            HttpSession session) {
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
         assistentPersonalValidator.validate(assistentPersonal, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -366,7 +368,8 @@ public class AssistentPersonalController {
 
         // Actualizar también la sesión con los nuevos datos
         session.setAttribute("assistentPersonal", assistentPersonal);
-
+        redirectAttributes.addFlashAttribute("msgOk",
+                "Tu perfil ha sido actualizado correctamente.");
         return "redirect:profile";
     }
 
