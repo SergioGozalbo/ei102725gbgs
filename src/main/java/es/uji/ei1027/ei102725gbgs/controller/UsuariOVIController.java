@@ -7,13 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Component
@@ -124,11 +124,29 @@ public class UsuariOVIController {
      * @return the list view
      */
     @RequestMapping("/list")
-    public String listUsuariOVI(Model model) {
-        model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI());
+    public String listUsuariOVI(
+            @RequestParam(defaultValue = "") String busqueda,
+            @RequestParam(defaultValue = "10") int registres,
+            Model model, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        List<UsuariOVI> todos = usuariOVIDao.getUsuariosOVI();
+        List<UsuariOVI> filtrados = new ArrayList<>();
+        for (UsuariOVI u : todos) {
+            String nombre = (u.getNombre() + " " + u.getApellidos()).toLowerCase();
+            if (busqueda.isEmpty() || nombre.contains(busqueda.toLowerCase()))
+                filtrados.add(u);
+        }
+        int totalRegistres = filtrados.size();
+        List<UsuariOVI> limitados = filtrados.size() > registres
+                ? filtrados.subList(0, registres) : filtrados;
+
+        model.addAttribute("usuarios", limitados);
+        model.addAttribute("busqueda", busqueda);
+        model.addAttribute("registres", registres);
+        model.addAttribute("totalRegistres", totalRegistres);
         return "UsuariOVI/list";
     }
-
     /**
      * Shows the add form.
      * @param model model for the view
@@ -219,6 +237,14 @@ public class UsuariOVIController {
             return "redirect:/UsuariOVI/list";
         }
         return "redirect:/UsuariOVI/list";
+    }
+
+    @RequestMapping(value = "/confirmDelete/{idUsuario}", method = RequestMethod.GET)
+    public String confirmDelete(@PathVariable String idUsuario,
+                                Model model, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+        model.addAttribute("usuario", usuariOVIDao.getUsuariOVI(idUsuario));
+        return "UsuariOVI/confirmDelete";
     }
 
     /**

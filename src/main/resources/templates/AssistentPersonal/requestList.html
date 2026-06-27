@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>SgOVI - Les meues sol·licituds assignades</title>
+  <title>SgOVI - Les meues sol·licituds</title>
   <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body class="table-page">
 <nav aria-label="Navegació principal">
   <span class="nav-brand">SgOVI</span>
   <div class="nav-right">
-    <a th:href="@{/dashboard/assistentPersonal}" class="btn-logout">Tornar al panell</a>
+    <a th:href="@{/logout}" class="btn-logout">Tancar sessió</a>
   </div>
 </nav>
 <main>
@@ -21,14 +21,38 @@
         Usuaris que t'han escollit com a assistent personal.
       </p>
     </div>
+    <a th:href="@{/dashboard/assistentPersonal}" class="btn-back">
+      Tornar al panell
+    </a>
   </div>
 
+  <form method="get" th:action="@{/AssistentPersonal/requests}"
+        style="margin-bottom:1.5rem; display:flex; gap:0.75rem; align-items:center;">
+    <input type="text" name="busqueda" th:value="${busqueda}"
+           placeholder="Cerca per nom d'usuari..."
+           style="max-width:280px;"/>
+    <select name="registres" style="max-width:120px;">
+      <option value="5"  th:selected="${registres == 5}">5</option>
+      <option value="10" th:selected="${registres == 10}">10</option>
+      <option value="25" th:selected="${registres == 25}">25</option>
+      <option value="50" th:selected="${registres == 50}">50</option>
+    </select>
+    <button type="submit" class="btn-new">Cercar</button>
+    <a th:href="@{/AssistentPersonal/requests}" class="btn-back">Netejar</a>
+  </form>
+
+  <p th:if="${totalRegistres != null}"
+     style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
+     th:text="'Mostrant ' + ${#lists.size(requests)}
+                + ' de ' + ${totalRegistres} + ' registres'"></p>
+
   <div th:if="${#lists.isEmpty(requests)}"
-       style="text-align: center; padding: 2rem; color: #4b5563;">
+       style="text-align:center; padding:2rem; color:#4b5563;">
     Encara no t'han assignat cap sol·licitud.
   </div>
 
-  <div class="table-container" th:unless="${#lists.isEmpty(requests)}">
+  <div class="table-container" th:unless="${#lists.isEmpty(requests)}"
+       style="max-height:500px; overflow-y:auto;">
     <table>
       <caption class="visually-hidden">Sol·licituds assignades</caption>
       <thead>
@@ -37,6 +61,7 @@
         <th scope="col">Província</th>
         <th scope="col">Tipus d'assistència</th>
         <th scope="col">Estat</th>
+        <th scope="col">Accions</th>
       </tr>
       </thead>
       <tbody>
@@ -52,14 +77,14 @@
                           th:text="${req.tipoAsistencia}"></span>
         </td>
         <td>
-          <span class="badge-estat badge-acceptat">✓ Escollit</span>
+          <span class="badge-estat badge-acceptat">Escollit</span>
         </td>
         <td>
           <div class="table-actions">
             <a th:href="@{/AssistentPersonal/contrato/{id}(id=${req.idSolicitud})}"
-               class="btn-edit" target="_blank">Veure contracte</a>
+               class="btn-edit">Veure contracte</a>
             <a th:href="@{/chat/{id}(id=${req.idSolicitud})}"
-               class="btn-card" style="background: #059669;">Enviar missatge</a>
+               class="btn-new">Enviar missatge</a>
           </div>
         </td>
       </tr>

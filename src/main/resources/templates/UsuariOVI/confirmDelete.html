@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Confirmar eliminació</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body class="form-page">
+<nav>
+    <span class="nav-brand">SgOVI - Administració</span>
+    <div class="nav-right">
+        <a th:href="@{/UsuariOVI/list}" class="btn-logout">Tornar</a>
+    </div>
+</nav>
+<main>
+    <div class="form-card">
+        <h1 class="page-title">Confirmar eliminació</h1>
+        <p class="page-subtitle" style="margin-top:0.5rem;">
+            Estàs segur que vols eliminar l'usuari
+            <strong th:text="${usuario.nombre} + ' ' + ${usuario.apellidos}"></strong>?
+            Aquesta acció no es pot desfer.
+        </p>
+        <div style="display:flex; gap:1rem; margin-top:2rem;">
+            <a th:href="@{/UsuariOVI/delete/{id}(id=${usuario.idUsuario})}"
+               class="btn btn-primary" style="flex:1; text-align:center;">
+                Sí, eliminar
+            </a>
+            <a th:href="@{/UsuariOVI/list}"
+               class="btn btn-outline" style="flex:1; text-align:center;">
+                Cancel·lar
+            </a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

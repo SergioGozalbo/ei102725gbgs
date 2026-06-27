@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>SgOVI - Confirmar cancel·lació</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body class="form-page">
+<nav>
+  <span class="nav-brand">SgOVI</span>
+  <div class="nav-right">
+    <a th:href="@{/AssistentPersonal/myrequests}" class="btn-logout">Tornar</a>
+  </div>
+</nav>
+<main>
+  <div class="form-card">
+    <h1 class="page-title">Confirmar cancel·lació</h1>
+    <p class="page-subtitle" style="margin-top:0.5rem;">
+      Vols cancel·lar la teua candidatura per a aquesta sol·licitud?
+      Aquesta acció no es pot desfer.
+    </p>
+    <div style="display:flex; gap:1rem; margin-top:2rem;">
+      <a th:href="@{/AssistentPersonal/cancelRequest/{id}(id=${idSolicitud})}"
+         class="btn btn-primary" style="flex:1; text-align:center;">
+        Sí, cancel·lar
+      </a>
+      <a th:href="@{/AssistentPersonal/myrequests}"
+         class="btn btn-outline" style="flex:1; text-align:center;">
+        Tornar
+      </a>
+    </div>
+  </div>
+</main>
+</body>
+</html>

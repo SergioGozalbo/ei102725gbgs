@@ -17,10 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.Validator;
 
 import java.util.ArrayList;
@@ -166,9 +163,27 @@ public class AssistentPersonalController {
      * @return the list view
      */
     @RequestMapping("/list")
-    public String list(Model model) {
-        model.addAttribute("asistentes",
-            assistentPersonalDao.getAssistentsPersonals());
+    public String list(
+            @RequestParam(defaultValue = "") String busqueda,
+            @RequestParam(defaultValue = "10") int registres,
+            Model model, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        List<AssistentPersonal> todos = assistentPersonalDao.getAssistentsPersonals();
+        List<AssistentPersonal> filtrados = new ArrayList<>();
+        for (AssistentPersonal a : todos) {
+            String nombre = (a.getNombre() + " " + a.getApellidos()).toLowerCase();
+            if (busqueda.isEmpty() || nombre.contains(busqueda.toLowerCase()))
+                filtrados.add(a);
+        }
+        int totalRegistres = filtrados.size();
+        List<AssistentPersonal> limitados = filtrados.size() > registres
+                ? filtrados.subList(0, registres) : filtrados;
+
+        model.addAttribute("asistentes", limitados);
+        model.addAttribute("busqueda", busqueda);
+        model.addAttribute("registres", registres);
+        model.addAttribute("totalRegistres", totalRegistres);
         return "AssistentPersonal/list";
     }
 
@@ -268,6 +283,26 @@ public class AssistentPersonalController {
         return "redirect:../list";
     }
 
+    @RequestMapping(value = "/confirmDelete/{idAsistente}", method = RequestMethod.GET)
+    public String confirmDelete(@PathVariable String idAsistente,
+                                Model model, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+        model.addAttribute("asistente",
+                assistentPersonalDao.getAssistentPersonal(idAsistente));
+        return "AssistentPersonal/confirmDelete";
+    }
+
+
+    @RequestMapping(value = "/confirmCancelRequest/{id}", method = RequestMethod.GET)
+    public String confirmCancelRequest(@PathVariable int id,
+                                       Model model, HttpSession session) {
+        AssistentPersonal ap =
+                (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (ap == null) return "redirect:/login";
+        model.addAttribute("idSolicitud", id);
+        return "AssistentPersonal/confirmCancelRequest";
+    }
+
     /**
      * Shows the profile of the logged-in assistant.
      * @param session session data
@@ -333,6 +368,64 @@ public class AssistentPersonalController {
         session.setAttribute("assistentPersonal", assistentPersonal);
 
         return "redirect:profile";
+    }
+
+    @RequestMapping("/myrequests")
+    public String myRequests(
+            @RequestParam(defaultValue = "") String busqueda,
+            @RequestParam(defaultValue = "10") int registres,
+            Model model, HttpSession session) {
+        AssistentPersonal ap =
+                (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (ap == null) return "redirect:/login";
+
+        List<Selection> mySelections =
+                selectionDao.getSelectionsByAsistente(ap.getIdAsistente());
+        List<APRequest> todas = new ArrayList<>();
+        List<Integer> solicitudesConContrato = new ArrayList<>();
+        List<RegistreContracte> todosLosContratos =
+                registreContracteDao.getRegistresContractes();
+        List<UsuariOVI> usuarios = usuariOVIDao.getUsuariosOVI();
+
+        for (Selection s : mySelections) {
+            APRequest req = apRequestDao.getAPRequest(s.getIdSolicitud());
+            if (req != null) {
+                todas.add(req);
+                boolean tieneContrato = todosLosContratos.stream()
+                        .anyMatch(c -> c.getIdSeleccion() == s.getIdSeleccion());
+                if (tieneContrato) solicitudesConContrato.add(s.getIdSolicitud());
+            }
+        }
+
+        List<APRequest> filtradas = new ArrayList<>();
+        for (APRequest req : todas) {
+            if (busqueda.isEmpty()) {
+                filtradas.add(req);
+            } else {
+                for (UsuariOVI u : usuarios) {
+                    if (u.getIdUsuario().equals(req.getIdUsuarioOvi())) {
+                        String nombre = (u.getNombre() + " "
+                                + u.getApellidos()).toLowerCase();
+                        if (nombre.contains(busqueda.toLowerCase()))
+                            filtradas.add(req);
+                        break;
+                    }
+                }
+            }
+        }
+
+        int totalRegistres = filtradas.size();
+        List<APRequest> limitadas = filtradas.size() > registres
+                ? filtradas.subList(0, registres) : filtradas;
+
+        model.addAttribute("requests", limitadas);
+        model.addAttribute("selections", mySelections);
+        model.addAttribute("solicitudesConContrato", solicitudesConContrato);
+        model.addAttribute("usuarios", usuarios);
+        model.addAttribute("busqueda", busqueda);
+        model.addAttribute("registres", registres);
+        model.addAttribute("totalRegistres", totalRegistres);
+        return "AssistentPersonal/myrequests";
     }
 
     /**

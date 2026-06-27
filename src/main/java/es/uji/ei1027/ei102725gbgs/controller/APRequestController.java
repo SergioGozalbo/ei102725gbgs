@@ -154,12 +154,41 @@ public class APRequestController {
      * @return the name of the view to render the list of APRequest entities
      */
     @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public String listAPRequest(Model model, HttpSession session) {
-        if (session.getAttribute("admin") == null) {
-            return "redirect:/login";
+    public String listAPRequest(
+            @RequestParam(defaultValue = "") String busqueda,
+            @RequestParam(defaultValue = "10") int registres,
+            Model model, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+
+        List<APRequest> todas = apRequestDao.getAPRequests();
+        List<UsuariOVI> usuarios = usuariOVIDao.getUsuariosOVI();
+
+        List<APRequest> filtradas = new ArrayList<>();
+        for (APRequest r : todas) {
+            if (busqueda.isEmpty()) {
+                filtradas.add(r);
+            } else {
+                for (UsuariOVI u : usuarios) {
+                    if (u.getIdUsuario().equals(r.getIdUsuarioOvi())) {
+                        String nombre = (u.getNombre() + " "
+                                + u.getApellidos()).toLowerCase();
+                        if (nombre.contains(busqueda.toLowerCase()))
+                            filtradas.add(r);
+                        break;
+                    }
+                }
+            }
         }
-        model.addAttribute("requests", apRequestDao.getAPRequests());
-        model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI()); // añade esto
+
+        int totalRegistres = filtradas.size();
+        List<APRequest> limitadas = filtradas.size() > registres
+                ? filtradas.subList(0, registres) : filtradas;
+
+        model.addAttribute("requests", limitadas);
+        model.addAttribute("usuarios", usuarios);
+        model.addAttribute("busqueda", busqueda);
+        model.addAttribute("registres", registres);
+        model.addAttribute("totalRegistres", totalRegistres);
         return "APRequest/list";
     }
 
@@ -193,33 +222,55 @@ public class APRequestController {
      * @return the list of APRequest entities for the currently logged-in user
      */
     @RequestMapping(value = "/mylist", method = RequestMethod.GET)
-    public String listMyRequests(Model model, HttpSession session) {
+    public String listMyRequests(
+            @RequestParam(defaultValue = "") String busqueda,
+            @RequestParam(defaultValue = "10") int registres,
+            Model model, HttpSession session) {
         UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
-        if (usuari == null) {
-            return "redirect:/login";
-        }
+        if (usuari == null) return "redirect:/login";
 
-        List<APRequest> requests = apRequestDao.getAPRequestsByUsuari(usuari.getIdUsuario());
-        List<RegistreContracte> todosContratos = registreContracteDao.getRegistresContractes();
+        List<APRequest> requests = apRequestDao.getAPRequestsByUsuari(
+                usuari.getIdUsuario());
+        List<RegistreContracte> todosContratos =
+                registreContracteDao.getRegistresContractes();
 
-        // Calcular qué solicitudes tienen contrato y cuál es el asistente elegido
-        java.util.Map<Integer, String> asistenteElegidoPorSolicitud = new java.util.HashMap<>();
-
+        java.util.Map<Integer, String> asistenteElegidoPorSolicitud =
+                new java.util.HashMap<>();
         for (APRequest req : requests) {
-            List<Selection> selecciones = selectionDao.getSelectionsBySolicitud(req.getIdSolicitud());
+            List<Selection> selecciones =
+                    selectionDao.getSelectionsBySolicitud(req.getIdSolicitud());
             for (Selection s : selecciones) {
                 boolean tieneContrato = todosContratos.stream()
                         .anyMatch(c -> c.getIdSeleccion() == s.getIdSeleccion());
                 if (tieneContrato) {
-                    asistenteElegidoPorSolicitud.put(req.getIdSolicitud(), s.getIdAsistente());
+                    asistenteElegidoPorSolicitud.put(
+                            req.getIdSolicitud(), s.getIdAsistente());
                     break;
                 }
             }
         }
 
-        model.addAttribute("requests", requests);
+        List<APRequest> filtradas = new ArrayList<>();
+        for (APRequest r : requests) {
+            if (busqueda.isEmpty()
+                    || r.getTipoAsistencia().toLowerCase()
+                    .contains(busqueda.toLowerCase())
+                    || r.getProximidad().toLowerCase()
+                    .contains(busqueda.toLowerCase())) {
+                filtradas.add(r);
+            }
+        }
+
+        int totalRegistres = filtradas.size();
+        List<APRequest> limitadas = filtradas.size() > registres
+                ? filtradas.subList(0, registres) : filtradas;
+
+        model.addAttribute("requests", limitadas);
         model.addAttribute("usuari", usuari);
         model.addAttribute("asistenteElegido", asistenteElegidoPorSolicitud);
+        model.addAttribute("busqueda", busqueda);
+        model.addAttribute("registres", registres);
+        model.addAttribute("totalRegistres", totalRegistres);
         return "APRequest/mylist";
     }
 
@@ -299,6 +350,24 @@ public class APRequestController {
     public String processDelete(@PathVariable int idSolicitud) {
         apRequestDao.deleteAPRequestPorId(idSolicitud);
         return "redirect:/APRequest/mylist";
+    }
+
+    @RequestMapping(value = "/confirmDeleteAdmin/{id}", method = RequestMethod.GET)
+    public String confirmDeleteAdmin(@PathVariable int id,
+                                     Model model, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
+        model.addAttribute("idSolicitud", id);
+        return "APRequest/confirmDeleteAdmin";
+    }
+
+
+    @RequestMapping(value = "/confirmDeleteMylist/{id}", method = RequestMethod.GET)
+    public String confirmDeleteMylist(@PathVariable int id,
+                                      Model model, HttpSession session) {
+        UsuariOVI usuari = (UsuariOVI) session.getAttribute("usuariOVI");
+        if (usuari == null) return "redirect:/login";
+        model.addAttribute("idSolicitud", id);
+        return "APRequest/confirmDeleteMylist";
     }
 
     /**
@@ -652,47 +721,59 @@ public class APRequestController {
      * @return the contracts list view
      */
     @RequestMapping(value = "/contratos", method = RequestMethod.GET)
-    public String listarContratos(Model model, HttpSession session) {
-        if (session.getAttribute("admin") == null) {
-            return "redirect:/login";
-        }
+    public String listarContratos(
+            @RequestParam(defaultValue = "") String busqueda,
+            @RequestParam(defaultValue = "10") int registres,
+            Model model, HttpSession session) {
+        if (session.getAttribute("admin") == null) return "redirect:/login";
 
         List<RegistreContracte> contratos =
                 registreContracteDao.getRegistresContractes();
+        List<java.util.Map<String, Object>> todos = new ArrayList<>();
 
-        // Para cada contrato, enriquecer con datos de solicitud y asistente
-        List<java.util.Map<String, Object>> contratosEnriquecidos = new ArrayList<>();
         for (RegistreContracte c : contratos) {
-            // Buscar la selección para obtener el asistente
-            // Reutilizamos selectionDao que ya está inyectado
-            List<Selection> sels = selectionDao.getSelections();
             Selection sel = null;
-            for (Selection s : sels) {
-                if (s.getIdSeleccion() == c.getIdSeleccion()) {
-                    sel = s;
-                    break;
-                }
+            for (Selection s : selectionDao.getSelections()) {
+                if (s.getIdSeleccion() == c.getIdSeleccion()) { sel = s; break; }
             }
-
             java.util.Map<String, Object> row = new java.util.HashMap<>();
             row.put("contrato", c);
-
             if (sel != null) {
                 APRequest req = apRequestDao.getAPRequest(sel.getIdSolicitud());
                 AssistentPersonal ap = assistentPersonalDao
                         .getAssistentPersonal(sel.getIdAsistente());
                 UsuariOVI ovi = req != null
                         ? usuariOVIDao.getUsuariOVI(req.getIdUsuarioOvi()) : null;
-
                 row.put("solicitud", req);
                 row.put("assistent", ap);
                 row.put("usuari", ovi);
             }
-
-            contratosEnriquecidos.add(row);
+            todos.add(row);
         }
 
-        model.addAttribute("contratos", contratosEnriquecidos);
+        List<java.util.Map<String, Object>> filtrats = new ArrayList<>();
+        for (java.util.Map<String, Object> row : todos) {
+            if (busqueda.isEmpty()) {
+                filtrats.add(row);
+            } else {
+                UsuariOVI u = (UsuariOVI) row.get("usuari");
+                AssistentPersonal a = (AssistentPersonal) row.get("assistent");
+                String noms = "";
+                if (u != null) noms += u.getNombre() + " " + u.getApellidos();
+                if (a != null) noms += " " + a.getNombre() + " " + a.getApellidos();
+                if (noms.toLowerCase().contains(busqueda.toLowerCase()))
+                    filtrats.add(row);
+            }
+        }
+
+        int totalRegistres = filtrats.size();
+        List<java.util.Map<String, Object>> limitats = filtrats.size() > registres
+                ? filtrats.subList(0, registres) : filtrats;
+
+        model.addAttribute("contratos", limitats);
+        model.addAttribute("busqueda", busqueda);
+        model.addAttribute("registres", registres);
+        model.addAttribute("totalRegistres", totalRegistres);
         return "APRequest/contratos";
     }
 

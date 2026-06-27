@@ -2,16 +2,15 @@
 <html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>SgOVI - Contractes</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <link rel="stylesheet"
-          href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
 </head>
 <body class="table-page">
 <nav>
     <span class="nav-brand">SgOVI - Administració</span>
     <div class="nav-right">
-        <a th:href="@{/APRequest/list}" class="btn-logout">Tornar a sol·licituds</a>
+        <a th:href="@{/logout}" class="btn-logout">Tancar sessió</a>
     </div>
 </nav>
 <main>
@@ -20,24 +19,47 @@
             <h1 class="page-title">Contractes actius</h1>
             <p class="page-subtitle">Tots els contractes generats al sistema.</p>
         </div>
+        <a th:href="@{/APRequest/list}" class="btn-back">Tornar a sol·licituds</a>
     </div>
 
+    <form method="get" th:action="@{/APRequest/contratos}"
+          style="margin-bottom:1.5rem; display:flex; gap:0.75rem; align-items:center;">
+        <input type="text" name="busqueda" th:value="${busqueda}"
+               placeholder="Cerca per nom d'usuari o assistent..."
+               style="max-width:280px;"/>
+        <select name="registres" style="max-width:120px;">
+            <option value="5"  th:selected="${registres == 5}">5</option>
+            <option value="10" th:selected="${registres == 10}">10</option>
+            <option value="25" th:selected="${registres == 25}">25</option>
+            <option value="50" th:selected="${registres == 50}">50</option>
+        </select>
+        <button type="submit" class="btn-new">Cercar</button>
+        <a th:href="@{/APRequest/contratos}" class="btn-back">Netejar</a>
+    </form>
+
+    <p th:if="${totalRegistres != null}"
+       style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
+       th:text="'Mostrant ' + ${#lists.size(contratos)}
+                + ' de ' + ${totalRegistres} + ' registres'"></p>
+
     <div th:if="${#lists.isEmpty(contratos)}"
-         style="text-align:center; padding:2rem; color:#6b7280;">
+         style="text-align:center; padding:2rem; color:#4b5563;">
         No hi ha contractes registrats.
     </div>
 
-    <div class="table-container" th:unless="${#lists.isEmpty(contratos)}">
-        <table id="tablaContratos" style="width:100%">
+    <div class="table-container" th:unless="${#lists.isEmpty(contratos)}"
+         style="max-height:500px; overflow-y:auto;">
+        <table>
+            <caption class="visually-hidden">Llistat de contractes actius</caption>
             <thead>
             <tr>
-                <th>Usuari OVI</th>
-                <th>Assistent</th>
-                <th>Tipus</th>
-                <th>Província</th>
-                <th>Data inici</th>
-                <th>Data fi</th>
-                <th>Accions</th>
+                <th scope="col">Usuari OVI</th>
+                <th scope="col">Assistent</th>
+                <th scope="col">Tipus</th>
+                <th scope="col">Província</th>
+                <th scope="col">Data inici</th>
+                <th scope="col">Data fi</th>
+                <th scope="col">Accions</th>
             </tr>
             </thead>
             <tbody>
@@ -57,25 +79,12 @@
                     ? ${row.contrato.fechaFin} : 'Indefinida'"></td>
                 <td>
                     <a th:href="@{/APRequest/contratoPdf/{id}(id=${row.contrato.idContrato})}"
-                       class="btn-edit" target="_blank">Veure PDF</a>
+                       class="btn-edit">Veure PDF</a>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
 </main>
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#tablaContratos').DataTable({
-            language: {
-                url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/ca.json'
-            },
-            pageLength: 10,
-            columnDefs: [{ orderable: false, targets: 6 }]
-        });
-    });
-</script>
 </body>
 </html>

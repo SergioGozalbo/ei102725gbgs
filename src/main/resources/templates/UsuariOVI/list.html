@@ -1,147 +1,73 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <title>Lista usuarios</title>
-</head>
-<body class="table-page">
-
-<nav>
-    <span class="nav-brand">SgOVI</span>
-
-    <div class="nav-right">
-        <a th:href="@{/logout}" class="btn-logout">
-            Cerrar sesión
-        </a>
-    </div>
-</nav>
-
-<main>
-    <div class="page-actions">
-
-        <div>
-
-    <h1 class="page-title">
-        Lista de usuarios
-    </h1>
-
-            <p class="page-subtitle">
-                Lista de todos los usuarios registrados.
-            </p>
-        </div>
-
-        <div style="display:flex; gap:0.75rem;">
-
-            <a th:href="@{/UsuariOVI/add}"
-               class="btn-new">
-                +Nuevo usuario
-            </a>
-
-            <a th:href="@{/}"
-               class="btn-back">
-                Volver al menú
-            </a>
-        </div>
-    </div>
-
-<div class="table-container">
-    <table style="min-width: 900px;">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellidos</th>
-            <th>Email</th>
-            <th>Contraseña</th>
-            <th>Teléfono</th>
-            <th>Confirmación RGPD</th>
-            <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="usuario : ${usuarios}">
-            <td th:text="${usuario.idUsuario}"></td>
-            <td th:text="${usuario.nombre}"></td>
-            <td th:text="${usuario.apellidos}"></td>
-            <td th:text="${usuario.email}"></td>
-            <td th:text="${usuario.password}"></td>
-            <td th:text="${usuario.telefono}"></td>
-            <td th:text="${usuario.consentimientoRgpd ? 'Si' : 'No'}"></td>
-
-            <td>
-
-                <div class="table-actions">
-
-                    <a th:href="@{/UsuariOVI/update/{id}(id=${usuario.idUsuario})}"
-                       class="btn-edit">
-                        Editar
-                    </a>
-
-                    <a th:href="@{/UsuariOVI/delete/{id}(id=${usuario.idUsuario})}"
-                       class="btn-delete">
-                        Eliminar
-                    </a>
-
-                </div>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-</div>
-
-<br><br>
-
 <html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <title>SgOVI - Usuaris OVI</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
-    <link rel="stylesheet"
-          href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css"/>
 </head>
 <body class="table-page">
 <nav aria-label="Navegació principal">
     <span class="nav-brand">SgOVI - Administració</span>
     <div class="nav-right">
-        <a th:href="@{/}" class="btn-logout">Tornar al menú</a>
+        <a th:href="@{/logout}" class="btn-logout">Tancar sessió</a>
     </div>
 </nav>
 <main>
-    <!-- Mensaje de error FK -->
-    <div th:if="${errorMsg}"
-         style="background:#fee2e2; border:1px solid #fca5a5; color:#991b1b;
-                border-radius:10px; padding:1rem 1.2rem; margin-bottom:1.5rem;
-                display:flex; align-items:center; gap:0.75rem;">
-        <span style="font-size:1.3rem;">⚠️</span>
-        <span th:text="${errorMsg}"></span>
-    </div>
+    <div th:if="${errorMsg}" class="alert-error" th:text="${errorMsg}"></div>
 
     <div class="page-actions">
         <div>
             <h1 class="page-title">Usuaris OVI</h1>
             <p class="page-subtitle">Llista de tots els usuaris registrats.</p>
         </div>
-        <a th:href="@{/UsuariOVI/add}" class="btn-new">+ Nou usuari</a>
+        <div style="display:flex; gap:0.75rem;">
+            <a th:href="@{/UsuariOVI/add}" class="btn-new">+ Nou usuari</a>
+            <a th:href="@{/dashboard/admin}" class="btn-back">Tornar al panell</a>
+        </div>
     </div>
 
-    <div class="table-container">
-        <table id="tablaUsuarios" style="width:100%">
+    <form method="get" th:action="@{/UsuariOVI/list}"
+          style="margin-bottom:1.5rem; display:flex; gap:0.75rem; align-items:center;">
+        <input type="text" name="busqueda" th:value="${busqueda}"
+               placeholder="Cerca per nom o cognoms..."
+               style="max-width:280px;"/>
+        <select name="registres" style="max-width:120px;">
+            <option value="5"  th:selected="${registres == 5}">5</option>
+            <option value="10" th:selected="${registres == 10}">10</option>
+            <option value="25" th:selected="${registres == 25}">25</option>
+            <option value="50" th:selected="${registres == 50}">50</option>
+        </select>
+        <button type="submit" class="btn-new">Cercar</button>
+        <a th:href="@{/UsuariOVI/list}" class="btn-back">Netejar</a>
+    </form>
+
+    <p th:if="${totalRegistres != null}"
+       style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
+       th:text="'Mostrant ' + ${#lists.size(usuarios)}
+                + ' de ' + ${totalRegistres} + ' registres'"></p>
+
+    <div th:if="${#lists.isEmpty(usuarios)}"
+         style="text-align:center; padding:2rem; color:#4b5563;">
+        No s'han trobat usuaris.
+    </div>
+
+    <div class="table-container" th:unless="${#lists.isEmpty(usuarios)}"
+         style="max-height:500px; overflow-y:auto;">
+        <table>
+            <caption class="visually-hidden">Llistat d'usuaris OVI</caption>
             <thead>
             <tr>
-                <th>Nom</th>
-                <th>Cognoms</th>
-                <th>Email</th>
-                <th>Telèfon</th>
-                <th>RGPD</th>
-                <th>Accions</th>
+                <th scope="col">Nom i cognoms</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telèfon</th>
+                <th scope="col">RGPD</th>
+                <th scope="col">Accions</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="usuario : ${usuarios}">
-                <td th:text="${usuario.nombre}"></td>
-                <td th:text="${usuario.apellidos}"></td>
+                <td th:text="${usuario.nombre} + ' ' + ${usuario.apellidos}"></td>
                 <td th:text="${usuario.email}"></td>
                 <td th:text="${usuario.telefono}"></td>
                 <td th:text="${usuario.consentimientoRgpd ? 'Sí' : 'No'}"></td>
@@ -149,10 +75,8 @@
                     <div class="table-actions">
                         <a th:href="@{/UsuariOVI/update/{id}(id=${usuario.idUsuario})}"
                            class="btn-edit">Editar</a>
-                        <a th:href="@{/UsuariOVI/delete/{id}(id=${usuario.idUsuario})}"
-                           class="btn-delete"
-                           onclick="return confirm('Estàs segur que vols eliminar aquest usuari?')">
-                            Eliminar</a>
+                        <a th:href="@{/UsuariOVI/confirmDelete/{id}(id=${usuario.idUsuario})}"
+                           class="btn-delete">Eliminar</a>
                     </div>
                 </td>
             </tr>
@@ -160,18 +84,5 @@
         </table>
     </div>
 </main>
-<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#tablaUsuarios').DataTable({
-            language: {
-                url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/ca.json'
-            },
-            pageLength: 10,
-            columnDefs: [{ orderable: false, targets: 5 }]
-        });
-    });
-</script>
 </body>
 </html>
