@@ -36,10 +36,12 @@
     <form method="get" th:action="@{/APRequest/mylist}"
           style="margin-bottom:1.5rem; display:flex; gap:0.75rem;
                  align-items:center; flex-wrap:wrap;">
-        <input type="text" name="busqueda" th:value="${busqueda}"
+        <label for="busqueda" class="visually-hidden">Cerca per província</label>
+        <input type="text" id="busqueda" name="busqueda" th:value="${busqueda}"
                placeholder="Cerca per província..."
                style="max-width:220px;"/>
-        <select name="estat" style="max-width:200px;">
+        <label for="estat" class="visually-hidden">Filtre per estat</label>
+        <select id="estat" name="estat" style="max-width:200px;">
             <option value="" th:selected="${estat == ''}">Tots els estats</option>
             <option value="En revisión"
                     th:selected="${estat == 'En revisión'}">En revisió</option>
@@ -52,13 +54,15 @@
                 Tancada amb contracte
             </option>
         </select>
-        <select name="tipus" style="max-width:120px;">
+        <label for="tipus" class="visually-hidden">Filtre per tipus</label>
+        <select id="tipus" name="tipus" style="max-width:120px;">
             <option value="" th:selected="${tipus == ''}">Tots els tipus</option>
             <option value="PAP" th:selected="${tipus == 'PAP'}">PAP</option>
             <option value="PATI" th:selected="${tipus == 'PATI'}">PATI</option>
         </select>
         <button type="submit" class="btn-new">Cercar</button>
-        <a th:href="@{/APRequest/mylist}" class="btn-back">Netejar</a>
+        <button type="button" class="btn-back"
+                onclick="window.location.href='/APRequest/mylist'">Netejar</button>
     </form>
 
     <p style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"

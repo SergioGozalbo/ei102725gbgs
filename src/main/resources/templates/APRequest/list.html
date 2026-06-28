@@ -27,22 +27,21 @@
     </div>
 
     <form method="get" th:action="@{/APRequest/list}"
-          style="margin-bottom:1.5rem; display:flex; gap:0.75rem;
-                 align-items:center; flex-wrap:wrap;">
-        <input type="text" name="busqueda" th:value="${busqueda}"
+          style="margin-bottom:1.5rem; display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
+        <label for="busqueda" class="visually-hidden">Cerca per nom d'usuari OVI</label>
+        <input type="text" id="busqueda" name="busqueda" th:value="${busqueda}"
                placeholder="Cerca per nom d'usuari OVI..."
                style="max-width:240px;"/>
-        <select name="estat" style="max-width:180px;">
+        <label for="estat" class="visually-hidden">Filtre per estat</label>
+        <select id="estat" name="estat" style="max-width:180px;">
             <option value="" th:selected="${estat == ''}">Tots els estats</option>
             <option value="En revisión" th:selected="${estat == 'En revisión'}">En revisió</option>
             <option value="Aprobada" th:selected="${estat == 'Aprobada'}">Aprovada</option>
             <option value="Rechazada" th:selected="${estat == 'Rechazada'}">Rebutjada</option>
-            <option value="Cerrada con contrato"
-                    th:selected="${estat == 'Cerrada con contrato'}">
-                Tancada amb contracte
-            </option>
+            <option value="Cerrada con contrato" th:selected="${estat == 'Cerrada con contrato'}">Tancada amb contracte</option>
         </select>
-        <select name="tipus" style="max-width:120px;">
+        <label for="tipus" class="visually-hidden">Filtre per tipus</label>
+        <select id="tipus" name="tipus" style="max-width:120px;">
             <option value="" th:selected="${tipus == ''}">Tots els tipus</option>
             <option value="PAP" th:selected="${tipus == 'PAP'}">PAP</option>
             <option value="PATI" th:selected="${tipus == 'PATI'}">PATI</option>
@@ -52,11 +51,9 @@
     </form>
 
     <p style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
-       th:text="'Mostrant ' + ${#lists.size(requests)}
-                + ' de ' + ${totalRegistres} + ' registres'"></p>
+       th:text="'Mostrant ' + ${#lists.size(requests)} + ' de ' + ${totalRegistres} + ' registres'"></p>
 
-    <div th:if="${#lists.isEmpty(requests)}"
-         style="text-align:center; padding:2rem; color:#4b5563;">
+    <div th:if="${#lists.isEmpty(requests)}" style="text-align:center; padding:2rem; color:#4b5563;">
         No s'han trobat sol·licituds.
     </div>
 
@@ -104,26 +101,19 @@
         </table>
     </div>
 
-    <!-- Paginació -->
     <div th:if="${totalPagines > 1}"
-         style="display:flex; gap:0.5rem; align-items:center;
-                margin-top:1.5rem; justify-content:center;">
+         style="display:flex; gap:0.5rem; align-items:center; margin-top:1.5rem; justify-content:center;">
         <a th:if="${paginaActual > 0}"
-           th:href="@{/APRequest/list(busqueda=${busqueda}, estat=${estat},
-                      tipus=${tipus}, pagina=${paginaActual - 1})}"
+           th:href="@{/APRequest/list(busqueda=${busqueda}, estat=${estat}, tipus=${tipus}, pagina=${paginaActual - 1})}"
            class="btn-back">← Anterior</a>
         <span th:each="i : ${#numbers.sequence(0, totalPagines - 1)}">
             <a th:if="${i != paginaActual}"
-               th:href="@{/APRequest/list(busqueda=${busqueda}, estat=${estat},
-                          tipus=${tipus}, pagina=${i})}"
+               th:href="@{/APRequest/list(busqueda=${busqueda}, estat=${estat}, tipus=${tipus}, pagina=${i})}"
                class="btn-back" th:text="${i + 1}"></a>
-            <span th:if="${i == paginaActual}"
-                  class="btn-new" th:text="${i + 1}"
-                  style="cursor:default;"></span>
+            <span th:if="${i == paginaActual}" class="btn-new" th:text="${i + 1}" style="cursor:default;"></span>
         </span>
         <a th:if="${paginaActual < totalPagines - 1}"
-           th:href="@{/APRequest/list(busqueda=${busqueda}, estat=${estat},
-                      tipus=${tipus}, pagina=${paginaActual + 1})}"
+           th:href="@{/APRequest/list(busqueda=${busqueda}, estat=${estat}, tipus=${tipus}, pagina=${paginaActual + 1})}"
            class="btn-back">Següent →</a>
     </div>
 </main>

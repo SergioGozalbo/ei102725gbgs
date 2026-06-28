@@ -30,17 +30,20 @@
     <form method="get" th:action="@{/AssistentPersonal/list}"
           style="margin-bottom:1.5rem; display:flex; gap:0.75rem;
                  align-items:center; flex-wrap:wrap;">
-        <input type="text" name="busqueda" th:value="${busqueda}"
+        <label for="busqueda" class="visually-hidden">Cerca per nom o cognoms</label>
+        <input type="text" id="busqueda" name="busqueda" th:value="${busqueda}"
                placeholder="Cerca per nom o cognoms..."
                style="max-width:280px;"/>
-        <select name="estat" style="max-width:160px;">
+        <label for="estat" class="visually-hidden">Filtre per estat</label>
+        <select id="estat" name="estat" style="max-width:160px;">
             <option value="" th:selected="${estat == ''}">Tots els estats</option>
             <option value="Aceptado" th:selected="${estat == 'Aceptado'}">Acceptat</option>
             <option value="Rechazado" th:selected="${estat == 'Rechazado'}">Rebutjat</option>
             <option value="Pendiente" th:selected="${estat == 'Pendiente'}">Pendent</option>
         </select>
         <button type="submit" class="btn-new">Cercar</button>
-        <a th:href="@{/AssistentPersonal/list}" class="btn-back">Netejar</a>
+        <button type="button" class="btn-back"
+                onclick="window.location.href='/AssistentPersonal/list'">Netejar</button>
     </form>
 
     <p style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"

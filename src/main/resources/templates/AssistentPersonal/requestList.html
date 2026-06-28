@@ -29,10 +29,12 @@
   <form method="get" th:action="@{/AssistentPersonal/requests}"
         style="margin-bottom:1.5rem; display:flex; gap:0.75rem;
                  align-items:center; flex-wrap:wrap;">
-    <input type="text" name="busqueda" th:value="${busqueda}"
+    <label for="busqueda" class="visually-hidden">Cerca per nom d'usuari</label>
+    <input type="text" id="busqueda" name="busqueda" th:value="${busqueda}"
            placeholder="Cerca per nom d'usuari..."
            style="max-width:240px;"/>
-    <select name="estat" style="max-width:180px;">
+    <label for="estat" class="visually-hidden">Filtre per estat</label>
+    <select id="estat" name="estat" style="max-width:180px;">
       <option value="" th:selected="${estat == ''}">Tots els estats</option>
       <option value="candidat" th:selected="${estat == 'candidat'}">Escollit</option>
       <option value="contractat"
@@ -40,7 +42,8 @@
       <option value="tancat" th:selected="${estat == 'tancat'}">Tancat</option>
     </select>
     <button type="submit" class="btn-new">Cercar</button>
-    <a th:href="@{/AssistentPersonal/requests}" class="btn-back">Netejar</a>
+    <button type="button" class="btn-back"
+            onclick="window.location.href='/AssistentPersonal/requests'">Netejar</button>
   </form>
 
   <p style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
@@ -67,18 +70,18 @@
       <tbody>
       <tr th:each="req : ${requests}">
         <td>
-                    <span th:each="u : ${usuarios}"
-                          th:if="${u.idUsuario == req.idUsuarioOvi}"
-                          th:text="${u.nombre} + ' ' + ${u.apellidos}"></span>
+          <span th:each="u : ${usuarios}"
+                th:if="${u.idUsuario == req.idUsuarioOvi}"
+                th:text="${u.nombre} + ' ' + ${u.apellidos}"></span>
         </td>
         <td th:text="${req.proximidad}"></td>
         <td>
-                    <span class="badge-estat badge-pendent"
-                          th:text="${req.tipoAsistencia}"></span>
+          <span class="badge-estat badge-pendent"
+                th:text="${req.tipoAsistencia}"></span>
         </td>
         <td>
-                    <span th:if="${estatPerSolicitud[req.idSolicitud] == 'candidat'}"
-                          class="badge-estat badge-acceptat">Escollit</span>
+          <span th:if="${estatPerSolicitud[req.idSolicitud] == 'candidat'}"
+                class="badge-estat badge-acceptat">Escollit</span>
           <span th:if="${estatPerSolicitud[req.idSolicitud] == 'tancat'}"
                 class="badge-estat badge-rebutjat">Tancat</span>
           <span th:if="${estatPerSolicitud[req.idSolicitud] == 'contractat'}"
@@ -122,14 +125,14 @@
                       estat=${estat}, pagina=${paginaActual - 1})}"
        class="btn-back">← Anterior</a>
     <span th:each="i : ${#numbers.sequence(0, totalPagines - 1)}">
-            <a th:if="${i != paginaActual}"
-               th:href="@{/AssistentPersonal/requests(busqueda=${busqueda},
+      <a th:if="${i != paginaActual}"
+         th:href="@{/AssistentPersonal/requests(busqueda=${busqueda},
                           estat=${estat}, pagina=${i})}"
-               class="btn-back" th:text="${i + 1}"></a>
-            <span th:if="${i == paginaActual}"
-                  class="btn-new" th:text="${i + 1}"
-                  style="cursor:default;"></span>
-        </span>
+         class="btn-back" th:text="${i + 1}"></a>
+      <span th:if="${i == paginaActual}"
+            class="btn-new" th:text="${i + 1}"
+            style="cursor:default;"></span>
+    </span>
     <a th:if="${paginaActual < totalPagines - 1}"
        th:href="@{/AssistentPersonal/requests(busqueda=${busqueda},
                       estat=${estat}, pagina=${paginaActual + 1})}"
