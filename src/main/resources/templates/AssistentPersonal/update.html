@@ -1,81 +1,82 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <title>SgOVI - Editar Asistente</title>
+    <title>SgOVI - Editar Assistent Personal</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body class="form-page">
 <nav>
-    <span class="nav-brand">SgOVI</span>
+    <span class="nav-brand">SgOVI - Administració</span>
     <div class="nav-right">
-        <a th:href="@{/logout}" class="btn-logout">Cerrar sesión</a>
+        <a th:href="@{/logout}" class="btn-logout">Tancar sessió</a>
     </div>
 </nav>
-
 <main>
     <div class="page-actions">
         <div>
-            <h1 class="page-title">Editar Asistente Personal</h1>
-            <p class="page-subtitle">Modifica los datos del asistente.</p>
+            <h1 class="page-title">Editar Assistent Personal</h1>
+            <p class="page-subtitle">Modifica les dades de l'assistent.</p>
         </div>
     </div>
-
     <div class="form-card">
-        <form th:action="@{/AssistentPersonal/update}" th:object="${assistentPersonal}" method="post">
+        <form th:action="@{/AssistentPersonal/update}"
+              th:object="${assistentPersonal}" method="post">
+            <input type="hidden" th:field="*{idAsistente}"/>
+            <input type="hidden" th:field="*{password}"/>
             <div class="form-group">
-                <label for="idAsistente">ID Asistente</label>
-                <input id="idAsistente" type="text" th:field="*{idAsistente}" class="input-readonly" readonly/>
+                <label for="nombre">Nom</label>
+                <input id="nombre" type="text" th:field="*{nombre}"
+                       placeholder="Nom"/>
+                <span th:if="${#fields.hasErrors('nombre')}"
+                      th:errors="*{nombre}" class="error"></span>
             </div>
-
             <div class="form-group">
-                <label for="nombre">Nombre</label>
-                <input id="nombre" type="text" th:field="*{nombre}" placeholder="Nombre"/>
-                <div th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}" class="error"></div>
+                <label for="apellidos">Cognoms</label>
+                <input id="apellidos" type="text" th:field="*{apellidos}"
+                       placeholder="Cognoms"/>
+                <span th:if="${#fields.hasErrors('apellidos')}"
+                      th:errors="*{apellidos}" class="error"></span>
             </div>
-
-            <div class="form-group">
-                <label for="apellidos">Apellidos</label>
-                <input id="apellidos" type="text" th:field="*{apellidos}" placeholder="Apellidos"/>
-            </div>
-
             <div class="form-group">
                 <label for="email">Email</label>
-                <input id="email" type="email" th:field="*{email}" placeholder="correo@ejemplo.com"/>
-                <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="error"></div>
+                <input id="email" type="email" th:field="*{email}"
+                       placeholder="correu@exemple.com"/>
+                <span th:if="${#fields.hasErrors('email')}"
+                      th:errors="*{email}" class="error"></span>
             </div>
-
             <div class="form-group">
-                <label for="telefono">Teléfono</label>
-                <input id="telefono" type="text" th:field="*{telefono}" placeholder="6XXXXXXXX"/>
-                <div th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}" class="error"></div>
+                <label for="telefono">Telèfon</label>
+                <input id="telefono" type="text" th:field="*{telefono}"
+                       placeholder="6XXXXXXXX"/>
+                <span th:if="${#fields.hasErrors('telefono')}"
+                      th:errors="*{telefono}" class="error"></span>
             </div>
-
             <div class="form-group">
-                <label for="formacionAcademica">Formación académica</label>
-                <textarea id="formacionAcademica" th:field="*{formacionAcademica}" rows="4"
-                          placeholder="Formación académica"></textarea>
+                <label for="formacionAcademica">Formació acadèmica</label>
+                <textarea id="formacionAcademica"
+                          th:field="*{formacionAcademica}" rows="4"></textarea>
             </div>
-
             <div class="form-group">
-                <label for="experiencia">Experiencia</label>
-                <textarea id="experiencia" th:field="*{experiencia}" rows="4"
-                          placeholder="Experiencia profesional"></textarea>
+                <label for="experiencia">Experiència</label>
+                <textarea id="experiencia" th:field="*{experiencia}"
+                          rows="4"></textarea>
             </div>
-
             <div class="form-group">
-                <label for="estadoAceptado">Estado de aceptación</label>
+                <label for="estadoAceptado">Estat d'acceptació</label>
                 <select id="estadoAceptado" th:field="*{estadoAceptado}">
-                    <option value="Pendiente">Pendiente</option>
-                    <option value="Aceptado">Aceptado</option>
-                    <option value="Rechazado">Rechazado</option>
+                    <option value="Pendiente">Pendent</option>
+                    <option value="Aceptado">Acceptat</option>
+                    <option value="Rechazado">Rebutjat</option>
                 </select>
             </div>
-
-            <input type="hidden" th:field="*{password}"/>
-
-            <button type="submit" class="btn btn-primary">Actualizar</button>
+            <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+                <button type="submit" class="btn btn-primary"
+                        style="flex:1;">Actualitzar</button>
+                <a th:href="@{/AssistentPersonal/list}" class="btn btn-outline"
+                   style="flex:1; text-align:center;">Cancel·lar</a>
+            </div>
         </form>
     </div>
 </main>

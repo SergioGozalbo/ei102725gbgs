@@ -26,7 +26,7 @@
             <input type="hidden" th:field="*{estado}"/>
             <div class="form-group">
                 <label for="tipoAsistencia">Tipus d'assistència</label>
-                <select id="tipoAsistencia" th:field="*{tipoAsistencia}" required>
+                <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
                     <option value="">-- Selecciona --</option>
                     <option value="PAP">PAP (Personal)</option>
                     <option value="PATI">PATI (Tècnica)</option>
@@ -36,7 +36,7 @@
             </div>
             <div class="form-group">
                 <label for="proximidad">Província</label>
-                <select id="proximidad" th:field="*{proximidad}" required>
+                <select id="proximidad" th:field="*{proximidad}">
                     <option value="">-- Selecciona província --</option>
                     <option th:each="prov : ${provincias}"
                             th:value="${prov}" th:text="${prov}"></option>
@@ -47,19 +47,15 @@
             <div class="form-group">
                 <label for="preferencias">Preferències i detalls</label>
                 <textarea id="preferencias" th:field="*{preferencias}" rows="3"
-                          placeholder="Explica breument les teues necessitats..."
-                          required></textarea>
+                          placeholder="Explica breument les teues necessitats..."></textarea>
                 <span th:if="${#fields.hasErrors('preferencias')}"
                       th:errors="*{preferencias}" class="error"></span>
             </div>
             <div style="display:flex; gap:1rem; margin-top:1.5rem;">
-                <button type="submit" class="btn btn-primary" style="flex:1;">
-                    Crear sol·licitud
-                </button>
-                <a th:href="@{/APRequest/mylist}"
-                   class="btn btn-outline" style="flex:1; text-align:center;">
-                    Cancel·lar
-                </a>
+                <button type="submit" class="btn btn-primary"
+                        style="flex:1;">Crear sol·licitud</button>
+                <a th:href="@{/APRequest/mylist}" class="btn btn-outline"
+                   style="flex:1; text-align:center;">Cancel·lar</a>
             </div>
         </form>
     </div>

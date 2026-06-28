@@ -668,9 +668,14 @@ public class APRequestController {
      */
     @RequestMapping(value = "/updateAdmin/{idSolicitud}", method = RequestMethod.GET)
     public String editAPRequestAdmin(Model model, @PathVariable int idSolicitud) {
-        model.addAttribute("apRequest", apRequestDao.getAPRequest(idSolicitud));
-        model.addAttribute("usuariosOvi", usuariOVIDao.getUsuariosOVI());
+        APRequest apRequest = apRequestDao.getAPRequest(idSolicitud);
+        model.addAttribute("apRequest", apRequest);
         model.addAttribute("provincias", getListaProvincias());
+        // Nombre del usuario para mostrarlo sin ID
+        UsuariOVI u = usuariOVIDao.getUsuariOVI(apRequest.getIdUsuarioOvi());
+        model.addAttribute("nomUsuari",
+                u != null ? u.getNombre() + " " + u.getApellidos()
+                        : apRequest.getIdUsuarioOvi());
         return "APRequest/updateAdmin";
     }
 

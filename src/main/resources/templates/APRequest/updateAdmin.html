@@ -1,64 +1,67 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title>SgOVI - Editar Solicitud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Editar Sol·licitud</title>
     <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body class="form-page">
 <nav>
-    <span class="nav-brand">SgOVI - Administración</span>
+    <span class="nav-brand">SgOVI - Administració</span>
     <div class="nav-right">
-        <a th:href="@{/logout}" class="btn-logout">Cerrar sesión</a>
+        <a th:href="@{/logout}" class="btn-logout">Tancar sessió</a>
     </div>
 </nav>
 <main>
-    <h1 class="page-title">Editar Solicitud</h1>
-    <p class="page-subtitle">Modifica los datos de la solicitud.</p>
-
+    <div class="page-actions">
+        <div>
+            <h1 class="page-title">Editar Sol·licitud</h1>
+            <p class="page-subtitle">Modifica les dades de la sol·licitud.</p>
+        </div>
+        <a th:href="@{/APRequest/list}" class="btn-back">Tornar a la llista</a>
+    </div>
     <div class="form-card">
-        <form th:action="@{/APRequest/updateAdmin}" th:object="${apRequest}" method="post">
+        <form th:action="@{/APRequest/updateAdmin}" th:object="${apRequest}"
+              method="post">
             <input type="hidden" th:field="*{idSolicitud}"/>
             <input type="hidden" th:field="*{idUsuarioOvi}"/>
-
             <div class="form-group">
-                <label>Usuario OVI</label>
-                <div class="field-readonly" th:text="${apRequest.idUsuarioOvi}"></div>
+                <label>Usuari OVI</label>
+                <div class="field-readonly" th:text="${nomUsuari}"></div>
             </div>
-
             <div class="form-group">
-                <label for="estado">Estado</label>
+                <label for="estado">Estat</label>
                 <select id="estado" th:field="*{estado}">
-                    <option value="En revisión">En revisión</option>
-                    <option value="Aprobada">Aprobada</option>
-                    <option value="Rechazada">Rechazada</option>
+                    <option value="En revisión">En revisió</option>
+                    <option value="Aprobada">Aprovada</option>
+                    <option value="Rechazada">Rebutjada</option>
                 </select>
             </div>
-
             <div class="form-group">
-                <label for="tipoAsistencia">Tipo de Asistencia</label>
+                <label for="tipoAsistencia">Tipus d'assistència</label>
                 <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
                     <option value="PAP">PAP</option>
                     <option value="PATI">PATI</option>
                 </select>
             </div>
-
             <div class="form-group">
-                <label for="proximidad">Provincia</label>
+                <label for="proximidad">Província</label>
                 <select id="proximidad" th:field="*{proximidad}">
                     <option th:each="p : ${provincias}"
                             th:value="${p}" th:text="${p}"></option>
                 </select>
             </div>
-
             <div class="form-group">
-                <label for="preferencias">Preferencias</label>
-                <textarea id="preferencias" th:field="*{preferencias}" rows="4"></textarea>
+                <label for="preferencias">Preferències</label>
+                <textarea id="preferencias" th:field="*{preferencias}"
+                          rows="4"></textarea>
             </div>
-
-            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;">Actualizar</button>
-                <a th:href="@{/APRequest/list}" class="btn btn-outline" style="flex: 1; text-align: center;">Cancelar</a>
+            <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+                <button type="submit" class="btn btn-primary"
+                        style="flex:1;">Actualitzar</button>
+                <a th:href="@{/APRequest/list}" class="btn btn-outline"
+                   style="flex:1; text-align:center;">Cancel·lar</a>
             </div>
         </form>
     </div>

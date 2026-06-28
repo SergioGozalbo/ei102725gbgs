@@ -19,41 +19,42 @@
             <h1 class="page-title">Nou Usuari OVI</h1>
             <p class="page-subtitle">Omple les dades per registrar un nou usuari.</p>
         </div>
-        <a th:href="@{/UsuariOVI/list}" class="btn-back">Tornar a la llista</a>
     </div>
     <div class="form-card">
         <form th:action="@{/UsuariOVI/add}" th:object="${usuariOVI}" method="post">
             <div class="form-group">
                 <label for="nombre">Nom</label>
                 <input id="nombre" type="text" th:field="*{nombre}" placeholder="Nom"/>
-                <div th:if="${#fields.hasErrors('nombre')}"
-                     th:errors="*{nombre}" class="error"></div>
+                <span th:if="${#fields.hasErrors('nombre')}"
+                      th:errors="*{nombre}" class="error"></span>
             </div>
             <div class="form-group">
                 <label for="apellidos">Cognoms</label>
                 <input id="apellidos" type="text" th:field="*{apellidos}"
                        placeholder="Cognoms"/>
-                <div th:if="${#fields.hasErrors('apellidos')}"
-                     th:errors="*{apellidos}" class="error"></div>
+                <span th:if="${#fields.hasErrors('apellidos')}"
+                      th:errors="*{apellidos}" class="error"></span>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
                 <input id="email" type="email" th:field="*{email}"
                        placeholder="correu@exemple.com"/>
-                <div th:if="${#fields.hasErrors('email')}"
-                     th:errors="*{email}" class="error"></div>
+                <span th:if="${#fields.hasErrors('email')}"
+                      th:errors="*{email}" class="error"></span>
             </div>
             <div class="form-group">
                 <label for="password">Contrasenya</label>
                 <input id="password" type="password" th:field="*{password}"
                        placeholder="••••••••"/>
+                <span th:if="${#fields.hasErrors('password')}"
+                      th:errors="*{password}" class="error"></span>
             </div>
             <div class="form-group">
                 <label for="telefono">Telèfon</label>
                 <input id="telefono" type="text" th:field="*{telefono}"
                        placeholder="6XXXXXXXX"/>
-                <div th:if="${#fields.hasErrors('telefono')}"
-                     th:errors="*{telefono}" class="error"></div>
+                <span th:if="${#fields.hasErrors('telefono')}"
+                      th:errors="*{telefono}" class="error"></span>
             </div>
             <div class="form-group"
                  style="flex-direction:row; align-items:center; gap:0.75rem;">
@@ -63,8 +64,8 @@
                 <label for="consentimientoRgpd" style="margin:0;">
                     Accepte el tractament de dades (RGPD)
                 </label>
-                <div th:if="${#fields.hasErrors('consentimientoRgpd')}"
-                     th:errors="*{consentimientoRgpd}" class="error"></div>
+                <span th:if="${#fields.hasErrors('consentimientoRgpd')}"
+                      th:errors="*{consentimientoRgpd}" class="error"></span>
             </div>
             <div style="display:flex; gap:1rem; margin-top:1.5rem;">
                 <button type="submit" class="btn btn-primary"

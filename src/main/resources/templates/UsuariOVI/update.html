@@ -19,30 +19,30 @@
             <h1 class="page-title">Editar Usuari OVI</h1>
             <p class="page-subtitle">Modifica les dades de l'usuari.</p>
         </div>
-        <a th:href="@{/UsuariOVI/list}" class="btn-back">Tornar a la llista</a>
     </div>
     <div class="form-card">
         <form th:action="@{/UsuariOVI/update}" th:object="${usuariOVI}" method="post">
             <input type="hidden" th:field="*{idUsuario}"/>
+            <input type="hidden" th:field="*{consentimientoRgpd}"/>
             <div class="form-group">
                 <label for="nombre">Nom</label>
                 <input id="nombre" type="text" th:field="*{nombre}" placeholder="Nom"/>
-                <div th:if="${#fields.hasErrors('nombre')}"
-                     th:errors="*{nombre}" class="error"></div>
+                <span th:if="${#fields.hasErrors('nombre')}"
+                      th:errors="*{nombre}" class="error"></span>
             </div>
             <div class="form-group">
                 <label for="apellidos">Cognoms</label>
                 <input id="apellidos" type="text" th:field="*{apellidos}"
                        placeholder="Cognoms"/>
-                <div th:if="${#fields.hasErrors('apellidos')}"
-                     th:errors="*{apellidos}" class="error"></div>
+                <span th:if="${#fields.hasErrors('apellidos')}"
+                      th:errors="*{apellidos}" class="error"></span>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
                 <input id="email" type="email" th:field="*{email}"
                        placeholder="correu@exemple.com"/>
-                <div th:if="${#fields.hasErrors('email')}"
-                     th:errors="*{email}" class="error"></div>
+                <span th:if="${#fields.hasErrors('email')}"
+                      th:errors="*{email}" class="error"></span>
             </div>
             <div class="form-group">
                 <label for="password">Contrasenya</label>
@@ -53,17 +53,8 @@
                 <label for="telefono">Telèfon</label>
                 <input id="telefono" type="text" th:field="*{telefono}"
                        placeholder="6XXXXXXXX"/>
-                <div th:if="${#fields.hasErrors('telefono')}"
-                     th:errors="*{telefono}" class="error"></div>
-            </div>
-            <div class="form-group"
-                 style="flex-direction:row; align-items:center; gap:0.75rem;">
-                <input type="checkbox" id="consentimientoRgpd"
-                       th:field="*{consentimientoRgpd}"
-                       style="width:auto; margin:0;"/>
-                <label for="consentimientoRgpd" style="margin:0;">
-                    Accepte el tractament de dades (RGPD)
-                </label>
+                <span th:if="${#fields.hasErrors('telefono')}"
+                      th:errors="*{telefono}" class="error"></span>
             </div>
             <div style="display:flex; gap:1rem; margin-top:1.5rem;">
                 <button type="submit" class="btn btn-primary"
