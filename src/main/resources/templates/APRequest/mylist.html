@@ -16,7 +16,6 @@
     </div>
 </nav>
 <main>
-    <div th:replace="~{fragments/notificacion :: notificacion}"></div>
     <div class="page-actions">
         <div>
             <h1 class="page-title">Les meues sol·licituds</h1>
@@ -29,24 +28,40 @@
             <a th:href="@{/dashboard/usuariOVI}" class="btn-back">Tornar al Panel</a>
         </div>
     </div>
-
+    <div th:if="${msgOk}"
+         style="background:#dcfce7; border:1px solid #86efac; color:#166534;
+            border-radius:10px; padding:1rem 1.2rem; margin-bottom:1.5rem;">
+        <span th:text="${msgOk}"></span>
+    </div>
     <form method="get" th:action="@{/APRequest/mylist}"
-          style="margin-bottom:1.5rem; display:flex; gap:0.75rem; align-items:center;">
+          style="margin-bottom:1.5rem; display:flex; gap:0.75rem;
+                 align-items:center; flex-wrap:wrap;">
         <input type="text" name="busqueda" th:value="${busqueda}"
-               placeholder="Cerca per tipus o província..."
-               style="max-width:280px;"/>
-        <select name="registres" style="max-width:120px;">
-            <option value="5"  th:selected="${registres == 5}">5</option>
-            <option value="10" th:selected="${registres == 10}">10</option>
-            <option value="25" th:selected="${registres == 25}">25</option>
-            <option value="50" th:selected="${registres == 50}">50</option>
+               placeholder="Cerca per província..."
+               style="max-width:220px;"/>
+        <select name="estat" style="max-width:200px;">
+            <option value="" th:selected="${estat == ''}">Tots els estats</option>
+            <option value="En revisión"
+                    th:selected="${estat == 'En revisión'}">En revisió</option>
+            <option value="Aprobada"
+                    th:selected="${estat == 'Aprobada'}">Aprovada</option>
+            <option value="Rechazada"
+                    th:selected="${estat == 'Rechazada'}">Rebutjada</option>
+            <option value="Cerrada con contrato"
+                    th:selected="${estat == 'Cerrada con contrato'}">
+                Tancada amb contracte
+            </option>
+        </select>
+        <select name="tipus" style="max-width:120px;">
+            <option value="" th:selected="${tipus == ''}">Tots els tipus</option>
+            <option value="PAP" th:selected="${tipus == 'PAP'}">PAP</option>
+            <option value="PATI" th:selected="${tipus == 'PATI'}">PATI</option>
         </select>
         <button type="submit" class="btn-new">Cercar</button>
         <a th:href="@{/APRequest/mylist}" class="btn-back">Netejar</a>
     </form>
 
-    <p th:if="${totalRegistres != null}"
-       style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
+    <p style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
        th:text="'Mostrant ' + ${#lists.size(requests)}
                 + ' de ' + ${totalRegistres} + ' registres'"></p>
 
@@ -56,8 +71,7 @@
         No tens cap sol·licitud activa.
     </div>
 
-    <div class="table-container" th:unless="${#lists.isEmpty(requests)}"
-         style="max-height:500px; overflow-y:auto;">
+    <div class="table-container" th:unless="${#lists.isEmpty(requests)}">
         <table>
             <caption class="visually-hidden">Les meues sol·licituds d'assistència</caption>
             <thead>
@@ -75,47 +89,71 @@
                 <td>
                     <span class="badge-estat"
                           th:classappend="${request.estado == 'Aprobada'} ? ' badge-acceptat' :
-                                         ' badge-pendent'"
+                                         (${request.estado == 'Rechazada'} ? ' badge-rebutjat' :
+                                         ' badge-pendent')"
                           th:text="${request.estado}"></span>
                 </td>
                 <td th:text="${request.proximidad}"></td>
                 <td th:text="${request.preferencias}"></td>
                 <td>
                     <div class="table-actions" style="flex-wrap:nowrap;">
-                        <span th:if="${asistenteElegido[request.idSolicitud] == null}">
+                        <th:block th:if="${asistenteConContracte[request.idSolicitud] == null
+                                          and !solicitudesConCandidats.contains(request.idSolicitud)}">
                             <a th:href="@{/APRequest/update/{id}(id=${request.idSolicitud})}"
                                class="btn-edit">Editar</a>
                             <a th:href="@{/APRequest/confirmDeleteMylist/{id}(id=${request.idSolicitud})}"
                                class="btn-delete">Esborrar</a>
-                        </span>
-                        <a th:if="${request.estado == 'Aprobada'
-                                   and asistenteElegido[request.idSolicitud] == null}"
-                           th:href="@{/APRequest/mylistChooseAP/{id}(id=${request.idSolicitud})}"
-                           class="btn-edit">Veure candidats</a>
-                        <span th:if="${asistenteElegido[request.idSolicitud] != null}"
-                              style="display:inline-flex; gap:0.4rem;
-                                     flex-wrap:nowrap; align-items:center;">
-                            <span class="badge-estat badge-acceptat"
-                                  style="font-size:0.75rem; padding:0.2rem 0.6rem;
-                                         white-space:nowrap;">
-                                ✓ Escollit
-                            </span>
+                            <a th:if="${request.estado == 'Aprobada'}"
+                               th:href="@{/APRequest/mylistChooseAP/{id}(id=${request.idSolicitud})}"
+                               class="btn-edit">Veure candidats</a>
+                        </th:block>
+                        <th:block th:if="${asistenteConContracte[request.idSolicitud] == null
+                                          and solicitudesConCandidats.contains(request.idSolicitud)}">
+                            <a th:href="@{/APRequest/candidatsEscollits/{id}(id=${request.idSolicitud})}"
+                               class="btn-edit">Candidats escollits</a>
+                            <a th:href="@{/APRequest/mylistChooseAP/{id}(id=${request.idSolicitud})}"
+                               class="btn-edit">Veure candidats</a>
+                        </th:block>
+                        <th:block th:if="${asistenteConContracte[request.idSolicitud] != null}">
                             <a th:href="@{/APRequest/mylistChooseAPDetails/{idSolicitud}/{idAsistente}
                                 (idSolicitud=${request.idSolicitud},
-                                 idAsistente=${asistenteElegido[request.idSolicitud]})}"
-                               class="btn-edit"
-                               style="color:#ffffff;">Veure detalls</a>
+                                 idAsistente=${asistenteConContracte[request.idSolicitud]})}"
+                               class="btn-edit">Veure detalls</a>
                             <a th:href="@{/APRequest/contrato/{id}(id=${request.idSolicitud})}"
                                class="btn-edit">Contracte</a>
-                            <a th:href="@{/chat/{id}(id=${request.idSolicitud})}"
+                            <a th:href="@{/chat/{id}(id=${request.idSolicitud},
+                                        idAsistente=${asistenteConContracte[request.idSolicitud]})}"
                                class="btn-edit">Xat</a>
-                        </span>
+                        </th:block>
                     </div>
                 </td>
             </tr>
             </tbody>
         </table>
     </div>
+
+    <div th:if="${totalPagines > 1}"
+         style="display:flex; gap:0.5rem; align-items:center;
+                margin-top:1.5rem; justify-content:center;">
+        <a th:if="${paginaActual > 0}"
+           th:href="@{/APRequest/mylist(busqueda=${busqueda}, estat=${estat},
+                      tipus=${tipus}, pagina=${paginaActual - 1})}"
+           class="btn-back">← Anterior</a>
+        <span th:each="i : ${#numbers.sequence(0, totalPagines - 1)}">
+            <a th:if="${i != paginaActual}"
+               th:href="@{/APRequest/mylist(busqueda=${busqueda}, estat=${estat},
+                          tipus=${tipus}, pagina=${i})}"
+               class="btn-back" th:text="${i + 1}"></a>
+            <span th:if="${i == paginaActual}"
+                  class="btn-new" th:text="${i + 1}"
+                  style="cursor:default;"></span>
+        </span>
+        <a th:if="${paginaActual < totalPagines - 1}"
+           th:href="@{/APRequest/mylist(busqueda=${busqueda}, estat=${estat},
+                      tipus=${tipus}, pagina=${paginaActual + 1})}"
+           class="btn-back">Següent →</a>
+    </div>
 </main>
+
 </body>
 </html>

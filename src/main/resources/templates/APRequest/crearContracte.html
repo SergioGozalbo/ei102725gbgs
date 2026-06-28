@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Crear Contracte</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body class="form-page">
+<nav>
+    <span class="nav-brand">SgOVI</span>
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">Tancar sessió</a>
+    </div>
+</nav>
+<main>
+    <div class="page-actions">
+        <div>
+            <h1 class="page-title">Crear Contracte</h1>
+            <p class="page-subtitle">
+                Estàs a punt de crear un contracte amb
+                <strong th:text="${assistent.nombre} + ' '
+                                  + ${assistent.apellidos}"></strong>.
+                Aquesta acció és irreversible.
+            </p>
+        </div>
+        <a th:href="@{/APRequest/candidatsEscollits/{id}(id=${idSolicitud})}"
+           class="btn-back">Tornar</a>
+    </div>
+
+    <div th:if="${errorDates}"
+         class="alert-error"
+         th:text="${errorDates}"></div>
+
+    <div class="form-card">
+        <div class="field-group" style="margin-bottom:1.5rem;">
+            <span class="field-label">Assistent</span>
+            <div class="field-readonly"
+                 th:text="${assistent.nombre} + ' ' + ${assistent.apellidos}"></div>
+        </div>
+        <div class="field-group" style="margin-bottom:1.5rem;">
+            <span class="field-label">Email</span>
+            <div class="field-readonly" th:text="${assistent.email}"></div>
+        </div>
+        <div class="field-group" style="margin-bottom:1.5rem;">
+            <span class="field-label">Telèfon</span>
+            <div class="field-readonly" th:text="${assistent.telefono}"></div>
+        </div>
+
+        <form th:action="@{/APRequest/crearContracte}" method="post">
+            <input type="hidden" name="idSolicitud" th:value="${idSolicitud}"/>
+            <input type="hidden" name="idAsistente" th:value="${idAsistente}"/>
+            <div class="form-group">
+                <label for="fechaInicio">Data d'inici</label>
+                <input type="date" id="fechaInicio" name="fechaInicio"
+                       th:min="${#temporals.format(
+                                  T(java.time.LocalDate).now(),
+                                  'yyyy-MM-dd')}"
+                       required/>
+            </div>
+            <div class="form-group">
+                <label for="fechaFin">Data de fi</label>
+                <input type="date" id="fechaFin" name="fechaFin"
+                       th:min="${#temporals.format(
+                                  T(java.time.LocalDate).now().plusDays(1),
+                                  'yyyy-MM-dd')}"
+                       required/>
+            </div>
+            <div style="display:flex; gap:1rem; margin-top:2rem;">
+                <button type="submit" class="btn btn-primary" style="flex:1;">
+                    Confirmar i crear contracte
+                </button>
+                <a th:href="@{/APRequest/candidatsEscollits/{id}(id=${idSolicitud})}"
+                   class="btn btn-outline" style="flex:1; text-align:center;">
+                    Cancel·lar
+                </a>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+</html>

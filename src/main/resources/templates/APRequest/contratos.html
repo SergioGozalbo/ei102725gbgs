@@ -23,22 +23,16 @@
     </div>
 
     <form method="get" th:action="@{/APRequest/contratos}"
-          style="margin-bottom:1.5rem; display:flex; gap:0.75rem; align-items:center;">
+          style="margin-bottom:1.5rem; display:flex; gap:0.75rem;
+                 align-items:center; flex-wrap:wrap;">
         <input type="text" name="busqueda" th:value="${busqueda}"
                placeholder="Cerca per nom d'usuari o assistent..."
-               style="max-width:280px;"/>
-        <select name="registres" style="max-width:120px;">
-            <option value="5"  th:selected="${registres == 5}">5</option>
-            <option value="10" th:selected="${registres == 10}">10</option>
-            <option value="25" th:selected="${registres == 25}">25</option>
-            <option value="50" th:selected="${registres == 50}">50</option>
-        </select>
+               style="max-width:300px;"/>
         <button type="submit" class="btn-new">Cercar</button>
         <a th:href="@{/APRequest/contratos}" class="btn-back">Netejar</a>
     </form>
 
-    <p th:if="${totalRegistres != null}"
-       style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
+    <p style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
        th:text="'Mostrant ' + ${#lists.size(contratos)}
                 + ' de ' + ${totalRegistres} + ' registres'"></p>
 
@@ -47,8 +41,7 @@
         No hi ha contractes registrats.
     </div>
 
-    <div class="table-container" th:unless="${#lists.isEmpty(contratos)}"
-         style="max-height:500px; overflow-y:auto;">
+    <div class="table-container" th:unless="${#lists.isEmpty(contratos)}">
         <table>
             <caption class="visually-hidden">Llistat de contractes actius</caption>
             <thead>
@@ -84,6 +77,28 @@
             </tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- Paginació -->
+    <div th:if="${totalPagines > 1}"
+         style="display:flex; gap:0.5rem; align-items:center;
+                margin-top:1.5rem; justify-content:center;">
+        <a th:if="${paginaActual > 0}"
+           th:href="@{/APRequest/contratos(busqueda=${busqueda},
+                      pagina=${paginaActual - 1})}"
+           class="btn-back">← Anterior</a>
+        <span th:each="i : ${#numbers.sequence(0, totalPagines - 1)}">
+            <a th:if="${i != paginaActual}"
+               th:href="@{/APRequest/contratos(busqueda=${busqueda}, pagina=${i})}"
+               class="btn-back" th:text="${i + 1}"></a>
+            <span th:if="${i == paginaActual}"
+                  class="btn-new" th:text="${i + 1}"
+                  style="cursor:default;"></span>
+        </span>
+        <a th:if="${paginaActual < totalPagines - 1}"
+           th:href="@{/APRequest/contratos(busqueda=${busqueda},
+                      pagina=${paginaActual + 1})}"
+           class="btn-back">Següent →</a>
     </div>
 </main>
 </body>

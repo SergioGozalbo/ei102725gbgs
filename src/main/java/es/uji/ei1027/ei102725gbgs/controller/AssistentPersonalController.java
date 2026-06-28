@@ -166,24 +166,38 @@ public class AssistentPersonalController {
     @RequestMapping("/list")
     public String list(
             @RequestParam(defaultValue = "") String busqueda,
-            @RequestParam(defaultValue = "10") int registres,
+            @RequestParam(defaultValue = "") String estat,
+            @RequestParam(defaultValue = "0") int pagina,
             Model model, HttpSession session) {
         if (session.getAttribute("admin") == null) return "redirect:/login";
 
+        int tamanyPagina = 10;
         List<AssistentPersonal> todos = assistentPersonalDao.getAssistentsPersonals();
         List<AssistentPersonal> filtrados = new ArrayList<>();
         for (AssistentPersonal a : todos) {
             String nombre = (a.getNombre() + " " + a.getApellidos()).toLowerCase();
-            if (busqueda.isEmpty() || nombre.contains(busqueda.toLowerCase()))
-                filtrados.add(a);
+            boolean coincideixNom = busqueda.isEmpty()
+                    || nombre.contains(busqueda.toLowerCase());
+            boolean coincideixEstat = estat.isEmpty()
+                    || estat.equals(a.getEstadoAceptado());
+            if (coincideixNom && coincideixEstat) filtrados.add(a);
         }
-        int totalRegistres = filtrados.size();
-        List<AssistentPersonal> limitados = filtrados.size() > registres
-                ? filtrados.subList(0, registres) : filtrados;
 
-        model.addAttribute("asistentes", limitados);
+        int totalRegistres = filtrados.size();
+        int totalPagines = (int) Math.ceil((double) totalRegistres / tamanyPagina);
+        if (pagina < 0) pagina = 0;
+        if (pagina >= totalPagines && totalPagines > 0) pagina = totalPagines - 1;
+
+        int inici = pagina * tamanyPagina;
+        int fi = Math.min(inici + tamanyPagina, totalRegistres);
+        List<AssistentPersonal> paginats = totalRegistres > 0
+                ? filtrados.subList(inici, fi) : filtrados;
+
+        model.addAttribute("asistentes", paginats);
         model.addAttribute("busqueda", busqueda);
-        model.addAttribute("registres", registres);
+        model.addAttribute("estat", estat);
+        model.addAttribute("paginaActual", pagina);
+        model.addAttribute("totalPagines", totalPagines);
         model.addAttribute("totalRegistres", totalRegistres);
         return "AssistentPersonal/list";
     }
@@ -291,6 +305,21 @@ public class AssistentPersonalController {
         model.addAttribute("asistente",
                 assistentPersonalDao.getAssistentPersonal(idAsistente));
         return "AssistentPersonal/confirmDelete";
+    }
+
+    @RequestMapping(value = "/cancelRequest/{idSolicitud}",
+            method = RequestMethod.GET)
+    public String cancelRequest(@PathVariable int idSolicitud,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+        AssistentPersonal ap =
+                (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (ap == null) return "redirect:/login";
+
+        selectionDao.deleteSelection(idSolicitud, ap.getIdAsistente());
+        redirectAttributes.addFlashAttribute("msgOk",
+                "Sol·licitud eliminada de la teua llista.");
+        return "redirect:/AssistentPersonal/requests";
     }
 
 
@@ -438,36 +467,98 @@ public class AssistentPersonalController {
      * @return the view or redirect to login
      */
     @RequestMapping("/requests")
-    public String myAssignedRequests(Model model, HttpSession session) {
+    public String myAssignedRequests(
+            @RequestParam(defaultValue = "") String busqueda,
+            @RequestParam(defaultValue = "") String estat,
+            @RequestParam(defaultValue = "0") int pagina,
+            Model model, HttpSession session) {
         AssistentPersonal ap =
                 (AssistentPersonal) session.getAttribute("assistentPersonal");
-        if (ap == null) {
-            return "redirect:/login";
-        }
+        if (ap == null) return "redirect:/login";
 
-        // Buscar todas las selecciones donde este asistente fue elegido
+        int tamanyPagina = 10;
         List<Selection> misSelecciones =
                 selectionDao.getSelectionsByAsistente(ap.getIdAsistente());
-
-        List<APRequest> solicitudesAsignadas = new ArrayList<>();
-        List<RegistreContracte> todosLosContratos =
+        List<RegistreContracte> todosContratos =
                 registreContracteDao.getRegistresContractes();
+        List<UsuariOVI> usuarios = usuariOVIDao.getUsuariosOVI();
+
+        List<APRequest> totas = new ArrayList<>();
+        java.util.Map<Integer, String> estatPerSolicitud =
+                new java.util.HashMap<>();
 
         for (Selection s : misSelecciones) {
-            // Solo incluir si tiene contrato (es decir, el usuario lo eligió de verdad)
-            boolean tieneContrato = todosLosContratos.stream()
-                    .anyMatch(c -> c.getIdSeleccion() == s.getIdSeleccion());
-            if (tieneContrato) {
-                APRequest req = apRequestDao.getAPRequest(s.getIdSolicitud());
-                if (req != null) {
-                    solicitudesAsignadas.add(req);
-                }
+            APRequest req = apRequestDao.getAPRequest(s.getIdSolicitud());
+            if (req == null) continue;
+
+            RegistreContracte nostreContracte =
+                    registreContracteDao.getRegistreContracteBySeleccion(
+                            s.getIdSeleccion());
+            if (nostreContracte != null) {
+                estatPerSolicitud.put(req.getIdSolicitud(), "contractat");
+            } else if ("Cerrada con contrato".equals(req.getEstado())) {
+                estatPerSolicitud.put(req.getIdSolicitud(), "tancat");
+            } else {
+                estatPerSolicitud.put(req.getIdSolicitud(), "candidat");
             }
+            totas.add(req);
         }
 
-        model.addAttribute("requests", solicitudesAsignadas);
-        model.addAttribute("usuarios", usuariOVIDao.getUsuariosOVI());
+        List<APRequest> filtrades = new ArrayList<>();
+        for (APRequest req : totas) {
+            boolean coincideixNom = busqueda.isEmpty();
+            if (!coincideixNom) {
+                for (UsuariOVI u : usuarios) {
+                    if (u.getIdUsuario().equals(req.getIdUsuarioOvi())) {
+                        coincideixNom = (u.getNombre() + " " + u.getApellidos())
+                                .toLowerCase().contains(busqueda.toLowerCase());
+                        break;
+                    }
+                }
+            }
+            String estatReq = estatPerSolicitud.getOrDefault(
+                    req.getIdSolicitud(), "");
+            boolean coincideixEstat = estat.isEmpty() || estat.equals(estatReq);
+            if (coincideixNom && coincideixEstat) filtrades.add(req);
+        }
+
+        int totalRegistres = filtrades.size();
+        int totalPagines = (int) Math.ceil((double) totalRegistres / tamanyPagina);
+        if (pagina < 0) pagina = 0;
+        if (pagina >= totalPagines && totalPagines > 0) pagina = totalPagines - 1;
+
+        int inici = pagina * tamanyPagina;
+        int fi = Math.min(inici + tamanyPagina, totalRegistres);
+        List<APRequest> paginades = totalRegistres > 0
+                ? filtrades.subList(inici, fi) : filtrades;
+
+        model.addAttribute("requests", paginades);
+        model.addAttribute("usuarios", usuarios);
+        model.addAttribute("estatPerSolicitud", estatPerSolicitud);
+        model.addAttribute("busqueda", busqueda);
+        model.addAttribute("estat", estat);
+        model.addAttribute("paginaActual", pagina);
+        model.addAttribute("totalPagines", totalPagines);
+        model.addAttribute("totalRegistres", totalRegistres);
         return "AssistentPersonal/requestList";
+    }
+    /**
+     * Shows the details of a request for the assistant.
+     */
+    @RequestMapping(value = "/requestDetails/{id}", method = RequestMethod.GET)
+    public String requestDetails(@PathVariable int id,
+                                 Model model, HttpSession session) {
+        AssistentPersonal ap =
+                (AssistentPersonal) session.getAttribute("assistentPersonal");
+        if (ap == null) return "redirect:/login";
+
+        APRequest request = apRequestDao.getAPRequest(id);
+        if (request == null) return "redirect:/AssistentPersonal/requests";
+
+        UsuariOVI usuari = usuariOVIDao.getUsuariOVI(request.getIdUsuarioOvi());
+        model.addAttribute("request", request);
+        model.addAttribute("usuari", usuari);
+        return "AssistentPersonal/requestDetails";
     }
 
     /**

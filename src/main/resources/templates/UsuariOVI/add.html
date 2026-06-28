@@ -1,89 +1,4 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>SgOVI - Añadir usuario</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-</head>
-<body class="form-page">
-
-<nav>
-    <span class="nav-brand">SgOVI</span>
-
-    <div class="nav-right">
-        <a th:href="@{/logout}" class="btn-logout">
-            Cerrar sesión
-        </a>
-    </div>
-</nav>
-
-<main>
-
-<div class="page-actions">
-
-    <div>
-        <h1 class="page-title">Añadir usuario</h1>
-        <p class="page-subtitle">
-            Registra un nuevo usuario OVI
-        </p>
-    </div>
-
-    <a th:href="@{/UsuariOVI/list}"
-       class="btn-back">
-        Volver a la lista
-    </a>
-
-</div>
-
-<div class="form-card">
-
-    <form th:action="@{/UsuariOVI/add}" th:object="${usuariOVI}" method="post">
-
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" th:field="*{nombre}"
-            placeholder="Nombre">
-            <span th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"
-            class="error"></span>
-        </div>
-        <div class="form-group">
-            <label for="apellidos">Apellidos:</label>
-            <input type="text" id="apellidos" th:field="*{apellidos}"
-                   placeholder="Apellidos">
-        </div>
-
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" th:field="*{email}"
-            placeholder="correo@ejemplo.com">
-        </div>
-
-        <div class="form-group">
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" th:field="*{password}"
-                   placeholder="********">
-        </div>
-
-        <div class="form-group">
-            <label for="telefono">Teléfono:</label>
-            <input type="text" id="telefono" th:field="*{telefono}"
-            placeholder="6XXXXXXXX">
-            <span th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"
-                  class="error"></span>
-        </div>
-
-        <div class="checkbox-group">
-            <input type="checkbox" id="consentimientoRgpd" th:field="*{consentimientoRgpd}">
-            <label for="consentimientoRgpd">Accepto el tractament de dades (RGPD):</label>
-            <span th:if="${#fields.hasErrors('consentimientoRgpd')}" th:errors="*{consentimientoRgpd}"
-                  class="error"></span>
-        </div>
-        <button type="submit" class="btn btn-primary">
-            Guardar
-        </button>
-    </form>
-
-</div>
 <html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
@@ -95,7 +10,7 @@
 <nav>
     <span class="nav-brand">SgOVI - Administració</span>
     <div class="nav-right">
-        <a th:href="@{/UsuariOVI/list}" class="btn-logout">Tornar a la llista</a>
+        <a th:href="@{/logout}" class="btn-logout">Tancar sessió</a>
     </div>
 </nav>
 <main>
@@ -104,6 +19,7 @@
             <h1 class="page-title">Nou Usuari OVI</h1>
             <p class="page-subtitle">Omple les dades per registrar un nou usuari.</p>
         </div>
+        <a th:href="@{/UsuariOVI/list}" class="btn-back">Tornar a la llista</a>
     </div>
     <div class="form-card">
         <form th:action="@{/UsuariOVI/add}" th:object="${usuariOVI}" method="post">
@@ -140,11 +56,11 @@
                      th:errors="*{telefono}" class="error"></div>
             </div>
             <div class="form-group"
-                 style="flex-direction: row; align-items: center; gap: 0.75rem;">
+                 style="flex-direction:row; align-items:center; gap:0.75rem;">
                 <input type="checkbox" id="consentimientoRgpd"
                        th:field="*{consentimientoRgpd}"
-                       style="width: auto; margin: 0;"/>
-                <label for="consentimientoRgpd" style="margin: 0;">
+                       style="width:auto; margin:0;"/>
+                <label for="consentimientoRgpd" style="margin:0;">
                     Accepte el tractament de dades (RGPD)
                 </label>
                 <div th:if="${#fields.hasErrors('consentimientoRgpd')}"

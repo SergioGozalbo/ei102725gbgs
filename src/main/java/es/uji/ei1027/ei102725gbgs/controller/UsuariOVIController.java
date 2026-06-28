@@ -127,10 +127,11 @@ public class UsuariOVIController {
     @RequestMapping("/list")
     public String listUsuariOVI(
             @RequestParam(defaultValue = "") String busqueda,
-            @RequestParam(defaultValue = "10") int registres,
+            @RequestParam(defaultValue = "0") int pagina,
             Model model, HttpSession session) {
         if (session.getAttribute("admin") == null) return "redirect:/login";
 
+        int tamanyPagina = 10;
         List<UsuariOVI> todos = usuariOVIDao.getUsuariosOVI();
         List<UsuariOVI> filtrados = new ArrayList<>();
         for (UsuariOVI u : todos) {
@@ -138,16 +139,25 @@ public class UsuariOVIController {
             if (busqueda.isEmpty() || nombre.contains(busqueda.toLowerCase()))
                 filtrados.add(u);
         }
-        int totalRegistres = filtrados.size();
-        List<UsuariOVI> limitados = filtrados.size() > registres
-                ? filtrados.subList(0, registres) : filtrados;
 
-        model.addAttribute("usuarios", limitados);
+        int totalRegistres = filtrados.size();
+        int totalPagines = (int) Math.ceil((double) totalRegistres / tamanyPagina);
+        if (pagina < 0) pagina = 0;
+        if (pagina >= totalPagines && totalPagines > 0) pagina = totalPagines - 1;
+
+        int inici = pagina * tamanyPagina;
+        int fi = Math.min(inici + tamanyPagina, totalRegistres);
+        List<UsuariOVI> paginats = totalRegistres > 0
+                ? filtrados.subList(inici, fi) : filtrados;
+
+        model.addAttribute("usuarios", paginats);
         model.addAttribute("busqueda", busqueda);
-        model.addAttribute("registres", registres);
+        model.addAttribute("paginaActual", pagina);
+        model.addAttribute("totalPagines", totalPagines);
         model.addAttribute("totalRegistres", totalRegistres);
         return "UsuariOVI/list";
     }
+
     /**
      * Shows the add form.
      * @param model model for the view

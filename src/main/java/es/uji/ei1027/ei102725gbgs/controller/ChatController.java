@@ -2,6 +2,7 @@ package es.uji.ei1027.ei102725gbgs.controller;
 
 import es.uji.ei1027.ei102725gbgs.dao.APRequestDaoImpl;
 import es.uji.ei1027.ei102725gbgs.dao.MensajeDaoImpl;
+import es.uji.ei1027.ei102725gbgs.dao.SelectionDaoImpl;
 import es.uji.ei1027.ei102725gbgs.model.APRequest;
 import es.uji.ei1027.ei102725gbgs.model.AssistentPersonal;
 import es.uji.ei1027.ei102725gbgs.model.Mensaje;
@@ -15,86 +16,111 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/** Handles the chat between an OVI user and their assigned assistant. */
 @Controller
 @RequestMapping("/chat")
 public class ChatController {
 
-    /**
-     * DAO for accessing Mensaje data, used to retrieve and store chat messages.
-     */
     private final MensajeDaoImpl mensajeDao;
-
-    /**
-     * DAO for accessing APRequest data, used to retrieve request details for the chat context.
-     */
     private final APRequestDaoImpl apRequestDao;
+    private final SelectionDaoImpl selectionDao;
 
-    /**
-     * Constructor for ChatController.
-     * @param mensajeDao the MensajeDaoImpl to access message data
-     * @param apRequestDao the APRequestDaoImpl to access request data
-     */
     @Autowired
     public ChatController(MensajeDaoImpl mensajeDao,
-                          APRequestDaoImpl apRequestDao) {
+                          APRequestDaoImpl apRequestDao,
+                          SelectionDaoImpl selectionDao) {
         this.mensajeDao = mensajeDao;
         this.apRequestDao = apRequestDao;
+        this.selectionDao = selectionDao;
     }
 
     /**
-     * Shows the chat for a given request.
-     * Works for both OVI users and assistants.
-     * @param idSolicitud request identifier
-     * @param model model for the view
-     * @param session session data
-     * @return chat view or redirect to login
+     * Shows the chat between a specific OVI user and a specific assistant.
+     * OVI messages are stored with remitenteId = "idOVI:idAsistente"
+     * so each pair has a private conversation.
      */
     @RequestMapping(value = "/{idSolicitud}", method = RequestMethod.GET)
     public String showChat(@PathVariable int idSolicitud,
+                           @RequestParam(required = false) String idAsistente,
                            Model model, HttpSession session) {
 
         String remitenteType = getRemitenteType(session);
-        if (remitenteType == null) {
-            return "redirect:/login";
-        }
+        if (remitenteType == null) return "redirect:/login";
 
         APRequest solicitud = apRequestDao.getAPRequest(idSolicitud);
-        if (solicitud == null) {
-            return "redirect:/login";
+        if (solicitud == null) return "redirect:/login";
+
+        String idAsistenteConversacion;
+        if ("ASISTENT".equals(remitenteType)) {
+            AssistentPersonal ap =
+                    (AssistentPersonal) session.getAttribute("assistentPersonal");
+            idAsistenteConversacion = ap.getIdAsistente();
+        } else {
+            if (idAsistente == null || idAsistente.trim().isEmpty()) {
+                return "redirect:/APRequest/mylist";
+            }
+            idAsistenteConversacion = idAsistente;
         }
 
-        List<Mensaje> mensajes = mensajeDao.getMensajesBySolicitud(idSolicitud);
+        String idOVI = solicitud.getIdUsuarioOvi();
+        String claveOVI = idOVI + ":" + idAsistenteConversacion;
+
+        List<Mensaje> todos = mensajeDao.getMensajesBySolicitud(idSolicitud);
+        List<Mensaje> mensajes = new ArrayList<>();
+        for (Mensaje m : todos) {
+            boolean esOVI = "OVI".equals(m.getRemitenteType())
+                    && claveOVI.equals(m.getRemitenteId());
+            boolean esAsistent = "ASISTENT".equals(m.getRemitenteType())
+                    && idAsistenteConversacion.equals(m.getRemitenteId());
+            if (esOVI || esAsistent) {
+                mensajes.add(m);
+            }
+        }
+
+        String miRemitenteId;
+        if ("ASISTENT".equals(remitenteType)) {
+            miRemitenteId = idAsistenteConversacion;
+        } else {
+            miRemitenteId = claveOVI;
+        }
 
         model.addAttribute("mensajes", mensajes);
         model.addAttribute("idSolicitud", idSolicitud);
+        model.addAttribute("idAsistente", idAsistenteConversacion);
         model.addAttribute("remitenteType", remitenteType);
+        model.addAttribute("miRemitenteId", miRemitenteId);
         model.addAttribute("solicitud", solicitud);
         return "chat/chat";
     }
 
     /**
-     * Sends a message and redirects back to the chat.
-     * @param idSolicitud request identifier
-     * @param contenido message text
-     * @param session session data
-     * @return redirect to chat
+     * Sends a message. OVI messages use "idOVI:idAsistente" as remitenteId
+     * to keep conversations private per pair.
      */
     @RequestMapping(value = "/{idSolicitud}/send", method = RequestMethod.POST)
     public String sendMessage(@PathVariable int idSolicitud,
                               @RequestParam String contenido,
+                              @RequestParam(required = false) String idAsistente,
                               HttpSession session) {
 
         String remitenteType = getRemitenteType(session);
-        if (remitenteType == null) {
-            return "redirect:/login";
-        }
-
-        String remitenteId = getRemitenteId(session, remitenteType);
+        if (remitenteType == null) return "redirect:/login";
 
         if (contenido != null && !contenido.trim().isEmpty()) {
+            String remitenteId;
+            if ("OVI".equals(remitenteType)) {
+                // Clave compuesta para mensajes del OVI
+                UsuariOVI usuari =
+                        (UsuariOVI) session.getAttribute("usuariOVI");
+                remitenteId = usuari.getIdUsuario() + ":" + idAsistente;
+            } else {
+                AssistentPersonal ap =
+                        (AssistentPersonal) session.getAttribute("assistentPersonal");
+                remitenteId = ap.getIdAsistente();
+            }
+
             Mensaje m = new Mensaje();
             m.setIdSolicitud(idSolicitud);
             m.setRemitenteType(remitenteType);
@@ -103,35 +129,16 @@ public class ChatController {
             mensajeDao.addMensaje(m);
         }
 
+        if ("OVI".equals(remitenteType) && idAsistente != null) {
+            return "redirect:/chat/" + idSolicitud
+                    + "?idAsistente=" + idAsistente;
+        }
         return "redirect:/chat/" + idSolicitud;
     }
 
-    /**
-     * Determines the sender type based on the session attributes.
-     * @param session the HTTP session to check for user attributes
-     * @return 'OVI' if an OVI user is logged in, 'ASISTENT' if an assistant is logged in, or {@code null} if no user is logged in
-     */
     private String getRemitenteType(HttpSession session) {
-        if (session.getAttribute("usuariOVI") != null) {
-            return "OVI";
-        }
-        if (session.getAttribute("assistentPersonal") != null) {
-            return "ASISTENT";
-        }
+        if (session.getAttribute("usuariOVI") != null) return "OVI";
+        if (session.getAttribute("assistentPersonal") != null) return "ASISTENT";
         return null;
-    }
-
-    /**
-     * Determines the sender ID based on the session attributes and sender type.
-     * @param session the HTTP session to check for user attributes
-     * @param type the sender type ('OVI' or 'ASISTENT')
-     * @return the sender ID corresponding to the logged-in user of the specified type
-     */
-    private String getRemitenteId(HttpSession session, String type) {
-        if ("OVI".equals(type)) {
-            return ((UsuariOVI) session.getAttribute("usuariOVI")).getIdUsuario();
-        }
-        return ((AssistentPersonal) session.getAttribute(
-                "assistentPersonal")).getIdAsistente();
     }
 }

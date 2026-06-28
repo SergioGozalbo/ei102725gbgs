@@ -1,65 +1,65 @@
 <!DOCTYPE html>
-<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>SgOVI - Nueva Solicitud</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Nova Sol·licitud</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body class="form-page">
 <nav>
     <span class="nav-brand">SgOVI</span>
     <div class="nav-right">
-        <a th:href="@{/logout}" class="btn-logout">Cerrar sesión</a>
+        <a th:href="@{/logout}" class="btn-logout">Tancar sessió</a>
     </div>
 </nav>
-
 <main>
     <div class="page-actions">
         <div>
-            <h1 class="page-title">Nueva Solicitud</h1>
-            <p class="page-subtitle">Indica el tipo de asistencia que necesitas.</p>
+            <h1 class="page-title">Nova Sol·licitud</h1>
+            <p class="page-subtitle">Indica el tipus d'assistència que necessites.</p>
         </div>
     </div>
-
     <div class="form-card">
         <form th:action="@{/APRequest/add}" th:object="${apRequest}" method="post">
             <input type="hidden" th:field="*{idUsuarioOvi}"/>
             <input type="hidden" th:field="*{estado}"/>
-
             <div class="form-group">
-                <label for="tipoAsistencia">Tipo de Asistencia</label>
-                <select id="tipoAsistencia" th:field="*{tipoAsistencia}">
+                <label for="tipoAsistencia">Tipus d'assistència</label>
+                <select id="tipoAsistencia" th:field="*{tipoAsistencia}" required>
                     <option value="">-- Selecciona --</option>
                     <option value="PAP">PAP (Personal)</option>
-                    <option value="PATI">PATI (Técnica)</option>
+                    <option value="PATI">PATI (Tècnica)</option>
                 </select>
-                <div class="error" th:if="${#fields.hasErrors('tipoAsistencia')}"
-                     th:errors="*{tipoAsistencia}"></div>
+                <span th:if="${#fields.hasErrors('tipoAsistencia')}"
+                      th:errors="*{tipoAsistencia}" class="error"></span>
             </div>
-
             <div class="form-group">
-                <label for="proximidad">Provincia</label>
-                <select id="proximidad" th:field="*{proximidad}">
-                    <option value="">-- Selecciona provincia --</option>
+                <label for="proximidad">Província</label>
+                <select id="proximidad" th:field="*{proximidad}" required>
+                    <option value="">-- Selecciona província --</option>
                     <option th:each="prov : ${provincias}"
                             th:value="${prov}" th:text="${prov}"></option>
                 </select>
-                <div class="error" th:if="${#fields.hasErrors('proximidad')}"
-                     th:errors="*{proximidad}"></div>
+                <span th:if="${#fields.hasErrors('proximidad')}"
+                      th:errors="*{proximidad}" class="error"></span>
             </div>
-
             <div class="form-group">
-                <label for="preferencias">Preferencias y detalles</label>
+                <label for="preferencias">Preferències i detalls</label>
                 <textarea id="preferencias" th:field="*{preferencias}" rows="3"
-                          placeholder="Explica brevemente tus necesidades..."></textarea>
-                <div class="error" th:if="${#fields.hasErrors('preferencias')}"
-                     th:errors="*{preferencias}"></div>
+                          placeholder="Explica breument les teues necessitats..."
+                          required></textarea>
+                <span th:if="${#fields.hasErrors('preferencias')}"
+                      th:errors="*{preferencias}" class="error"></span>
             </div>
-
-            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
-                <button type="submit" class="btn btn-primary" style="flex: 1;">Crear solicitud</button>
-                <a th:href="@{/APRequest/mylist}" class="btn btn-outline"
-                   style="flex: 1; text-align: center;">Cancelar</a>
+            <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+                <button type="submit" class="btn btn-primary" style="flex:1;">
+                    Crear sol·licitud
+                </button>
+                <a th:href="@{/APRequest/mylist}"
+                   class="btn btn-outline" style="flex:1; text-align:center;">
+                    Cancel·lar
+                </a>
             </div>
         </form>
     </div>

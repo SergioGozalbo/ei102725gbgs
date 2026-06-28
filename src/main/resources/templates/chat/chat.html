@@ -11,11 +11,10 @@
             margin: 0 auto;
             display: flex;
             flex-direction: column;
-            height: 70vh;
         }
         .chat-messages {
-            flex: 1;
-            overflow-y: auto;
+            height: 400px;
+            overflow-y: scroll;
             padding: 1rem;
             background: #f8fafc;
             border: 1px solid #e5e7eb;
@@ -54,7 +53,7 @@
             display: flex;
             gap: 0.5rem;
         }
-        .chat-input-row input {
+        .chat-input-row input[type="text"] {
             flex: 1;
             padding: 0.75rem 1rem;
             border: 1px solid #d1d5db;
@@ -62,7 +61,7 @@
             font-size: 0.95rem;
             outline: none;
         }
-        .chat-input-row input:focus {
+        .chat-input-row input[type="text"]:focus {
             border-color: #1a56db;
         }
         .chat-input-row button {
@@ -83,11 +82,12 @@
 <nav>
     <span class="nav-brand">SgOVI</span>
     <div class="nav-right">
-        <!-- Volver al sitio correcto según rol -->
         <a th:if="${remitenteType == 'OVI'}"
-           th:href="@{/APRequest/mylist}" class="btn-logout">Tornar</a>
+           th:href="@{/APRequest/candidatsEscollits/{id}(id=${idSolicitud})}"
+           class="btn-logout">Tornar</a>
         <a th:if="${remitenteType == 'ASISTENT'}"
-           th:href="@{/AssistentPersonal/requests}" class="btn-logout">Tornar</a>
+           th:href="@{/AssistentPersonal/requests}"
+           class="btn-logout">Tornar</a>
     </div>
 </nav>
 <main>
@@ -99,13 +99,13 @@
     </p>
 
     <div class="chat-container">
-        <div class="chat-messages" id="chatMessages">
+        <div class="chat-messages">
             <div th:if="${#lists.isEmpty(mensajes)}"
-                 style="text-align:center; color:#9ca3af; margin: auto;">
+                 style="text-align:center; color:#9ca3af; margin:auto;">
                 Encara no hi ha missatges. Comença la conversa!
             </div>
             <div th:each="m : ${mensajes}"
-                 th:class="${m.remitenteType == remitenteType}
+                 th:class="${m.remitenteId == miRemitenteId}
                             ? 'message-bubble message-mine'
                             : 'message-bubble message-theirs'">
                 <span th:text="${m.contenido}"></span>
@@ -117,21 +117,14 @@
 
         <form th:action="@{/chat/{id}/send(id=${idSolicitud})}"
               method="post" class="chat-input-row">
+            <input type="hidden" name="idAsistente"
+                   th:value="${idAsistente}"/>
             <input type="text" name="contenido"
                    placeholder="Escriu un missatge..."
-                   autocomplete="off" autofocus/>
+                   autocomplete="off"/>
             <button type="submit">Enviar</button>
         </form>
     </div>
 </main>
-
-<script>
-    // Scroll to bottom on load
-    const chatBox = document.getElementById('chatMessages');
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    // Auto-refresh every 5 seconds to get new messages
-    setTimeout(() => location.reload(), 5000);
-</script>
 </body>
 </html>

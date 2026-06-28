@@ -7,7 +7,7 @@
   <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body class="table-page">
-<nav aria-label="Navegació principal">
+<nav>
   <span class="nav-brand">SgOVI</span>
   <div class="nav-right">
     <a th:href="@{/logout}" class="btn-logout">Tancar sessió</a>
@@ -18,7 +18,7 @@
     <div>
       <h1 class="page-title">Les meues sol·licituds</h1>
       <p class="page-subtitle">
-        Usuaris que t'han escollit com a assistent personal.
+        Sol·licituds en les que participes com a candidat.
       </p>
     </div>
     <a th:href="@{/dashboard/assistentPersonal}" class="btn-back">
@@ -27,39 +27,39 @@
   </div>
 
   <form method="get" th:action="@{/AssistentPersonal/requests}"
-        style="margin-bottom:1.5rem; display:flex; gap:0.75rem; align-items:center;">
+        style="margin-bottom:1.5rem; display:flex; gap:0.75rem;
+                 align-items:center; flex-wrap:wrap;">
     <input type="text" name="busqueda" th:value="${busqueda}"
            placeholder="Cerca per nom d'usuari..."
-           style="max-width:280px;"/>
-    <select name="registres" style="max-width:120px;">
-      <option value="5"  th:selected="${registres == 5}">5</option>
-      <option value="10" th:selected="${registres == 10}">10</option>
-      <option value="25" th:selected="${registres == 25}">25</option>
-      <option value="50" th:selected="${registres == 50}">50</option>
+           style="max-width:240px;"/>
+    <select name="estat" style="max-width:180px;">
+      <option value="" th:selected="${estat == ''}">Tots els estats</option>
+      <option value="candidat" th:selected="${estat == 'candidat'}">Escollit</option>
+      <option value="contractat"
+              th:selected="${estat == 'contractat'}">Escollit i contractat</option>
+      <option value="tancat" th:selected="${estat == 'tancat'}">Tancat</option>
     </select>
     <button type="submit" class="btn-new">Cercar</button>
     <a th:href="@{/AssistentPersonal/requests}" class="btn-back">Netejar</a>
   </form>
 
-  <p th:if="${totalRegistres != null}"
-     style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
+  <p style="font-size:0.85rem; color:#4b5563; margin-bottom:1rem;"
      th:text="'Mostrant ' + ${#lists.size(requests)}
                 + ' de ' + ${totalRegistres} + ' registres'"></p>
 
   <div th:if="${#lists.isEmpty(requests)}"
        style="text-align:center; padding:2rem; color:#4b5563;">
-    Encara no t'han assignat cap sol·licitud.
+    Encara no ets candidat en cap sol·licitud.
   </div>
 
-  <div class="table-container" th:unless="${#lists.isEmpty(requests)}"
-       style="max-height:500px; overflow-y:auto;">
+  <div class="table-container" th:unless="${#lists.isEmpty(requests)}">
     <table>
-      <caption class="visually-hidden">Sol·licituds assignades</caption>
+      <caption class="visually-hidden">Sol·licituds com a candidat</caption>
       <thead>
       <tr>
         <th scope="col">Usuari</th>
         <th scope="col">Província</th>
-        <th scope="col">Tipus d'assistència</th>
+        <th scope="col">Tipus</th>
         <th scope="col">Estat</th>
         <th scope="col">Accions</th>
       </tr>
@@ -77,19 +77,63 @@
                           th:text="${req.tipoAsistencia}"></span>
         </td>
         <td>
-          <span class="badge-estat badge-acceptat">Escollit</span>
+                    <span th:if="${estatPerSolicitud[req.idSolicitud] == 'candidat'}"
+                          class="badge-estat badge-acceptat">Escollit</span>
+          <span th:if="${estatPerSolicitud[req.idSolicitud] == 'tancat'}"
+                class="badge-estat badge-rebutjat">Tancat</span>
+          <span th:if="${estatPerSolicitud[req.idSolicitud] == 'contractat'}"
+                class="badge-estat badge-contractat">Escollit i contractat</span>
         </td>
         <td>
-          <div class="table-actions">
-            <a th:href="@{/AssistentPersonal/contrato/{id}(id=${req.idSolicitud})}"
-               class="btn-edit">Veure contracte</a>
-            <a th:href="@{/chat/{id}(id=${req.idSolicitud})}"
-               class="btn-new">Enviar missatge</a>
+          <div class="table-actions" style="flex-wrap:nowrap;">
+            <th:block th:if="${estatPerSolicitud[req.idSolicitud] == 'candidat'}">
+              <a th:href="@{/AssistentPersonal/requestDetails/{id}(id=${req.idSolicitud})}"
+                 class="btn-edit">Detalls</a>
+              <a th:href="@{/chat/{id}(id=${req.idSolicitud})}"
+                 class="btn-edit">Xat</a>
+            </th:block>
+            <th:block th:if="${estatPerSolicitud[req.idSolicitud] == 'tancat'}">
+              <a th:href="@{/AssistentPersonal/requestDetails/{id}(id=${req.idSolicitud})}"
+                 class="btn-edit">Detalls</a>
+              <a th:href="@{/AssistentPersonal/cancelRequest/{id}(id=${req.idSolicitud})}"
+                 class="btn-delete">Esborrar</a>
+            </th:block>
+            <th:block th:if="${estatPerSolicitud[req.idSolicitud] == 'contractat'}">
+              <a th:href="@{/AssistentPersonal/requestDetails/{id}(id=${req.idSolicitud})}"
+                 class="btn-edit">Detalls</a>
+              <a th:href="@{/AssistentPersonal/contrato/{id}(id=${req.idSolicitud})}"
+                 class="btn-edit">Contracte</a>
+              <a th:href="@{/chat/{id}(id=${req.idSolicitud})}"
+                 class="btn-edit">Xat</a>
+            </th:block>
           </div>
         </td>
       </tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- Paginació -->
+  <div th:if="${totalPagines > 1}"
+       style="display:flex; gap:0.5rem; align-items:center;
+                margin-top:1.5rem; justify-content:center;">
+    <a th:if="${paginaActual > 0}"
+       th:href="@{/AssistentPersonal/requests(busqueda=${busqueda},
+                      estat=${estat}, pagina=${paginaActual - 1})}"
+       class="btn-back">← Anterior</a>
+    <span th:each="i : ${#numbers.sequence(0, totalPagines - 1)}">
+            <a th:if="${i != paginaActual}"
+               th:href="@{/AssistentPersonal/requests(busqueda=${busqueda},
+                          estat=${estat}, pagina=${i})}"
+               class="btn-back" th:text="${i + 1}"></a>
+            <span th:if="${i == paginaActual}"
+                  class="btn-new" th:text="${i + 1}"
+                  style="cursor:default;"></span>
+        </span>
+    <a th:if="${paginaActual < totalPagines - 1}"
+       th:href="@{/AssistentPersonal/requests(busqueda=${busqueda},
+                      estat=${estat}, pagina=${paginaActual + 1})}"
+       class="btn-back">Següent →</a>
   </div>
 </main>
 </body>

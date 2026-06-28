@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ca" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>SgOVI - Candidats escollits</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body class="table-page">
+<nav>
+    <span class="nav-brand">SgOVI</span>
+    <div class="nav-right">
+        <a th:href="@{/logout}" class="btn-logout">Tancar sessió</a>
+    </div>
+</nav>
+<main>
+    <div class="page-actions">
+        <div>
+            <h1 class="page-title">Candidats escollits</h1>
+            <p class="page-subtitle">
+                Parla amb els candidats i crea el contracte amb el que consideris.
+            </p>
+        </div>
+        <div style="display:flex; gap:0.75rem;">
+            <a th:href="@{/APRequest/mylistChooseAP/{id}(id=${request.idSolicitud})}"
+               class="btn-back">Afegir més candidats</a>
+            <a th:href="@{/APRequest/mylist}" class="btn-back">
+                Tornar a sol·licituds
+            </a>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(candidats)}"
+         style="text-align:center; padding:2rem; color:#4b5563;">
+        No has escollit cap candidat encara.
+    </div>
+
+    <div class="table-container" th:unless="${#lists.isEmpty(candidats)}">
+        <table>
+            <caption class="visually-hidden">
+                Candidats escollits per a aquesta sol·licitud
+            </caption>
+            <thead>
+            <tr>
+                <th scope="col">Nom i cognoms</th>
+                <th scope="col">Email</th>
+                <th scope="col">Telèfon</th>
+                <th scope="col">Accions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="candidat : ${candidats}">
+                <td th:text="${candidat.nombre} + ' ' + ${candidat.apellidos}"></td>
+                <td th:text="${candidat.email}"></td>
+                <td th:text="${candidat.telefono}"></td>
+                <td>
+                    <div class="table-actions" style="flex-wrap:nowrap;">
+                        <a th:href="@{/APRequest/mylistChooseAPDetails/{idSolicitud}/{idAsistente}
+                            (idSolicitud=${request.idSolicitud},
+                             idAsistente=${candidat.idAsistente})}"
+                           class="btn-edit">Veure detalls</a>
+                        <a th:href="@{/chat/{id}(id=${request.idSolicitud},
+                                    idAsistente=${candidat.idAsistente})}"
+                           class="btn-edit">Xat</a>
+                        <a th:href="@{/APRequest/crearContracte/{idSolicitud}/{idAsistente}
+                            (idSolicitud=${request.idSolicitud},
+                             idAsistente=${candidat.idAsistente})}"
+                           class="btn-new">Crear contracte</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+</body>
+</html>
