@@ -159,11 +159,24 @@ public class UsuariOVIController {
             @ModelAttribute("usuariOVI") UsuariOVI usuariOVI,
             BindingResult bindingResult) {
 
-        usuariOVIValidator.validate(usuariOVI, bindingResult);
+        if (usuariOVI.getNombre() == null || usuariOVI.getNombre().trim().isEmpty()) {
+            bindingResult.rejectValue("nombre", "obligatori", "El nom és obligatori");
+        }
+        if (usuariOVI.getApellidos() == null || usuariOVI.getApellidos().trim().isEmpty()) {
+            bindingResult.rejectValue("apellidos", "obligatori", "Els cognoms són obligatoris");
+        }
+        if (usuariOVI.getEmail() == null || usuariOVI.getEmail().trim().isEmpty()) {
+            bindingResult.rejectValue("email", "obligatori", "L'email és obligatori");
+        }
+        if (usuariOVI.getTelefono() == null || !usuariOVI.getTelefono().matches("\\d{9}")) {
+            bindingResult.rejectValue("telefono", "format",
+                    "El telèfon ha de tenir exactament 9 dígits numèrics");
+        }
+
         if (bindingResult.hasErrors()) return "UsuariOVI/update";
 
         usuariOVIDao.updateUsuariOVI(usuariOVI);
-        return "redirect:list";
+        return "redirect:/UsuariOVI/list";
     }
 
     @RequestMapping(value = "/delete/{idUsuario}")
